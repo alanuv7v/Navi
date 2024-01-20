@@ -1,0 +1,142 @@
+:root {
+    --light: rgba(225, 245, 231, 1);
+    --vivid: rgba(151, 200, 128, 1);
+    --deep: rgba(71, 71, 71, 1);
+    --dark: rgba(0, 0, 0, 1);
+    --hilight: rgb(185, 190, 255);
+}
+  
+* {
+  font-size: 14px;
+  box-sizing: border-box;
+  
+}
+#App {
+    background-color: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+body {
+    margin: 0px;
+}
+.IOI:hover {
+    box-shadow: inset 0px 0px 0px 1px var(--hilight);
+}
+.IOI:not(:has(.IOI:hover)):hover {
+    box-shadow: inset 0px 0px 0px 4px var(--hilight);
+}
+.main {
+    text-align: center;
+    background-color: var(--dark);
+    color: var(--light);
+    /* border: 1px solid var(--light);  */
+    box-shadow: inset 0px 0px 0px 1px var(--light);
+    /*
+    margin-right: -1px;
+    margin-bottom: -1px; */
+}
+#view {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+}
+
+
+.IOI {
+    width: 100%;
+    height: 100%;
+}
+
+button {
+  
+  font-size: 14px;
+  background-color: var(--dark);
+  color: var(--light);
+  border: none;
+  box-shadow: inset 0px 0px 0px 1px gray;
+
+}
+button:hover {
+  box-shadow: inset 0px 0px 0px 1px var(--light);
+}
+button:active {
+  background-color: var(--light);
+  color: var(--dark);
+}
+
+.border {
+  border: 1px solid var(--light);
+  box-shadow: inset 0px 0px 0px 1px var(--light);
+  box-shadow: inset 0px 0px 0px 1px yellow, inset 1px 0px 0px 1px blue;
+}
+*:focus {
+  outline: 1px solid var(--light);
+  outline: none;
+  box-shadow: inset 0px 0px 0px 1px var(--light);
+}
+
+#App {
+  position: relative;
+  height: 100vh;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+#content {
+  margin: 10px;
+  flex-grow: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  overflow: hidden;
+  position: relative;
+
+  border: 1px solid var(--light);
+}
+#background {
+  position: fixed;
+  top: 0px;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--dark);
+  z-index: -1;
+  transition: none;
+}
+#keyboard_toolbar {
+  position: sticky;
+  top: 0px;
+  left: 0px;
+  background-color: var(--deep);
+  width: 100vw;
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+  z-index: 4;
+}
+#command_palette {
+  display: none;
+
+  position: sticky;
+  margin-top: 160px;
+  background-color: rgba(54, 54, 54, 1);
+
+  width: 75vw;
+  height: fit-content;
+  left: ((100-@width)/2);
+  z-index: 4;
+}
+#command_palette textarea {
+    width: 100%;
+    height: fit-content;
+    color: white;
+    border: 1px solid transparent;
+    background-color: transparent;
+    resize: none;
+    box-sizing: border-box;
+    font-size: 16px !important;
+    padding: 4px;
+}
