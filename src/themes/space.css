@@ -183,3 +183,58 @@ button:focus {
 
 	
 }
+
+
+.MultilineTextarea {
+    box-sizing: border-box; /* 중요 */
+}
+.visibleTextarea {
+    background-color: transparent;
+    font-size: inherit;
+    width: 100%;
+    padding: 1em;
+    overflow-y: hidden;
+    resize: none;
+
+    color: white;
+    background-color: transparent;
+    border:none;
+    
+}
+.inputTextarea {
+    background-color: transparent;
+    font-size: inherit;
+    width: 100%;
+    padding: 1em;
+    overflow-y: hidden;
+    resize: none;
+
+    position: absolute;
+    border: none;
+    color: transparent;
+    background-color: transparent;
+    z-index: 1;
+    /* transition: none !important; */ /* 진짜 중요 */
+    caret-color: white;
+    
+}
+.inputTextarea::selection {
+    color: white;
+    background: #be9eff;
+}
+
+.FileViewer {
+    display: flex;
+    flex-direction: column;
+    .heading {
+        display: flex; 
+        flex-direction: row;
+        * {
+            font-size: 16px;
+            margin-right: 10px;
+        }
+    }
+    .Folder {
+        width: 100%;
+    }
+}

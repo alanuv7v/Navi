@@ -1,6 +1,4 @@
 import van from "vanjs-core"
-import compCSS from "../libs/compCSS"
-
 
 const t = van.tags
 const {div, span, button, textarea} = t
@@ -26,57 +24,10 @@ export const MultilineTextarea = (inputTextarea, visibleTextarea) => {
 
     inputTextarea.addEventListener('input', () => {resizeTextarea(inputTextarea, visibleTextarea)})
 
-    let main = d({class: "MultilineTextarea", style: `
-    position:relative; /* 중요 */
-    width: 100%;
-    height: fit-content;
-    display: flex; /* 중요 */
-    `},
+    let main = d({class: "MultilineTextarea"},
         inputTextarea,
         visibleTextarea
     )
-
-    compCSS("MultilineTextarea", `
-    * {
-        box-sizing: border-box; /* 중요 */
-    }
-    .visibleTextarea {
-        background-color: transparent;
-        font-size: inherit;
-        width: 100%;
-        padding: 1em;
-        overflow-y: hidden;
-        resize: none;
-
-        color: white;
-        background-color: transparent;
-        border:none;
-        
-    }
-    
-
-    .inputTextarea {
-        background-color: transparent;
-        font-size: inherit;
-        width: 100%;
-        padding: 1em;
-        overflow-y: hidden;
-        resize: none;
-
-        position: absolute;
-        border: none;
-        color: transparent;
-        background-color: transparent;
-        z-index: 1;
-        /* transition: none !important; */ /* 진짜 중요 */
-        caret-color: white;
-        
-    }
-    .inputTextarea::selection {
-        color: white;
-        background: #be9eff;
-    }
-    `)
 
   return main
 }

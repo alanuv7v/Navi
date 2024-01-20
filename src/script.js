@@ -14,15 +14,14 @@ codeanywhere에서 변경사항 있을 시 커밋 뿐만 아니라 push도 꼭 �
 const log = (text) => console.log(text)
 
 const t = van.tags
-const {div, span, button, textarea, input} = t
+const {div, span, button, textarea, input, a} = t
 /* destructuring 만세!! */
 const d = div
 
 //global variables
 const global = {}
 
-let head = (async function () {return await import('./data/heads/head_1.yaml')})()
-
+let head = (async function () {return await import('./data/docs/Alan.yaml')})()
 
 let testObj = {
   fruits: {
@@ -39,6 +38,63 @@ let initTargets = {
   'MultilineTextarea' : []
 }
 
+const FileViewer = (path) => {
+
+    console.log(head, path, nestedObj(head, path))
+    let data = nestedObj(head, path)
+    let items = []
+    for (let e of Object.entries(data)) {
+        switch (typeof e[1]) {
+            case "object":
+                items.push(Folder(e[0], path))
+                break
+            default:
+                items.push(File(e[0], e[1]))
+        }
+    }
+
+    return div(
+        {class: "FileViewer"},
+        div({class: "heading"},
+            button("<"),
+            button(">"),
+            button("⟳"),
+            button({onclick: () => updateFileViewer(path.slice(0, -1))}, "⇑"),
+            input({type: "text", value: ["root", ...path].join("/")})
+        ),
+        items
+    )
+}
+
+function updateFileViewer(path) {
+    global.View.children[0].remove()
+    global.View.append(FileViewer(SVGClipPathElement))
+    return true
+}
+
+const Folder = (key, path) => {
+    function onClick(event) {
+        updateFileViewer([...path, key])
+    }
+    return div(
+        {class: "Folder", style: "width: 100%;"}, 
+        //input({type: 'text', value: key, onclick: (event) => onClick(event)})
+        button({onclick: (event) => onClick(event)}, key)
+    )
+}
+
+const File = (key, file) => {
+    function onClick(event) {
+        console.log(key, file)
+    }
+    return div(
+        {class: "File", style: "width: 100%;"}, 
+        //input({type: 'text', value: key, onclick: (event) => onClick(event)})
+        //button({onclick: (event) => onClick(event)}, key)
+        a({href: ''}, key)
+    )
+}
+
 const InOutInterface = (path=[], head, iteration, keyType) => {
     //if ('name' in data) data.name = 'asdf'; console.log(data, head); return
     //proved that the data property is referencing prop in head. But still input elems cannot change head's prop.
@@ -51,9 +107,9 @@ const InOutInterface = (path=[], head, iteration, keyType) => {
 
     let resizeTargets = []
 
-    let key = path[path.length-1]
+    let key = path.length > 0 ? path[path.length-1] : ""
     let data = nestedObj(head, path)
-    console.log(key, data)
+    console.log(path, key, data, head)
 
     let prevKey = key
     
@@ -115,7 +171,7 @@ const InOutInterface = (path=[], head, iteration, keyType) => {
         let childKeyType
         if (Array.isArray(data)) childKeyType = "Array"
         for (let key in data) {
-        values_.push(IOI([...path, key], head, iteration, childKeyType))
+            values_.push(IOI([...path, key], head, iteration, childKeyType))
         }
     }
     iteration--
@@ -274,6 +330,7 @@ function init() {
 
 function nestedObj(obj, props, value, command=false) {
     if (!props) return obj;
+    if (props.length === 0) return obj
     let prop;
     for (var i = 0, iLen = props.length - 1; i < iLen; i++) {
       prop = props[i];
@@ -312,31 +369,32 @@ nestedObj(obj, ["foo", "bar", "baz"], 'y'); */
 
 //App
 
+global.View = div({id: "view", class:"main"})
+
 const App = (head) => {
     
-    let seed = InOutInterface(['thots'], head, 10)
+    let seed = Folder()
+    //let seed = InOutInterface([], head, 10)
   
     global.ContextMenu = ContextMenu()
+    global.View.append(FileViewer([]))
   
     return div({id: 'App', /* style: "display: flex; flex-direction: row; " */},
       div({id: "header", style: "display: flex; flex-direction: row; "},
-        button({style: "flex-grow: 1;"}, "head name"),
-        button("depth"),
+        button({style: "flex-grow: 1;"}, "Root: Alan √"),
+        button("axis: All"),
         button("account"),
         button("settings"),
-        button({style: "margin-left: auto"}, "Diver version 0.1")
+        button({style: "margin-left: auto"}, "Root ver 0.1")
       ),
-      div({id: "view", class:"main"},
-          seed,
-      ),
-      global.ContextMenu
+      [global.View, global.ContextMenu]
     )
 }
   
 head.then((h) => {
-    
-  van.add(document.body, App(head = h.default))
-  init()
+    head = h.default
+    van.add(document.body, App({"Root": h.default}))
+    init()
 
 })
 
