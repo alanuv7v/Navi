@@ -1,0 +1,26 @@
+{
+  "name": "head_1",
+  "thots": [
+    {
+      "id": 0, 
+      "authName": "D",
+      "props": {
+        "content": ""
+      },
+      "relations": [
+        {"parents": {"ids": [], "type": "id"},
+          "children": []},
+        {"conclusions": [],
+          "reasons": []},
+        {"poem": [],
+          "actuality": []}
+      ],
+      "metadata": {
+        "Created date": null,
+        "Modified date": null,
+        "History": null
+      },
+      "customMetadata": {}
+    }
+  ]
+}

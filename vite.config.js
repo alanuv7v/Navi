@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import ViteYaml from '@modyfi/vite-plugin-yaml';
 
 export default defineConfig({
   server: {
@@ -7,4 +8,7 @@ export default defineConfig({
       'Cross-Origin-Opener-Policy': 'same-origin',
     },
   },
+  plugins: [
+    ViteYaml(), 
+  ],
 });
