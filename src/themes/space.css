@@ -22,7 +22,7 @@
 }
 
 div {
-    text-align: left;
+  text-align: left;
 }
 
 
@@ -91,8 +91,10 @@ button, input, select {
 input:hover, button:hover, button:focus {
     border-radius: 0px;
     box-shadow: inset 0px 0px 0px 1px var(--light),
-                0px 0px 10px 0px var(--light);
-    text-decoration: solid underline var(--light) 4px;
+    0px 0px 10px 0px var(--light);
+    /*text-decoration: solid underline var(--light) 4px;
+    box-shadow: inset 0px 0px 0px 1px var(--light);*/
+    
 }
 input:focus, button:active {
 
@@ -245,4 +247,10 @@ input:focus, button:active {
 
 #TextModifiers * {
   white-space: nowrap;
+}
+
+.group {
+  box-shadow: inset 0px 0px 0px 1px var(--deep);
+  display: flex; 
+  flex-direction: column;
 }

@@ -172,8 +172,8 @@ function nestedObj(obj, props, value, command=false) {
 nestedObj(obj, ["foo", "bar", "baz"], 'y'); */
 
 const Group = (name, innie) => {
-  return div({class: "group", style: "border-left: 4px solid var(--light); display: flex; flex-direction: column;"},
-    div({class: "main"}, name),
+  return div({class: "group"},
+    div({style: "text-align: center; width: 100%; "}, name),
     div({style: "display: flex; flex-direction: row;"},
       innie
     )
@@ -206,7 +206,7 @@ global.TextModifiers = div(
     button("[tie|link]")]
   ),
   Group(
-    "Ect",
+    "Custom",
     [button("?c.compile")]
   ),
 )
