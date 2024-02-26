@@ -45,10 +45,13 @@ const FileList = (head, path) => {
 }
 
 const FileViewer = (path) => {
-    return div(
-        {class: "FileViewer"},
-        global.FileList
-    )
+  let This = "root"
+  return div(
+      {class: "FileViewer"},
+      div({class: "Name"},
+      This),
+      global.FileList
+  )
 }
 
 function updateFileList(head, path) {

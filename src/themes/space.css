@@ -1,6 +1,7 @@
 :root {
     --light: rgba(225, 245, 231, 1);
     --vivid: rgba(151, 200, 128, 1);
+    --link: rgb(153, 247, 225);
     --deep: rgba(71, 71, 71, 1);
     --dark: rgba(0, 0, 0, 1);
     --hilight: rgb(108, 125, 255);
@@ -74,7 +75,7 @@ body {
     margin-bottom: -1px; */
 }
 
-button, input, select {
+button, input, select, .buttonlike {
   
   font-size: 14px;
   padding: 0.5em 0.5em 0.5em 0.5em;
@@ -253,4 +254,38 @@ input:focus, button:active {
   box-shadow: inset 0px 0px 0px 1px var(--deep);
   display: flex; 
   flex-direction: column;
+}
+
+.Name {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.File {
+  padding-left: 0.5em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  margin-bottom: 0.5em;
+  border-left: 2px solid var(--deep);
+}
+
+.Folder {
+  padding-left: 0.5em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  margin-bottom: 0.5em;
+  border-left: 2px solid var(--deep);
+}
+
+.File:hover, .Folder:hover {
+  border-left: 2px solid var(--light);
+  transition: border-color 0.5s cubic-bezier(0, 0, 0.15, 0.64);
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: solid underline var(--link) 1px;
 }

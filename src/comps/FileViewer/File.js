@@ -7,10 +7,11 @@ export default File = (key, file) => {
     function onClick(event) {
         console.log(key, file)
     }
+    let filePreview = span({style: "margin-left: 10px;"}, file)
+
     return div(
-        {class: "File", style: "width: 100%;"}, 
-        //input({type: 'text', value: key, onclick: (event) => onClick(event)})
-        //button({onclick: (event) => onClick(event)}, key)
-        a({href: ''}, key)
+        {class: "File", style: "width: fit-content;"}, 
+        a({href: '', style: "color: var(--link);"}, key), span(":"),
+        filePreview
     )
 }

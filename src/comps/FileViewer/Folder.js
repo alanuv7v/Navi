@@ -8,8 +8,16 @@ export default function Folder (key, path, updateFileList) {
         updateFileList([...path, key])
     }
     return div(
-        {class: "Folder", style: "width: 100%;"}, 
-        //input({type: 'text', value: key, onclick: (event) => onClick(event)})
-        button({onclick: (event) => onClick(event)}, key)
+        {class: "Folder"}, 
+        span({style: "margin-right: 10px;"}, key),
+        span("["),
+        a({
+            href: '',
+            onclick: (event) => {
+                event.preventDefault()
+                onClick(event)
+            }
+        }, "open"),
+        span("]"),
     )
 }
