@@ -32,6 +32,8 @@ let initTargets = {
 const FileList = (head, path) => {
   let pathResult = nestedObj(head, path)
   let items = []
+  let depth = 0
+  let indexInDepth = 0
   for (let e of Object.entries(pathResult)) {
       switch (typeof e[1]) {
           case "object":
