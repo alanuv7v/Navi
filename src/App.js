@@ -172,9 +172,11 @@ function nestedObj(obj, props, value, command=false) {
 nestedObj(obj, ["foo", "bar", "baz"], 'y'); */
 
 const Group = (name, innie) => {
-  return div({style: "border-left: 4px;"},
-    name,
-    innie
+  return div({class: "group", style: "border-left: 4px solid var(--light); display: flex; flex-direction: column;"},
+    div({class: "main"}, name),
+    div({style: "display: flex; flex-direction: row;"},
+      innie
+    )
   )
 }
 
@@ -182,12 +184,31 @@ global.TextModifiers = div(
   {id: "TextModifiers", class:"main"},
   Group(
     "Syntax",
-    button("#Title"),
+    [button("#Title"),
     button(">depth+"),
     button("<depth-"),
     button("[link]"),
-    button("[tie|link]"),
-  )
+    button("[tie|link]")]
+  ),
+  Group(
+    "Style",
+    [button("!Bold!"),
+    button("_Underline_"),
+    button("/Italic/"),
+    button("~Strike~"),]
+  ),
+  Group(
+    "Organize",
+    [button("* Ul"),
+    button("1. Ol"),
+    button("“quote”"),
+    button("[link]"),
+    button("[tie|link]")]
+  ),
+  Group(
+    "Ect",
+    [button("?c.compile")]
+  ),
 )
 
 
