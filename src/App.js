@@ -217,7 +217,6 @@ global.TextModifiers = div(
 global.View = div({id: "view", class:"main"})
 global.FileViewer = FileViewer([])
 global.View.append(global.FileViewer)
-global.View.append(global.TextModifiers)
 global.FileList = div({id: "FileList"})
 global.FileViewer.append(global.FileList)
 global.ContextMenu = d({style: "bottom: 0px; display: flex; flex-direction: column-reverse; z-index: 2; width: 100%; padding: 0.5em;"})
@@ -239,7 +238,9 @@ const App = (head) => {
         input({style: "flex-grow: 1;", type: "text", value: "root"}),
         button("axis: All"),
       ),
-      [global.View, global.ContextMenu]
+      global.View, 
+      global.TextModifiers,
+      global.ContextMenu,
     )
 }
   

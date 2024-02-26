@@ -63,15 +63,6 @@ body {
     margin: 0px;
   }
 
-.IOI {
-    width: 100%;
-}
-.IOI:hover {
-    box-shadow: inset 0px 0px 0px 1px var(--light);
-}
-.IOI:not(:has(.IOI:hover)):hover {
-    box-shadow: inset 0px 0px 0px 4px var(--light);
-}
 .main {
     text-align: center;
     background-color: var(--dark);
@@ -98,10 +89,10 @@ button, input, select {
 
 }
 input:hover, button:hover, button:focus {
-
     border-radius: 0px;
     box-shadow: inset 0px 0px 0px 1px var(--light),
                 0px 0px 10px 0px var(--light);
+    text-decoration: solid underline var(--light) 4px;
 }
 input:focus, button:active {
 
@@ -248,8 +239,10 @@ input:focus, button:active {
 #TextModifiers {
   display: flex;
   flex-direction: row;
+  overflow-x: auto;
+  justify-content: center;
 }
 
-#TextModifers * {
+#TextModifiers * {
   white-space: nowrap;
 }
