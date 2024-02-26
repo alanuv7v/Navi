@@ -171,6 +171,24 @@ function nestedObj(obj, props, value, command=false) {
 
 nestedObj(obj, ["foo", "bar", "baz"], 'y'); */
 
+const Group = (name, innie) => {
+  return div({style: "border-left: 4px;"},
+    name,
+    innie
+  )
+}
+
+global.TextModifiers = div(
+  {id: "TextModifiers", class:"main"},
+  Group(
+    "Syntax",
+    button("#Title"),
+    button(">depth+"),
+    button("<depth-"),
+    button("[link]"),
+    button("[tie|link]"),
+  )
+)
 
 
 //App
@@ -178,6 +196,7 @@ nestedObj(obj, ["foo", "bar", "baz"], 'y'); */
 global.View = div({id: "view", class:"main"})
 global.FileViewer = FileViewer([])
 global.View.append(global.FileViewer)
+global.View.append(global.TextModifiers)
 global.FileList = div({id: "FileList"})
 global.FileViewer.append(global.FileList)
 global.ContextMenu = d({style: "bottom: 0px; display: flex; flex-direction: column-reverse; z-index: 2; width: 100%; padding: 0.5em;"})

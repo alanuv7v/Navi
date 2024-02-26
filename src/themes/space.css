@@ -231,7 +231,7 @@ button:focus {
 .FileViewer {
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--light);
+  border: 1px solid var(--deep);
   padding: 10px;
   width: 1000px;
 
