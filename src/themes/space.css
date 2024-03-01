@@ -102,6 +102,8 @@ button, input, select, .buttonlike {
 
   box-shadow: inset 0px 0px 0px 1px var(--deep);
 
+  flex-shrink: 0;
+
 }
 input:hover, button:hover, button:focus {
     border-radius: 0px;
@@ -236,6 +238,7 @@ input:focus, button:active {
   padding: 10px;
   width: 1000px;
   height: 100%;
+  margin: auto; /* !!! Important !!! it aligns this to the horizontal center of the view */
 
 }
 
@@ -269,6 +272,7 @@ input:focus, button:active {
   box-shadow: inset 0px 0px 0px 1px var(--deep);
   display: flex; 
   flex-direction: column;
+  flex-shrink: 0;
 }
 
 .Name {
