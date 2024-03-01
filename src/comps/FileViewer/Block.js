@@ -5,7 +5,7 @@ const d = div
 
 export default function createBlock (key, value, index, global) {
 
-    let depth = 1
+    let depth = index ? index.split(".").length : 0
 
     let hoverIndicators = []
     let hoverIndicator = () => {
@@ -42,7 +42,6 @@ export default function createBlock (key, value, index, global) {
         value ? textarea({placeholder: "value", value: value}) : null,
     ]
     let Block = div({class: "Block"},
-        hoverIndicator(),
         blockInner,
     )
     function onBlockClick(event) {
@@ -65,7 +64,7 @@ export default function createBlock (key, value, index, global) {
             Block.insertBefore(hoverIndicator(), blockInner.find((item) => {return item}))
         }
     }
-    
+    Block.depth(depth)
 
     return Block
 }
