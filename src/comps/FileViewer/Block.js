@@ -3,7 +3,7 @@ const t = van.tags
 const {div, span, button, textarea, input, a} = t
 const d = div
 
-export default function (key, value, index, global) {
+export default function createBlock (key, value, index, global) {
 
     let depth = 1
 
@@ -14,19 +14,27 @@ export default function (key, value, index, global) {
         return s
     }
 
-    let blockInput = () => {
-        
+    let blockInput = (props) => {
+        let e = input({...props})
+        return e
     }
     
 
     let blockInner = [
         index ? span({style: "margin-right: 0.5em;"}, index) : null, 
-        input({type: "text", placeholder: "key", value: key}),
-        value ? input({type: "text", style: "margin-left: 10px;", placeholder: "value", value: value}) : null,
+        key ? blockInput({type: "text", placeholder: "key", value: key, 
+        onkeydown: (event) => {
+            console.log(event)
+            if (event.key === "Enter") {
+                global.FileList.append(createBlock(null, "value", null, global))
+            }
+        }
+        }) : null,
+        value ? textarea({placeholder: "value", value: value}) : null,
     ]
     let Block = div({class: "Block"},
         hoverIndicator(),
-        blockInner,    
+        blockInner,
     )
     function onBlockClick(event) {
         global.SelectedBlock = Block

@@ -89,7 +89,7 @@ body {
     margin-bottom: -1px; */
 }
 
-button, input, select, .buttonlike {
+button, input, textarea, select, .buttonlike {
   
   font-size: 14px;
   padding: 0.5em 0.5em 0.5em 0.5em;
@@ -105,6 +105,12 @@ button, input, select, .buttonlike {
   flex-shrink: 0;
 
 }
+
+textarea {
+  resize: none;
+  overflow: auto; /* !! 결국 그게 되야하는데... 자동 리자이징. */
+}
+
 input:hover, button:hover, button:focus {
     border-radius: 0px;
     box-shadow: inset 0px 0px 0px 1px var(--light),
@@ -347,6 +353,9 @@ input:focus, button:active {
 }
 .Block:hover .hoverIndicator  {
   background-color: var(--light); 
+}
+.Block:hover .input  {
+  box-shadow: inset 0px 0px 0px 1px var(--light);
 }
 
 .Block:active {
