@@ -305,6 +305,36 @@ input:focus, button:active {
   background-color: var(--light); 
 }
 
+
+
+.Block {
+  padding-bottom: 0.5em;
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  align-items: center;
+  transition: background-color 0.5s cubic-bezier(0, 0, 0.15, 0.64);
+}
+
+.Block:hover {
+  background-color: rgba(99, 99, 253, 0.7);
+}
+.hoverIndicator {
+  height: 1em; 
+  background-color: var(--deep); 
+  margin-right: 0.5em;  
+  transition: background-color 0.5s cubic-bezier(0, 0, 0.15, 0.64);
+}
+.Block:hover .hoverIndicator  {
+  background-color: var(--light); 
+}
+
+.Block:active {
+  box-shadow: inset 0px 0px 0px 1px var(--light);
+}
+
+
+
 a {
   text-decoration: none;
 }

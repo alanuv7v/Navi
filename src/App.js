@@ -8,6 +8,7 @@ import { createEvent, createStore } from "effector"
 import * as yaml from 'yaml'
 import File from "./comps/FileViewer/File"
 import Folder from "./comps/FileViewer/Folder"
+import Block from "./comps/FileViewer/Block"
 import { MultilineTextarea, resizeTextarea } from "./comps/MultilineTextarea"
 
 
@@ -52,7 +53,7 @@ const FileViewer = (path) => {
       {class: "FileViewer"},
       div({class: "h-flex"},
         div({class: "Name"}, This),
-        div("(...)")
+        div({class: "h-flex"}, span("["),a("edit"), span("]"))
       ),
       global.FileList
   )
@@ -191,9 +192,21 @@ global.TextModifiers = div(
   {id: "TextModifiers", class:"main"},
   Group(
     "Syntax",
-    [button("#Title"),
-    button(">depth+"),
-    button("<depth-"),
+    [button(
+      {onclick: () => {global.FileList.append(
+        Block("Item", null, null, global)
+      )}},    
+      "#Item"),
+    button({
+      onclick: () => {
+        global.SelectedBlock.depth(+1)
+      }
+    }, ">depth+"),
+    button({
+      onclick: () => {
+        global.SelectedBlock.depth(-1)
+      }
+    }, "<depth-"),
     button("[link]"),
     button("[tie|link]")]
   ),
@@ -208,9 +221,7 @@ global.TextModifiers = div(
     "Organize",
     [button("* Ul"),
     button("1. Ol"),
-    button("“quote”"),
-    button("[link]"),
-    button("[tie|link]")]
+    button("“quote”"),]
   ),
   Group(
     "Custom",

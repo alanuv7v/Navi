@@ -12,7 +12,7 @@ export default File = (key, file, index) => {
     return div(
         {class: "FileSystemItem File"}, 
         span({class: "hoverIndicator"}),
-        span({style: "margin-right: 0.5em;"}, "1.1" /* index */),
+        //span({style: "margin-right: 0.5em;"}, "1.1" /* index */),
         a({href: '', style: "color: var(--link);"}, key), span(":"),
         filePreview
     )
