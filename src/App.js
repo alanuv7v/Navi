@@ -254,7 +254,7 @@ const App = (head) => {
         button("⇓"),
         button("⟳"),
         input({style: "flex-grow: 1;", type: "text", value: "root"}),
-        button("axis: All"),
+        button("👁 All"),
       ),
       global.View, 
       global.TextModifiers,
