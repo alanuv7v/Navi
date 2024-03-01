@@ -196,17 +196,22 @@ global.TextModifiers = div(
       {onclick: () => {global.FileList.append(
         Block("Item", null, null, global)
       )}},    
-      "#Item"),
-    button({
-      onclick: () => {
-        global.SelectedBlock.depth(+1)
-      }
-    }, ">depth+"),
+      "#Key"),
+    button(
+      {onclick: () => {global.FileList.append(
+        Block("body", null, null, global)
+      )}},    
+      "Value"),
     button({
       onclick: () => {
         global.SelectedBlock.depth(-1)
       }
     }, "<depth-"),
+    button({
+      onclick: () => {
+        global.SelectedBlock.depth(+1)
+      }
+    }, ">depth+"),
     button("[link]"),
     button("[tie|link]")]
   ),

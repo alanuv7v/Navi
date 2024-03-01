@@ -111,7 +111,7 @@ textarea {
   overflow: auto; /* !! 결국 그게 되야하는데... 자동 리자이징. */
 }
 
-input:hover, button:hover, button:focus {
+input:hover, button:hover, button:focus, textarea:hover {
     border-radius: 0px;
     box-shadow: inset 0px 0px 0px 1px var(--light),
     0px 0px 10px 0px var(--light);
@@ -119,7 +119,7 @@ input:hover, button:hover, button:focus {
     box-shadow: inset 0px 0px 0px 1px var(--light);*/
     
 }
-input:focus, button:active {
+input:focus, button:active, textarea:focus {
 
     border-radius: 0px;
 

@@ -16,6 +16,15 @@ export default function createBlock (key, value, index, global) {
 
     let blockInput = (props) => {
         let e = input({...props})
+        e.addEventListener('keydown',
+        (event) => {
+            if (event.altKey && event.key===",") {
+                Block.depth(-1)
+            }
+            if (event.altKey && event.key===".") {
+                Block.depth(+1)
+            }
+        }, false)
         return e
     }
     
