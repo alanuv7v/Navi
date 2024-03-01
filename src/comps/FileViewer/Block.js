@@ -13,12 +13,16 @@ export default function (key, value, index, global) {
         hoverIndicators.push(s)    
         return s
     }
+
+    let blockInput = () => {
+        
+    }
     
 
     let blockInner = [
         index ? span({style: "margin-right: 0.5em;"}, index) : null, 
-        input({type: "text", value: key}),
-        value ? input({type: "text", style: "margin-left: 10px;", value: value}) : null,
+        input({type: "text", placeholder: "key", value: key}),
+        value ? input({type: "text", style: "margin-left: 10px;", placeholder: "value", value: value}) : null,
     ]
     let Block = div({class: "Block"},
         hoverIndicator(),
@@ -28,7 +32,12 @@ export default function (key, value, index, global) {
         global.SelectedBlock = Block
         console.log(global.SelectedBlock)
     }
+    function onBlockAuxClick(event) {
+        //show input element instead of div for key and value
+    }
     Block.addEventListener('click', (event) => {onBlockClick(event)})
+    Block.addEventListener('auxclick', (event) => {onBlockAuxClick(event)})
+    Block.addEventListener('contextmenu', (event) => {event.stopPropagation(); event.preventDefault(); return false})
     
     Block.depth = function (add) {
         depth = Math.max(depth + add, 0)
