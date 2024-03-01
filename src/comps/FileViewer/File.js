@@ -7,11 +7,12 @@ export default File = (key, file, index) => {
     function onClick(event) {
         console.log(key, file)
     }
-    let filePreview = span({style: "margin-left: 10px;"}, file)
+    let filePreview = input({type: "text", style: "margin-left: 10px;", value: file})
 
     return div(
-        {class: "File", style: "width: fit-content;"}, 
-        span({style: "margin-right: 10px;"}, index),
+        {class: "FileSystemItem File"}, 
+        span({class: "hoverIndicator"}),
+        span({style: "margin-right: 0.5em;"}, "1.1" /* index */),
         a({href: '', style: "color: var(--link);"}, key), span(":"),
         filePreview
     )

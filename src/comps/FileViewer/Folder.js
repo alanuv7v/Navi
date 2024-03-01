@@ -8,8 +8,9 @@ export default function Folder (key, path, updateFileList, index) {
         updateFileList([...path, key])
     }
     return div(
-        {class: "Folder"}, 
-        span({style: "margin-right: 10px;"}, index),
+        {class: "FileSystemItem Folder"}, 
+        span({class: "hoverIndicator"}),
+        span({style: "margin-right: 10px;"}, "1.1" /* index */),
         span({style: "margin-right: 10px;"}, key),
         span("["),
         a({

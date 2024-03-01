@@ -26,6 +26,20 @@ div {
   text-align: left;
 }
 
+.h-flex {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  align-items: center;
+}
+
+.v-flex {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  justify-content: center;
+  align-items: center;
+}
 
 #App {
     background-color: var(--dark);
@@ -42,7 +56,7 @@ div {
   overflow: auto;
   
   width: 100%;
-  height: 100%;
+  flex-grow: 1;
 
   display: flex;
   flex-direction: column;
@@ -244,6 +258,7 @@ input:focus, button:active {
   flex-direction: row;
   overflow-x: auto;
   justify-content: center;
+  align-items: center;
 }
 
 #TextModifiers * {
@@ -261,25 +276,33 @@ input:focus, button:active {
   margin-bottom: 10px;
 }
 
+.FileSystemItem {
+  padding-bottom: 0.5em;
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  align-items: center;
+  transition: background-color 0.5s cubic-bezier(0, 0, 0.15, 0.64);
+}
+
 .File {
-  padding-left: 0.5em;
-  padding-top: 0.25em;
-  padding-bottom: 0.25em;
-  margin-bottom: 0.5em;
-  border-left: 2px solid var(--deep);
 }
 
 .Folder {
-  padding-left: 0.5em;
-  padding-top: 0.25em;
-  padding-bottom: 0.25em;
-  margin-bottom: 0.5em;
-  border-left: 2px solid var(--deep);
 }
 
-.File:hover, .Folder:hover {
-  border-left: 2px solid var(--light);
-  transition: border-color 0.5s cubic-bezier(0, 0, 0.15, 0.64);
+.FileSystemItem:hover {
+  background-color: rgba(99, 99, 253, 0.7);
+}
+.hoverIndicator {
+  width: 0.5em; 
+  height: 1em; 
+  background-color: var(--deep); 
+  margin-right: 0.5em;  
+  transition: background-color 0.5s cubic-bezier(0, 0, 0.15, 0.64);
+}
+.FileSystemItem:hover .hoverIndicator  {
+  background-color: var(--light); 
 }
 
 a {

@@ -50,8 +50,10 @@ const FileViewer = (path) => {
   let This = "root"
   return div(
       {class: "FileViewer"},
-      div({class: "Name"},
-      This),
+      div({class: "h-flex"},
+        div({class: "Name"}, This),
+        div("(...)")
+      ),
       global.FileList
   )
 }
@@ -178,8 +180,8 @@ nestedObj(obj, ["foo", "bar", "baz"], 'y'); */
 
 const Group = (name, innie) => {
   return div({class: "group"},
-    div({style: "text-align: center; width: 100%; "}, name),
-    div({style: "display: flex; flex-direction: row;"},
+    div({style: "text-align: center; width: 100%; align-items: center;"}, name),
+    div({style: "display: flex; flex-direction: row; align-items: center;"},
       innie
     )
   )
@@ -233,7 +235,7 @@ const App = (head) => {
   
   
     return div({id: 'App', /* style: "display: flex; flex-direction: row; " */},
-      div({id: "header", style: "display: flex; flex-direction: row; "},
+      div({id: "header", style: "display: flex; flex-direction: row; align-items: center; "},
         button("root: Alan"),
         button("◁"),
         button("▷"),
