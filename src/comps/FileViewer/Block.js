@@ -40,6 +40,7 @@ export default function createBlock (key, value, index, global) {
         }
         }) : null,
         value ? textarea({placeholder: "value", value: value}) : null,
+        
     ]
     let Block = div({class: "Block"},
         blockInner,
