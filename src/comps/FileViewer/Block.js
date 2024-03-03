@@ -1,7 +1,29 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a, img} = van.tags
 
-export default function createBlock (key, value, index, global) {
+export const blockInput = (props) => {
+    let e = input({...props})
+    e.addEventListener('keydown',
+    (event) => {
+        if (event.altKey && event.shiftKey && event.key==="{") {
+            Block.depth(-1)
+        }
+        else if (event.altKey && event.shiftKey && event.key==="}") {
+            Block.depth(+1)
+        }
+        else if (event.altKey && event.shiftKey && event.key==="_") {
+            Block.parentNode.insertBefore(Block, Block.previousSibling)
+            event.target.focus()
+        }
+        else if (event.altKey && event.shiftKey && event.key==="+") {
+            Block.parentNode.insertBefore(Block, Block.nextSibling.nextSibling)
+            event.target.focus()
+        }
+    }, false)
+    return e
+}
+
+export function createBlock (index, special, global) {
 
     let hoverIndicators = []
     let hoverIndicator = () => {
@@ -10,45 +32,10 @@ export default function createBlock (key, value, index, global) {
         return s
     }
 
-    let blockInput = (props) => {
-        let e = input({...props})
-        e.addEventListener('keydown',
-        (event) => {
-
-            if (event.altKey && event.shiftKey && event.key==="{") {
-                Block.depth(-1)
-            }
-            else if (event.altKey && event.shiftKey && event.key==="}") {
-                Block.depth(+1)
-            }
-            else if (event.altKey && event.shiftKey && event.key==="_") {
-                Block.parentNode.insertBefore(Block, Block.previousSibling)
-                event.target.focus()
-            }
-            else if (event.altKey && event.shiftKey && event.key==="+") {
-                Block.parentNode.insertBefore(Block, Block.nextSibling.nextSibling)
-                event.target.focus()
-            }
-        }, false)
-        return e
-    }
-    
-    let keyInput = key ? blockInput({type: "text", placeholder: "key", value: key, 
-    onkeydown: (event) => {
-        console.log(event)
-        if (event.key === "Enter") {
-            global.FileList.insertBefore(createBlock(null, "body", null, global), Block.nextSibling)
-        }
-    }
-    }) : null
-
-    let valueInput = value ? textarea({placeholder: "value", value: value}) : null
-
     let blockInner = [
         index ? span({style: "margin-right: 0.5em;"}, index) : null, 
-        keyInput,
-        valueInput,
-        span({style: "width: 1em"}),
+        special,
+        span({style: "width: 1em"}), //spacer
         button("expand"),
         button("open")
     ]

@@ -8,7 +8,7 @@ import { createEvent, createStore } from "effector"
 import * as yaml from 'yaml'
 import File from "./comps/FileViewer/File"
 import Folder from "./comps/FileViewer/Folder"
-import Block from "./comps/FileViewer/Block"
+import {createBlock as Block} from "./comps/FileViewer/Block"
 import { MultilineTextarea, resizeTextarea } from "./comps/MultilineTextarea"
 
 
