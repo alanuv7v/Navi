@@ -1,9 +1,8 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a, img} = van.tags
 
-export const blockInput = (props) => {
-    let e = input({...props})
-    e.addEventListener('keydown',
+export const blockInput = (elem) => {
+    elem.addEventListener('keydown',
     (event) => {
         if (event.altKey && event.shiftKey && event.key==="{") {
             Block.depth(-1)
@@ -20,7 +19,7 @@ export const blockInput = (props) => {
             event.target.focus()
         }
     }, false)
-    return e
+    return elem
 }
 
 export function createBlock (index, special, global) {

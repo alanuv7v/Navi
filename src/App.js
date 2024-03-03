@@ -10,6 +10,8 @@ import File from "./comps/FileViewer/File"
 import Folder from "./comps/FileViewer/Folder"
 import {createBlock as Block} from "./comps/FileViewer/Block"
 import { MultilineTextarea, resizeTextarea } from "./comps/MultilineTextarea"
+import Head from "./comps/FileViewer/Head"
+import Body from "./comps/FileViewer/Body"
 
 
 /* 
@@ -194,7 +196,7 @@ global.TextModifiers = div(
     "Syntax",
     [button(
       {onclick: () => {
-        let newBlock = Block("Item", null, null, global)
+        let newBlock = Head("Item", null, global)
         if (global.SelectedBlock) {
           newBlock.depth(Math.max(1, global.SelectedBlock.depth_))
           global.FileList.insertBefore(newBlock, global.SelectedBlock.nextSibling)
@@ -206,7 +208,7 @@ global.TextModifiers = div(
       "#Key"),
     button(
       {onclick: () => {
-        let newBlock = Block(null, "body", null, global)
+        let newBlock = Body("body", null, global)
         if (global.SelectedBlock) {
           global.FileList.insertBefore(newBlock, global.SelectedBlock.nextSibling)
           return
