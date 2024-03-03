@@ -367,7 +367,14 @@ input:focus, button:active, textarea:focus {
   box-shadow: inset 0px 0px 0px 1px var(--light);
 }
 
+.Block input {
+}
 
+.Block button {
+}
+.icon {
+  height: 100%;
+}
 
 a {
   text-decoration: none;
