@@ -194,21 +194,25 @@ global.TextModifiers = div(
     "Syntax",
     [button(
       {onclick: () => {
+        let newBlock = Block("Item", null, null, global)
         if (global.SelectedBlock) {
-          global.FileList.insertBefore(Block("Item", null, null, global), global.SelectedBlock.nextSibling)
+          newBlock.depth(Math.max(1, global.SelectedBlock.depth_))
+          global.FileList.insertBefore(newBlock, global.SelectedBlock.nextSibling)
           return
         }
-        global.FileList.append(Block("Item", null, null, global)
-      )}},    
+        global.FileList.append(newBlock)
+        newBlock.depth(1)
+      }},    
       "#Key"),
     button(
       {onclick: () => {
+        let newBlock = Block(null, "body", null, global)
         if (global.SelectedBlock) {
-          global.FileList.insertBefore(Block(null, "body", null, global), global.SelectedBlock.nextSibling)
+          global.FileList.insertBefore(newBlock, global.SelectedBlock.nextSibling)
           return
         }
-        global.FileList.append(Block(null, "body", null, global)
-      )}},    
+        global.FileList.append(newBlock)
+      }},    
       "Value"),
     button({
       onclick: () => {

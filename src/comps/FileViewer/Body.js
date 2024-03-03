@@ -1,5 +1,7 @@
 import van from "vanjs-core"
-const {div, span, button, textarea, input, a, img} = van.tags
+const t = van.tags
+const {div, span, button, textarea, input, a, img} = t
+const d = div
 
 export default function createBlock (key, value, index, global) {
 

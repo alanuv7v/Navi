@@ -1,6 +1,7 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a, img} = van.tags
 
+
 export default function createBlock (key, value, index, global) {
 
     let hoverIndicators = []
