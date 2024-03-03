@@ -354,10 +354,10 @@ input:focus, button:active, textarea:focus {
 .Block:hover .hoverIndicator  {
   background-color: var(--light); 
 }
-.Block:hover input  {
+.Block:hover input, .Block:hover textarea  {
   box-shadow: inset 0px 0px 0px 1px var(--light);
 }
-.Block input:hover {
+.Block input:hover, .Block textarea:hover  {
   border-radius: 0px;
   box-shadow: inset 0px 0px 0px 1px var(--light),
   0px 0px 10px 0px var(--light);
@@ -367,11 +367,10 @@ input:focus, button:active, textarea:focus {
   box-shadow: inset 0px 0px 0px 1px var(--light);
 }
 
-.Block input {
+.Block input, .Block textarea {
+  box-shadow: none;
 }
 
-.Block button {
-}
 .icon {
   height: 100%;
 }

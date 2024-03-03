@@ -1,16 +1,17 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a, img} = van.tags
 
-export const blockInput = (elem) => {
-    elem.addEventListener('keydown',
+export function createBlock (index, input, global) {
+
+    let hoverIndicators = []
+    let hoverIndicator = () => {
+        let s = span({class: "hoverIndicator", style: "width: 0.5em;"})
+        hoverIndicators.push(s)    
+        return s
+    }
+    input.addEventListener('keydown',
     (event) => {
-        if (event.altKey && event.shiftKey && event.key==="{") {
-            Block.depth(-1)
-        }
-        else if (event.altKey && event.shiftKey && event.key==="}") {
-            Block.depth(+1)
-        }
-        else if (event.altKey && event.shiftKey && event.key==="_") {
+        if (event.altKey && event.shiftKey && event.key==="_") {
             Block.parentNode.insertBefore(Block, Block.previousSibling)
             event.target.focus()
         }
@@ -19,28 +20,18 @@ export const blockInput = (elem) => {
             event.target.focus()
         }
     }, false)
-    return elem
-}
-
-export function createBlock (index, special, global) {
-
-    let hoverIndicators = []
-    let hoverIndicator = () => {
-        let s = span({class: "hoverIndicator", style: "width: 0.5em;"})
-        hoverIndicators.push(s)    
-        return s
-    }
-
-    let blockInner = [
+    
+    let beforeInput = [
         index ? span({style: "margin-right: 0.5em;"}, index) : null, 
-        special,
+    ]
+    let afterInput = [
         span({style: "width: 1em"}), //spacer
         button("expand"),
         button("open")
     ]
-    let Block = div({class: "Block"},
-        blockInner,
-    )
+    let blockInner = [...beforeInput, input, ...afterInput]
+    let Block = div({class: "Block"}, blockInner)
+
     function onBlockClick(event) {
         global.SelectedBlock = Block
         console.log(global.SelectedBlock)
