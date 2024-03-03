@@ -382,3 +382,10 @@ a {
 a:hover {
   text-decoration: solid underline var(--link) 1px;
 }
+
+.head {
+  font-size: 1.25em;
+}
+.body {
+  flex-grow: 1;
+}

@@ -4,7 +4,7 @@ import {createBlock} from "./Block"
 import Body from "./Body"
 
 export default function Head (key, index, global) {
-    let keyInput = input({type: "text", placeholder: "key", value: key, style: "font-size: 1.25em;"})
+    let keyInput = input({class: "head", type: "text", placeholder: "key", value: key, })
     let Block = createBlock(index, keyInput, global)
     keyInput.addEventListener('keydown', 
         (event) => {
@@ -15,8 +15,15 @@ export default function Head (key, index, global) {
             else if (event.altKey && event.shiftKey && event.key==="}") {
                 Block.depth(+1)
             }
-            if (event.key === "Enter") {
-                global.FileList.insertBefore(Body("body", null, global), Block.nextSibling)
+            else if (event.key === "Enter") {
+                if (event.shiftKey) {
+                    global.FileList.insertBefore(Body("body", null, global), Block.nextSibling)
+                }
+                else {
+                    let newBlock = Head("Item", null, global)
+                    newBlock.depth(Math.max(1, Block.depth_))
+                    global.FileList.insertBefore(newBlock, Block.nextSibling)
+                }
             }
         }
     )
