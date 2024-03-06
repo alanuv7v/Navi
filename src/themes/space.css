@@ -372,7 +372,9 @@ input:focus, button:active, textarea:focus {
 }
 
 .icon {
-  height: 100%;
+  height: 1.5em;
+}
+button:has(.icon) {
 }
 
 a {

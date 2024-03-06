@@ -260,16 +260,45 @@ global.View.append(global.FileViewer)
 global.FileList = div({id: "FileList"})
 global.FileViewer.append(global.FileList)
 global.ContextMenu = d({style: "bottom: 0px; display: flex; flex-direction: column-reverse; z-index: 2; width: 100%; padding: 0.5em;"})
+global._path = "Alan.yaml"
+Object.defineProperty(global, 'path', {
+    get: function() {
+        return this._path
+    },
+    set: function(p) {
+        this._path = p + ".yaml"
+        return true
+    }
+});
+global.path = "Alan"
 
 const App = (head) => {
     
     let seed = Folder()
     //let seed = InOutInterface([], head, 10)
-  
+
+    const rootPickerOpts = {
+        types: [
+          {
+            description: "root doc",
+            accept: {
+              "text/plain": [".json", ".yaml", ".txt"],
+            },
+          },
+        ],
+        startIn: "documents",
+        excludeAcceptAllOption: true,
+        multiple: false,
+      };
   
     return div({id: 'App', /* style: "display: flex; flex-direction: row; " */},
       div({id: "header", style: "display: flex; flex-direction: row; align-items: center; "},
-        button("root: Alan"),
+        button({onclick: 
+            async function () {
+            let fileHandle = await showOpenFilePicker(rootPickerOpts)
+            let file = await fileHandle[0].getFile()
+            console.log(file)
+        }}, "root: Alan"),
         button("◁"),
         button("▷"),
         button({onclick: () => updateFileViewer(path.slice(0, -1))}, "⇑"),

@@ -1,5 +1,10 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a, img} = van.tags
+import * as docs from "../../docs"
+import embedPNG from '../../icons/embed.png'
+import expandPNG from '../../icons/expand.png'
+import outerPNG from '../../icons/outer.png'
+
 
 export function createBlock (index, input, global) {
 
@@ -26,8 +31,14 @@ export function createBlock (index, input, global) {
     ]
     let afterInput = [
         span({style: "width: 1em"}), //spacer
-        button(img({src: "../../icons/expand.png", style: "filter: invert(1.0)"})), 
-        button(img({src: "./icons/outer.png", style: "filter: invert(1.0)"}))
+        button({onclick: () => {
+            console.log(docs)
+            let d = docs.read(global.path)
+            console.log(d)
+        }}, "embed"), 
+        button("open"),
+        /* button(img({src: embedPNG, class: "icon", style: "filter: invert(1.0)"})), 
+        button(img({src: outerPNG,  class: "icon", style: "filter: invert(1.0)"})), */
     ]
     let blockInner = [...beforeInput, input, ...afterInput]
     let Block = div({class: "Block"}, blockInner)
