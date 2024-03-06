@@ -33,20 +33,23 @@ let initTargets = {
 }
 
 const FileList = (head, path) => {
-  let pathResult = nestedObj(head, path)
-  let items = []
-  let depth = 0
-  let indexInDepth = 0
-  for (let e of Object.entries(pathResult)) {
-      switch (typeof e[1]) {
-          case "object":
-              items.push(Folder(e[0], path, updateFileList))
-              break
-          default:
-              items.push(File(e[0], e[1]))
-      }
-  }
-  return items
+    let pathResult = nestedObj(head, path)
+    let items = []
+    let depth = 0
+    let indexInDepth = 0
+    for (let e of Object.entries(pathResult)) {
+        let key = e[0]
+        let value = e[1]
+        switch (typeof value) {
+            case "object":
+                //items.push(Folder(e[0], path, updateFileList))
+                items.push(Head(key, null, global))
+                break
+            default:
+                items.push(Head(key, null, global))
+        }
+    }
+    return items
 }
 
 const FileViewer = (path) => {

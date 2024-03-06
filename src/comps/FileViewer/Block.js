@@ -26,8 +26,8 @@ export function createBlock (index, input, global) {
     ]
     let afterInput = [
         span({style: "width: 1em"}), //spacer
-        button("expand"),
-        button("open")
+        button(img({src: "../../icons/expand.png", style: "filter: invert(1.0)"})), 
+        button(img({src: "./icons/outer.png", style: "filter: invert(1.0)"}))
     ]
     let blockInner = [...beforeInput, input, ...afterInput]
     let Block = div({class: "Block"}, blockInner)
