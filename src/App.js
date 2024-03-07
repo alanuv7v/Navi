@@ -251,6 +251,23 @@ global.TextModifiers = div(
   ),
 )
 
+async function listAllFilesAndDirs(dirHandle) {
+    const files = [];
+    for await (let [name, handle] of dirHandle) {
+        const {kind} = handle;
+        if (handle.kind === 'directory') {
+            files.push({name, handle, kind, children: await listAllFilesAndDirs(handle)});
+        } else {
+            files.push({name, handle, kind});
+        }
+    }
+    return files;
+}
+
+async function onFileInputClick(e) {
+    const directoryHandle = await window.showDirectoryPicker()
+    global.docs = await listAllFilesAndDirs(directoryHandle);
+}
 
 //App
 
@@ -274,37 +291,26 @@ global.path = "Alan"
 
 const App = (head) => {
     
-    let seed = Folder()
-    //let seed = InOutInterface([], head, 10)
-
-    const rootPickerOpts = {
-        types: [
-          {
-            description: "root doc",
-            accept: {
-              "text/plain": [".json", ".yaml", ".txt"],
-            },
-          },
-        ],
-        startIn: "documents",
-        excludeAcceptAllOption: true,
-        multiple: false,
-      };
-  
     return div({id: 'App', /* style: "display: flex; flex-direction: row; " */},
       div({id: "header", style: "display: flex; flex-direction: row; align-items: center; "},
         button({onclick: 
-            async function () {
-            let fileHandle = await showOpenFilePicker(rootPickerOpts)
-            let file = await fileHandle[0].getFile()
-            console.log(file)
-        }}, "root: Alan"),
+            (event) => {onFileInputClick(event)}
+        },  
+        "root: Alan"),
         button("◁"),
         button("▷"),
         button({onclick: () => updateFileViewer(path.slice(0, -1))}, "⇑"),
         button("⇓"),
         button("⟳"),
-        input({style: "flex-grow: 1;", type: "text", value: "root"}),
+        input({style: "flex-grow: 1;", type: "text", value: "@root", placeholder: "search a thot", onchange: async function (event) {
+            let searchResult = global.docs.find((doc) => {
+                let docName = doc.name.slice(0, doc.name.lastIndexOf(".")) //removing the extension str
+                return docName === event.target.value
+            })
+            let file = await searchResult.handle.getFile() // get Blob
+            let obj = await yaml.parse(await file.text())
+            console.log(global.docs, searchResult, await obj)
+        }}),
         button("👁 All"),
       ),
       global.View, 
