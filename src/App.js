@@ -12,6 +12,7 @@ import {createBlock as Block} from "./comps/FileViewer/Block"
 import { MultilineTextarea, resizeTextarea } from "./comps/MultilineTextarea"
 import Head from "./comps/FileViewer/Head"
 import Body from "./comps/FileViewer/Body"
+import AutoComplete from "./comps/AutoComplete"
 
 
 /* 
@@ -267,6 +268,7 @@ async function listAllFilesAndDirs(dirHandle) {
 async function onFileInputClick(e) {
     const directoryHandle = await window.showDirectoryPicker()
     global.docs = await listAllFilesAndDirs(directoryHandle);
+    console.log(await global.docs)
 }
 
 //App
@@ -310,7 +312,11 @@ const App = (head) => {
             let file = await searchResult.handle.getFile() // get Blob
             let obj = await yaml.parse(await file.text())
             console.log(global.docs, searchResult, await obj)
-        }}),
+        },
+        oninput: (event) => {
+            AutoComplete(event.target, global.docs)
+        }
+        }),
         button("👁 All"),
       ),
       global.View, 

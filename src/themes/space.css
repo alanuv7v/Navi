@@ -391,3 +391,12 @@ a:hover {
 .body {
   flex-grow: 1;
 }
+
+.autoCompletion {
+    
+}
+.autoCompletionItem {
+    background-color: var(--dark);
+    width: 100%;
+    text-align: left;
+}
