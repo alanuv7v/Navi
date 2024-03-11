@@ -1,5 +1,7 @@
 import nestedObj from "../../libs/nestedObj"
 
+//blockData = {key, value, path}
+
 export default function (blocks=[]) {
     const result = {}
     let blocksPerDepth = []
@@ -9,7 +11,7 @@ export default function (blocks=[]) {
         let parentBlock = blocks.findLast((b) => {return b.depth === block.depth-1})
         if (parentBlock) nestedObj(result, [...parentBlock.path, block.key], block.value)
         else nestedObj(result, [block.key], block.value)
-    }   
+    }
     //if block has 2 more depth than lastHead, it's invalid. 
     //but I'm not even assumung that such input will be given to this function
 }
