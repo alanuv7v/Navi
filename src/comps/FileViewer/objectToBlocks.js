@@ -1,7 +1,7 @@
 import Head from "./Head"
 import Body from "./Body"
 
-export default async function (obj, global) {
+export default async function (obj, global, originalPath=[]) {
     let blocks = []
     for (let e of Object.entries(obj)) {
         let key = e[0]
@@ -12,7 +12,7 @@ export default async function (obj, global) {
                 break
             default:
                 //obj.push(Head(key, null, [global.thisDocName, key], global))
-                blocks.push(await Head(key, null, [key], global))
+                blocks.push(await Head(key, null, [...originalPath, key], global))
                 console.log(key, value)
                 break
 

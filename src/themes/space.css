@@ -236,7 +236,7 @@ input:focus, button:active, textarea:focus {
 .FileViewer {
   border: 1px solid var(--deep);
   padding: 10px;
-  width: 1000px;
+  width: 100%;
   min-height: 100%;
   margin: auto; /* !!! Important !!! it aligns this to the horizontal center of the view */
 
@@ -387,10 +387,13 @@ a:hover {
 
 .head {
   font-size: 1.25em;
-  flex-grow: 1;
 }
 .body {
   flex-grow: 1;
+}
+.valuePreview {
+    font-size: 1.25em;
+    color: var(--vivid);
 }
 
 .autoCompletion {

@@ -15,15 +15,14 @@ function addChild (parent, child) {
     parent.parentNode.insertBefore(child, parent.nextSibling)
 }
 
-export async function createBlock (index, path, input, global) {
+export async function createBlock (index, path, main, global) {
     //index = just for the visual and convinience
     //path = docName + key or value. needed for embed|open button onclick handler
     
-    let value
-    if (path) value = nestedObj(await global.thisDoc, [...path])
-    
-
     let Block = div({class: "Block"})
+
+    let value
+    if (path) value = nestedObj(await global.thisDoc, [...path]); Block.value = value;
 
     let hoverIndicators = []
     let hoverIndicator = () => {
@@ -31,7 +30,7 @@ export async function createBlock (index, path, input, global) {
         hoverIndicators.push(s)    
         return s
     }
-    input.addEventListener('keydown',
+    main.addEventListener('keydown',
     (event) => {
         if (event.altKey && event.shiftKey && event.key==="_") {
             Block.parentNode.insertBefore(Block, Block.previousSibling)
@@ -47,12 +46,13 @@ export async function createBlock (index, path, input, global) {
         index ? span({style: "margin-right: 0.5em;"}, index) : "", 
     ]
     let afterInput = [
-        span({style: "width: 1em"}), //spacer
+        typeof value === "string" ? input({className: "valuePreview", value: value}) : "",
+        span({style: "flex-grow: 1"}), //spacer
         button({onclick: async () => {
             let toEmbed = []
             switch (typeof value) {
                 case "object":
-                    toEmbed = await objectToBlocks(value, global)
+                    toEmbed = await objectToBlocks(value, global, path)
                     break
             }
             console.log(toEmbed, path, value)
@@ -64,7 +64,7 @@ export async function createBlock (index, path, input, global) {
         /* button(img({src: embedPNG, class: "icon", style: "filter: invert(1.0)"})), 
         button(img({src: outerPNG,  class: "icon", style: "filter: invert(1.0)"})), */
     ]
-    let blockInner = [...beforeInput, input, ...afterInput]
+    let blockInner = [...beforeInput, main, ...afterInput]
     for (let elem of blockInner) Block.append(elem)
     
 
