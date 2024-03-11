@@ -16,6 +16,10 @@ export default async function Head (key, value, index, path, global) {
     main.push(embedButton, openButton)
 
     let Block = await createBlock(index, path, main, global)
+    
+    Block.key = key
+    Block.value = value //later blocks will provide the value of this object anyway BUT may not, if the blocks weren't embeded. SO we put the value.
+    Block.path = path
 
     embedButton.addEventListener('click', 
         async () => {
@@ -32,11 +36,6 @@ export default async function Head (key, value, index, path, global) {
         }
     )
 
-    Block.data = {
-        key,
-        value: null, //later blocks will provide the value of this object anyway
-        path
-    }
     
     keyInput.addEventListener('keydown', 
         (event) => {

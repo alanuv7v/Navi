@@ -15,6 +15,7 @@ import Head from "./comps/FileViewer/Head"
 import Body from "./comps/FileViewer/Body"
 import AutoComplete from "./comps/AutoComplete"
 import objectToBlocks from "./comps/FileViewer/objectToBlocks"
+import blocksToObject from "./comps/FileViewer/blocksToObject"
 
 
 /* 
@@ -134,6 +135,11 @@ let defaultMenu = [
     action: function () {
         if (global.FileViewer.style.width === "100%") global.FileViewer.style.width = "1000px"
         else global.FileViewer.style.width = "100%"
+    }
+    },
+    {name: 'Blocks to YAML',
+    action: function () {
+        console.log(blocksToObject(Array.from(global.FileList.children)))
     }
     }
 ]
