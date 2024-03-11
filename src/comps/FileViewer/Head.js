@@ -3,9 +3,9 @@ const {div, span, button, textarea, input, a, img} = van.tags
 import {createBlock} from "./Block"
 import Body from "./Body"
 
-export default function Head (key, index, global) {
+export default async function Head (key, index, path, global) {
     let keyInput = input({class: "head", type: "text", placeholder: "key", value: key, })
-    let Block = createBlock(index, keyInput, global)
+    let Block = await createBlock(index, path, keyInput, global)
     keyInput.addEventListener('keydown', 
         (event) => {
             console.log(event)

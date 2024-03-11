@@ -1,12 +1,29 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a, img} = van.tags
+import nestedObj from "../../libs/nestedObj"
+import objectToBlocks from "./objectToBlocks"
+
+import Head from "./Head"
+import Body from "./Body"
 import * as docs from "../../docs"
 import embedPNG from '../../icons/embed.png'
 import expandPNG from '../../icons/expand.png'
 import outerPNG from '../../icons/outer.png'
 
 
-export function createBlock (index, input, global) {
+function addChild (parent, child) {
+    parent.parentNode.insertBefore(child, parent.nextSibling)
+}
+
+export async function createBlock (index, path, input, global) {
+    //index = just for the visual and convinience
+    //path = docName + key or value. needed for embed|open button onclick handler
+    
+    let value
+    if (path) value = nestedObj(await global.thisDoc, [...path])
+    
+
+    let Block = div({class: "Block"})
 
     let hoverIndicators = []
     let hoverIndicator = () => {
@@ -27,25 +44,32 @@ export function createBlock (index, input, global) {
     }, false)
     
     let beforeInput = [
-        index ? span({style: "margin-right: 0.5em;"}, index) : null, 
+        index ? span({style: "margin-right: 0.5em;"}, index) : "", 
     ]
     let afterInput = [
         span({style: "width: 1em"}), //spacer
-        button({onclick: () => {
-            console.log(docs)
-            let d = docs.read(global.path)
-            console.log(d)
+        button({onclick: async () => {
+            let toEmbed = []
+            switch (typeof value) {
+                case "object":
+                    toEmbed = await objectToBlocks(value, global)
+                    break
+            }
+            console.log(toEmbed, path, value)
+            if (toEmbed.length>0) for (let e of toEmbed.reverse()) addChild(Block, e)
+            //if the value is link
+            //let toEmbed = (async function () {return await import('./data/docs/Alan.yaml')})()
         }}, "embed"), 
         button("open"),
         /* button(img({src: embedPNG, class: "icon", style: "filter: invert(1.0)"})), 
         button(img({src: outerPNG,  class: "icon", style: "filter: invert(1.0)"})), */
     ]
     let blockInner = [...beforeInput, input, ...afterInput]
-    let Block = div({class: "Block"}, blockInner)
+    for (let elem of blockInner) Block.append(elem)
+    
 
     function onBlockClick(event) {
         global.SelectedBlock = Block
-        console.log(global.SelectedBlock)
     }
     function onBlockAuxClick(event) {
         //show input element instead of div for key and value

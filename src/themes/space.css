@@ -387,6 +387,7 @@ a:hover {
 
 .head {
   font-size: 1.25em;
+  flex-grow: 1;
 }
 .body {
   flex-grow: 1;

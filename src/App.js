@@ -5,6 +5,7 @@ const d = div
 
 import { createEvent, createStore } from "effector" 
 
+import nestedObj from "./libs/nestedObj"
 import * as yaml from 'yaml'
 import File from "./comps/FileViewer/File"
 import Folder from "./comps/FileViewer/Folder"
@@ -13,6 +14,7 @@ import { MultilineTextarea, resizeTextarea } from "./comps/MultilineTextarea"
 import Head from "./comps/FileViewer/Head"
 import Body from "./comps/FileViewer/Body"
 import AutoComplete from "./comps/AutoComplete"
+import objectToBlocks from "./comps/FileViewer/objectToBlocks"
 
 
 /* 
@@ -29,27 +31,20 @@ const global = {}
 
 let head = (async function () {return await import('./data/docs/Alan.yaml')})()
 
+global.thisDoc = import('./data/docs/Alan.yaml').then((module) => {return module.default})
+
+global.thisDocName = "Alan"
+
 let initTargets = {
   'MultilineTextarea' : []
 }
 
-const FileList = (head, path) => {
+const FileList = async (head, path) => {
     let pathResult = nestedObj(head, path)
     let items = []
     let depth = 0
     let indexInDepth = 0
-    for (let e of Object.entries(pathResult)) {
-        let key = e[0]
-        let value = e[1]
-        switch (typeof value) {
-            case "object":
-                //items.push(Folder(e[0], path, updateFileList))
-                items.push(Head(key, null, global))
-                break
-            default:
-                items.push(Head(key, null, global))
-        }
-    }
+    items = await objectToBlocks(head, global)
     return items
 }
 
@@ -65,8 +60,8 @@ const FileViewer = (path) => {
   )
 }
 
-function updateFileList(head, path) {
-  let list = FileList(head, path)
+async function updateFileList(head, path) {
+  let list = await FileList(head, path)
   for (let item of list) {
     global.FileList.append(item)
   }
@@ -79,7 +74,7 @@ const MenuItem = (menuIndex, name, action, children) => {
   console.log('At MenuItem init, menus.getState() = ', JSON.stringify(menus.getState(), null, 2) + '. Index is ' + menuIndex)  
   return button({onclick: (event) => {
     action();
-    updateContextMenu({fromIndex: menuIndex, toAdd: children});
+    if (children) updateContextMenu({fromIndex: menuIndex, toAdd: children});
   }}, name
   )
 }
@@ -124,18 +119,44 @@ function updateMenus(fromIndex, childrenMenus) {
 
 
 
-function init() {
 
-  let defaultMenu = [
-    {name: 'Item', action: function() {alert('!')}, 
-      children: [
+let defaultMenu = [
+    {name: 'Item', 
+    action: function() {alert('!')}, 
+    children: [
         {name: 'child 1'}, 
         {name: 'child 2', action: function() {alert('child 2')}, 
-          children: [{name: 'childrennnn'}]
+            children: [{name: 'childrennnn'}]
         }
-      ]
+    ]
+    },
+    {name: 'fit to viewport',
+    action: function () {
+        if (global.FileViewer.style.width === "100%") global.FileViewer.style.width = "1000px"
+        else global.FileViewer.style.width = "100%"
     }
-  ]
+    }
+]
+
+//yaml: 
+/* `
+name: Item
+action: 
+    args: []
+    body: "alert"
+children: 
+    - {
+        name:
+        action:
+        children:
+    }
+    - {}
+    - {}
+
+` */
+
+
+function init() {
 
   for (let mt of initTargets['MultilineTextarea']) {
     resizeTextarea(mt.children[0], mt.children[1])
@@ -147,43 +168,7 @@ function init() {
 }
 
 
-function nestedObj(obj, props, value, command=false) {
-    if (!props) return obj;
-    if (props.length === 0) return obj
-    let prop;
-    for (var i = 0, iLen = props.length - 1; i < iLen; i++) {
-      prop = props[i];
-      let candidate = obj[prop];
-      if (candidate !== undefined) {
-        obj = candidate;
-      } else {
-        break;
-      }
-    }
-    if (value) {
-        obj[props[i]] = value;
-        return obj
-    }
-    switch (command) {
-        case "delete":
-            delete obj[props[i]]
-            return
-        default: 
-            break
-    }
-    return obj[props[i]]
-}
 
-//nestObj 사용 예시:
-/* var obj = {
-    foo: {
-        bar: {
-        baz: 'x'
-        }
-    }
-};
-
-nestedObj(obj, ["foo", "bar", "baz"], 'y'); */
 
 const Group = (name, innie) => {
   return div({class: "group"},
@@ -200,7 +185,7 @@ global.TextModifiers = div(
     "Syntax",
     [button(
       {onclick: () => {
-        let newBlock = Head("Item", null, global)
+        let newBlock = Head("Item", null, [global.thisDocName, "Item"], global)
         if (global.SelectedBlock) {
           newBlock.depth(Math.max(1, global.SelectedBlock.depth_))
           global.FileList.insertBefore(newBlock, global.SelectedBlock.nextSibling)
@@ -328,7 +313,6 @@ const App = (head) => {
 head.then((h) => {
     console.log("GLOBAL:", global)
     global.head = h.default
-    global.NO = nestedObj
     head = h.default
     van.add(document.body, App({"Root": h.default}))
     updateFileList(head, [])
