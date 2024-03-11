@@ -1,3 +1,5 @@
+//Simply returns Blocks containing the 1 depth deeper key & value sets
+
 import Head from "./Head"
 import Body from "./Body"
 
@@ -6,13 +8,16 @@ export default async function (obj, global, originalPath=[]) {
     for (let e of Object.entries(obj)) {
         let key = e[0]
         let value = e[1]
+        let path = [...originalPath, key]
         switch (key) {
             case "_":
                 blocks.push(await Body(key, null, global))
                 break
             default:
                 //obj.push(Head(key, null, [global.thisDocName, key], global))
-                blocks.push(await Head(key, null, [...originalPath, key], global))
+                let h = await Head(key, null, [...originalPath, key], global)
+                h.depth(path.length)
+                blocks.push(h)
                 console.log(key, value)
                 break
 
