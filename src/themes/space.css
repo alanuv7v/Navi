@@ -2,9 +2,10 @@
     --light: rgba(225, 245, 231, 1);
     --vivid: rgba(151, 200, 128, 1);
     --link: rgb(153, 247, 225);
+    --mild: rgb(225, 245, 231, 0.5);
     --deep: rgba(71, 71, 71, 1);
     --dark: rgba(0, 0, 0, 1);
-    --hilight: rgb(108, 125, 255);
+    --hilight: rgba(99, 99, 253, 0.3);
 }
   
 * {
@@ -14,6 +15,8 @@
   overflow: hidden;
   
   color: var(--light);
+
+  text-overflow: ellipsis;
   
 }
 *:focus {
@@ -235,7 +238,6 @@ input:focus, button:active, textarea:focus {
 
 .FileViewer {
   border: 1px solid var(--deep);
-  padding: 10px;
   width: 100%;
   min-height: 100%;
   margin: auto; /* !!! Important !!! it aligns this to the horizontal center of the view */
@@ -334,6 +336,7 @@ input:focus, button:active, textarea:focus {
 
 
 .Block {
+  padding-left: 0.5em;
   margin-bottom: 0.5em;
   display: flex;
   flex-direction: row;
@@ -343,7 +346,7 @@ input:focus, button:active, textarea:focus {
 }
 
 .Block:hover {
-  background-color: rgba(99, 99, 253, 0.7);
+  background-color: var(--hilight);
 }
 .hoverIndicator {
   height: 1em; 
@@ -354,17 +357,23 @@ input:focus, button:active, textarea:focus {
 .Block:hover .hoverIndicator  {
   background-color: var(--light); 
 }
-.Block:hover input, .Block:hover textarea  {
-  box-shadow: inset 0px 0px 0px 1px var(--light);
+.Block:hover input, .Block:hover textarea  {/* 
+  box-shadow: inset 0px 0px 0px 1px var(--light); */
 }
 .Block input:hover, .Block textarea:hover  {
   border-radius: 0px;
-  box-shadow: inset 0px 0px 0px 1px var(--light),
-  0px 0px 10px 0px var(--light);
+  border-bottom: 1px solid var(--light);
+  /* box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 1), 
+  0px 0px 10px 0px var(--light); */
 }
 
-.Block:active {
-  box-shadow: inset 0px 0px 0px 1px var(--light);
+.Block.selected {
+  /* box-shadow: inset 0px 0px 0px 1px var(--mild); */
+  background-color: var(--hilight);
+}
+
+.Block:focus {
+    background-color: var(--vivid);
 }
 
 .Block input, .Block textarea {
@@ -386,7 +395,7 @@ a:hover {
 }
 
 .head {
-  font-size: 1.25em;
+  font-size: 1.2em;
 }
 .body {
   flex-grow: 1;

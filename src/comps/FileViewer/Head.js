@@ -2,10 +2,42 @@ import van from "vanjs-core"
 const {div, span, button, textarea, input, a, img} = van.tags
 import {createBlock} from "./Block"
 import Body from "./Body"
+import objectToBlocks from "./objectToBlocks"
 
-export default async function Head (key, index, path, global) {
+export default async function Head (key, value, index, path, global) {
+    //create elements first so they can be referenced
     let keyInput = input({class: "head", type: "text", placeholder: "key", value: key, })
-    let Block = await createBlock(index, path, keyInput, global)
+
+    let main = [keyInput]
+    if (typeof value === "string") main.push(input({className: "valuePreview", value: value}))
+    
+    let embedButton = button("embed")
+    let openButton = button("open")
+    main.push(embedButton, openButton)
+
+    let Block = await createBlock(index, path, main, global)
+
+    embedButton.addEventListener('click', 
+        async () => {
+            let toEmbed = []
+            switch (typeof value) {
+                case "object":
+                    toEmbed = await objectToBlocks(value, global, path)
+                    break
+            }
+            console.log(toEmbed, path, value)
+            if (toEmbed.length>0) for (let e of toEmbed.reverse()) Block.addChild(e)
+            //if the value is link
+            //let toEmbed = (async function () {return await import('./data/docs/Alan.yaml')})()
+        }
+    )
+
+    Block.data = {
+        key,
+        value: null, //later blocks will provide the value of this object anyway
+        path
+    }
+    
     keyInput.addEventListener('keydown', 
         (event) => {
             console.log(event)

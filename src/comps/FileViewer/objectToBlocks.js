@@ -11,11 +11,11 @@ export default async function (obj, global, originalPath=[]) {
         let path = [...originalPath, key]
         switch (key) {
             case "_":
-                blocks.push(await Body(key, null, global))
+                blocks.push(await Body(value, null, [...originalPath, key], global))
                 break
             default:
                 //obj.push(Head(key, null, [global.thisDocName, key], global))
-                let h = await Head(key, null, [...originalPath, key], global)
+                let h = await Head(key, value, null, [...originalPath, key], global)
                 h.depth(path.length)
                 blocks.push(h)
                 console.log(key, value)

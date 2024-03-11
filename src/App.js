@@ -52,7 +52,7 @@ const FileViewer = (path) => {
   let This = "root"
   return div(
       {class: "FileViewer"},
-      div({class: "h-flex"},
+      div({class: "h-flex Block", style: "margin-bottom: 0px;"},
         div({class: "Name"}, This),
         div({class: "h-flex"}, span("["),a("edit"), span("]"))
       ),

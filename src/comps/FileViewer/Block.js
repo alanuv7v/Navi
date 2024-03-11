@@ -11,9 +11,6 @@ import expandPNG from '../../icons/expand.png'
 import outerPNG from '../../icons/outer.png'
 
 
-function addChild (parent, child) {
-    parent.parentNode.insertBefore(child, parent.nextSibling)
-}
 
 export async function createBlock (index, path, main, global) {
     //index = just for the visual and convinience
@@ -21,55 +18,43 @@ export async function createBlock (index, path, main, global) {
     
     let Block = div({class: "Block"})
 
-    let value
-    if (path) value = nestedObj(await global.thisDoc, [...path]); Block.value = value;
-
     let hoverIndicators = []
     let hoverIndicator = () => {
         let s = span({class: "hoverIndicator", style: "width: 0.5em;"})
         hoverIndicators.push(s)    
         return s
     }
-    main.addEventListener('keydown',
-    (event) => {
-        if (event.altKey && event.shiftKey && event.key==="_") {
-            Block.parentNode.insertBefore(Block, Block.previousSibling)
-            event.target.focus()
-        }
-        else if (event.altKey && event.shiftKey && event.key==="+") {
-            Block.parentNode.insertBefore(Block, Block.nextSibling.nextSibling)
-            event.target.focus()
-        }
-    }, false)
+    
+    if (!Array.isArray(main)) main = [main]
+
+    for (let e of main) {
+        e.addEventListener('keydown',
+        (event) => {
+            if (event.altKey && event.shiftKey && event.key==="_") {
+                Block.parentNode.insertBefore(Block, Block.previousSibling)
+                event.target.focus()
+            }
+            else if (event.altKey && event.shiftKey && event.key==="+") {
+                Block.parentNode.insertBefore(Block, Block.nextSibling.nextSibling)
+                event.target.focus()
+            }
+        }, false)
+    }
     
     let beforeInput = [
         index ? span({style: "margin-right: 0.5em;"}, index) : "", 
     ]
     let afterInput = [
-        typeof value === "string" ? input({className: "valuePreview", value: value}) : "",
         span({style: "flex-grow: 1"}), //spacer
-        button({onclick: async () => {
-            let toEmbed = []
-            switch (typeof value) {
-                case "object":
-                    toEmbed = await objectToBlocks(value, global, path)
-                    break
-            }
-            console.log(toEmbed, path, value)
-            if (toEmbed.length>0) for (let e of toEmbed.reverse()) addChild(Block, e)
-            //if the value is link
-            //let toEmbed = (async function () {return await import('./data/docs/Alan.yaml')})()
-        }}, "embed"), 
-        button("open"),
-        /* button(img({src: embedPNG, class: "icon", style: "filter: invert(1.0)"})), 
-        button(img({src: outerPNG,  class: "icon", style: "filter: invert(1.0)"})), */
     ]
-    let blockInner = [...beforeInput, main, ...afterInput]
+    let blockInner = [...beforeInput, ...main, ...afterInput]
     for (let elem of blockInner) Block.append(elem)
     
 
     function onBlockClick(event) {
+        if (global.SelectedBlock) global.SelectedBlock.classList.remove("selected")
         global.SelectedBlock = Block
+        Block.classList.add("selected")
     }
     function onBlockAuxClick(event) {
         //show input element instead of div for key and value
@@ -91,6 +76,10 @@ export async function createBlock (index, path, main, global) {
         }
     }
     if (index) Block.depth(index.split(".").length)
+
+    Block.addChild = function (child) {
+        Block.parentNode.insertBefore(child, Block.nextSibling)
+    }
 
     return Block
 }
