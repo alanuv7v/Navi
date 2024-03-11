@@ -17,7 +17,6 @@ import AutoComplete from "./comps/AutoComplete"
 import objectToBlocks from "./comps/FileViewer/objectToBlocks"
 import blocksToObject from "./comps/FileViewer/blocksToObject"
 
-
 /* 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 codeanywhere에서 변경사항 있을 시 커밋 뿐만 아니라 push도 꼭 해야한다. 하고나서 깃허브에서 잘됬는지 한번더 확인할것
@@ -36,6 +35,7 @@ global.thisDoc = import('./data/docs/Alan.yaml').then((module) => {return module
 
 global.thisDocName = "Alan"
 
+global.docYAML = import('./data/docs/Alan.txt')
 let initTargets = {
   'MultilineTextarea' : []
 }

@@ -12,7 +12,7 @@ import outerPNG from '../../icons/outer.png'
 
 
 
-export async function createBlock (index, path, main, global) {
+export async function createBlock (index, path, main, dataIndex, global) {
     //index = just for the visual and convinience
     //path = docName + key or value. needed for embed|open button onclick handler
     
@@ -31,12 +31,24 @@ export async function createBlock (index, path, main, global) {
         e.addEventListener('keydown',
         (event) => {
             if (event.altKey && event.shiftKey && event.key==="_") {
+                //DOM change
                 Block.parentNode.insertBefore(Block, Block.previousSibling)
                 event.target.focus()
+                //data change
+                let prevData = global.blockDataList[Block.dataIndex]
+                global.blockDataList.splice(Block.dataIndex, 1)
+                Block.dataIndex -= 1
+                global.blockDataList.splice(Block.dataIndex, 0, prevData)
             }
             else if (event.altKey && event.shiftKey && event.key==="+") {
+                //DOM change
                 Block.parentNode.insertBefore(Block, Block.nextSibling.nextSibling)
                 event.target.focus()
+                //data change
+                let prevData = global.blockDataList[Block.dataIndex]
+                global.blockDataList.splice(Block.dataIndex, 1)
+                Block.dataIndex += 1
+                global.blockDataList.splice(Block.dataIndex, 0, prevData)
             }
         }, false)
     }

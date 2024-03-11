@@ -4,7 +4,7 @@ import {createBlock} from "./Block"
 import Body from "./Body"
 import objectToBlocks from "./objectToBlocks"
 
-export default async function Head (key, value, index, path, global) {
+export default async function Head (key, value, index, path, dataIndex, global) {
     //create elements first so they can be referenced
     let keyInput = input({class: "head", type: "text", placeholder: "key", value: key, })
 
