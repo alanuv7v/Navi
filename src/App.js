@@ -16,6 +16,7 @@ import Body from "./comps/FileViewer/Body"
 import AutoComplete from "./comps/AutoComplete"
 import objectToBlocks from "./comps/FileViewer/objectToBlocks"
 import blocksToObject from "./comps/FileViewer/blocksToObject"
+import Dexie from "dexie"
 
 /* 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -32,19 +33,24 @@ const global = {}
 let head = (async function () {return await import('./data/docs/Alan.yaml')})()
 
 global.thisDoc = import('./data/docs/Alan.yaml').then((module) => {return module.default})
-
 global.thisDocName = "Alan"
 
 global.docYAML = import('./data/docs/Alan.txt')
 let initTargets = {
   'MultilineTextarea' : []
 }
+const docsDB = new Dexie('docs');
+
+docsDB.version(1).stores({
+    docs: '++id, usage, filehandle'
+});
 
 const FileList = async (head, path) => {
     let pathResult = nestedObj(head, path)
     let items = []
     let depth = 0
     let indexInDepth = 0
+
     items = await objectToBlocks(head, global)
     return items
 }
@@ -260,6 +266,17 @@ async function onFileInputClick(e) {
     const directoryHandle = await window.showDirectoryPicker()
     global.docs = await listAllFilesAndDirs(directoryHandle);
     console.log(await global.docs)
+
+    let root = global.docs.find((d) => {return d.name==="@root"})
+
+    global.docsDB = docsDB
+    
+    await docsDB.docs.add({
+        usage: "lastOpened",
+		filehandle: root
+	});
+    console.log(await docsDB)
+    
 }
 
 //App
