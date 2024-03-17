@@ -79,7 +79,7 @@
 
 "@esbuild/linux-x64@0.16.17":
   version "0.16.17"
-  resolved "https://registry.yarnpkg.com/@esbuild/linux-x64/-/linux-x64-0.16.17.tgz#e4ba18e8b149a89c982351443a377c723762b85f"
+  resolved "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.16.17.tgz"
   integrity sha512-mdPjPxfnmoqhgpiEArqi4egmBAMYvaObgn4poorpUaqmvzzbvqbowRllQ+ZgzGVMGKaPkqUmPDOOFQRUFDmeUw==
 
 "@esbuild/netbsd-x64@0.16.17":
@@ -109,7 +109,7 @@
 
 "@esbuild/win32-x64@0.16.17":
   version "0.16.17"
-  resolved "https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.16.17.tgz"
+  resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.16.17.tgz#c5a1a4bfe1b57f0c3e61b29883525c6da3e5c091"
   integrity sha512-y+EHuSchhL7FjHgvQL/0fnnFmO4T1bhvWANX6gcnqTjtnKWbTvUMCpGnv2+t+31d7RzyEAYAd4u2fnIhHL6N/Q==
 
 "@isaacs/cliui@^8.0.2":
@@ -175,12 +175,12 @@
 
 "@napi-rs/magic-string-linux-x64-gnu@0.3.4":
   version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@napi-rs/magic-string-linux-x64-gnu/-/magic-string-linux-x64-gnu-0.3.4.tgz#2bcfef49f5a42b3b5df265d8c1ac1baf4591d35a"
+  resolved "https://registry.npmjs.org/@napi-rs/magic-string-linux-x64-gnu/-/magic-string-linux-x64-gnu-0.3.4.tgz"
   integrity sha512-sbxFDpYnt5WFbxQ1xozwOvh5A7IftqSI0WnE9O7KsQIOi0ej2dvFbfOW4tmFkvH/YP8KJELo5AhP2+kEq1DpYA==
 
 "@napi-rs/magic-string-linux-x64-musl@0.3.4":
   version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@napi-rs/magic-string-linux-x64-musl/-/magic-string-linux-x64-musl-0.3.4.tgz#71f80f5fdb1cbca4dc0ff55c1b5ea171fc3eb8c4"
+  resolved "https://registry.npmjs.org/@napi-rs/magic-string-linux-x64-musl/-/magic-string-linux-x64-musl-0.3.4.tgz"
   integrity sha512-jN4h/7e2Ul8v3UK5IZu38NXLMdzVWhY4uEDlnwuUAhwRh26wBQ1/pLD97Uy/Z3dFNBQPcsv60XS9fOM1YDNT6w==
 
 "@napi-rs/magic-string-win32-arm64-msvc@0.3.4":
@@ -195,7 +195,7 @@
 
 "@napi-rs/magic-string-win32-x64-msvc@0.3.4":
   version "0.3.4"
-  resolved "https://registry.npmjs.org/@napi-rs/magic-string-win32-x64-msvc/-/magic-string-win32-x64-msvc-0.3.4.tgz"
+  resolved "https://registry.yarnpkg.com/@napi-rs/magic-string-win32-x64-msvc/-/magic-string-win32-x64-msvc-0.3.4.tgz#b720b6691a20bdb30d334ed6ae9879942ace427b"
   integrity sha512-V8FMSf828MzOI3P6/765MR7zHU6CUZqiyPhmAnwYoKFNxfv7oCviN/G6NcENeCdcYOvNgh5fYzaNLB96ndId5A==
 
 "@napi-rs/magic-string@^0.3.4":
@@ -256,11 +256,6 @@
   version "1.0.5"
   resolved "https://registry.npmjs.org/@types/estree/-/estree-1.0.5.tgz"
   integrity sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==
-
-"@types/use-sync-external-store@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.npmjs.org/@types/use-sync-external-store/-/use-sync-external-store-0.0.3.tgz"
-  integrity sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==
 
 "@webcontainer/api@^1.1.3":
   version "1.1.3"
@@ -524,11 +519,6 @@ karma-safari-launcher@^1.0.0:
   resolved "https://registry.npmjs.org/lru-cache/-/lru-cache-10.2.0.tgz"
   integrity sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==
 
-matter-js@^0.19.0:
-  version "0.19.0"
-  resolved "https://registry.npmjs.org/matter-js/-/matter-js-0.19.0.tgz"
-  integrity sha512-v2huwvQGOHTGOkMqtHd2hercCG3f6QAObTisPPHg8TZqq2lz7eIY/5i/5YUV8Ibf3mEioFEmwibcPUF2/fnKKQ==
-
 merge2@^1.3.0:
   version "1.4.1"
   resolved "https://registry.npmjs.org/merge2/-/merge2-1.4.1.tgz"
@@ -619,14 +609,6 @@ queue-microtask@^1.2.2:
   version "1.2.3"
   resolved "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
-
-react-redux@^9.0.4:
-  version "9.0.4"
-  resolved "https://registry.npmjs.org/react-redux/-/react-redux-9.0.4.tgz"
-  integrity sha512-9J1xh8sWO0vYq2sCxK2My/QO7MzUMRi3rpiILP/+tDr8krBHixC6JMM17fMK88+Oh3e4Ae6/sHIhNBgkUivwFA==
-  dependencies:
-    "@types/use-sync-external-store" "^0.0.3"
-    use-sync-external-store "^1.0.0"
 
 resolve@^1.22.1:
   version "1.22.1"
@@ -726,11 +708,6 @@ tosource@2.0.0-alpha.3:
   version "2.0.0-alpha.3"
   resolved "https://registry.npmjs.org/tosource/-/tosource-2.0.0-alpha.3.tgz"
   integrity sha512-KAB2lrSS48y91MzFPFuDg4hLbvDiyTjOVgaK7Erw+5AmZXNq4sFRVn8r6yxSLuNs15PaokrDRpS61ERY9uZOug==
-
-use-sync-external-store@^1.0.0:
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz"
-  integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==
 
 vanjs-core@^1.2.6:
   version "1.2.6"

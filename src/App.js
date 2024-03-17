@@ -23,10 +23,6 @@ import Dexie from "dexie"
 codeanywhere에서 변경사항 있을 시 커밋 뿐만 아니라 push도 꼭 해야한다. 하고나서 깃허브에서 잘됬는지 한번더 확인할것
 */
 
-//util
-const log = (text) => console.log(text)
-
-
 //global variables
 const global = {}
 
@@ -42,30 +38,37 @@ personas:
   Vital: "@"
   Dane(Urbantopia): "@"
   D(War In Near): "@"
-birth: "2003.10.31"
+  birth: "2003.10.31"
 works: 
   fictions: 
-    Urbantopia: "@"
-    War In Near: "@"
-    Joyland: "@"
-    Mist River: "@"
+  Urbantopia: "@"
+  War In Near: "@"
+  Joyland: "@"
+  Mist River: "@"
   non-fictions:
     Intentions: "@"`
 
-global.docYAML = import('./data/docs/Alan.txt')
-let initTargets = {
-  'MultilineTextarea' : []
+    global.docYAML = import('./data/docs/Alan.txt')
+    let initTargets = {
+      'MultilineTextarea' : []
 }
-const docsDB = new Dexie('docs');
+let RootsDB = new Dexie("RootsDB");
 
-docsDB.version(1).stores({
-    docs: '++id, usage, filehandle'
+// DB with single table "friends" with primary key "id" and
+// indexes on properties "name" and "age"
+RootsDB.version(1).stores({
+  docs: `
+    ++id,
+    usage,
+    filehandle`,
 });
+let q = await RootsDB.docs.toArray()
+console.log(RootsDB, RootsDB.docs, q)
 
 const FileList = async (head, path) => {
-    let pathResult = nestedObj(head, path)
-    let items = []
-    let depth = 0
+  let pathResult = nestedObj(head, path)
+  let items = []
+  let depth = 0
     let indexInDepth = 0
 
     items = await objectToBlocks(head, global)
@@ -292,13 +295,16 @@ async function onFileInputClick(e) {
 
     let root = global.docs.find((d) => {return d.name==="@root"})
 
-    global.docsDB = docsDB
+    RootsDB.docs.add({
+      usage: "lastOpened",
+      filehandle: directoryHandle
+    })
     
-    await docsDB.docs.add({
-        usage: "lastOpened",
-		filehandle: root
-	});
-    console.log(await docsDB)
+    await RootsDB.docs.add({
+      usage: "lastOpened",
+      filehandle: root
+    });
+    console.log(await RootsDB)
     
 }
 
