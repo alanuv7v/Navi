@@ -306,7 +306,7 @@ async function onFileInputClick(e) {
 
 global.View = div({id: "view", class:"main"})
 global.FileViewer = FileViewer([])
-global.YAMLPreview = div({class: "YAMLpreview"}, "asfd")
+global.YAMLPreview = div({class: "YAMLpreview"})
 global.InnerView = div({class: "InnerView"},
   global.FileViewer,
   global.YAMLPreview

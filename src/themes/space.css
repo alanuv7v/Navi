@@ -240,7 +240,6 @@ input:focus, button:active, textarea:focus {
   border: 1px solid var(--deep);
   flex-grow: 1;
   min-height: 100%;
-  margin: auto; /* !!! Important !!! it aligns this to the horizontal center of the view */
 
 }
 
@@ -416,9 +415,14 @@ a:hover {
 .InnerView {
   display: flex;
   height: 100%;
+  margin: auto; /* !!! Important !!! it aligns this to the horizontal center of the view */
 }
 
 .YAMLpreview {
+  border: 1px solid var(--deep);
+  line-height: 2;
   flex-grow: 1;
   white-space: pre;
+  padding: 10px;
+  overflow: auto;
 }

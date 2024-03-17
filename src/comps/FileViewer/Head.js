@@ -39,12 +39,16 @@ export default async function Head (key, value, index, path, dataIndex, global) 
     
     keyInput.addEventListener('keydown', 
         (event) => {
-            console.log(event)
-            if (event.altKey && event.shiftKey && event.key==="{") {
+            console.log(event.key)
+            if (event.altKey && event.key===",") {
                 Block.depth(-1)
             }
-            else if (event.altKey && event.shiftKey && event.key==="}") {
+            else if (event.altKey && event.key===".") {
                 Block.depth(+1)
+            }
+            else if (event.altKey && event.ctrlKey && event.key==="}") {
+            }
+            else if (event.altKey && event.ctrlKey && event.key==="}") {
             }
             else if (event.key === "Enter") {
                 if (event.shiftKey) {

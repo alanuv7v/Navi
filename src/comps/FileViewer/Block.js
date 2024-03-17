@@ -30,7 +30,7 @@ export async function createBlock (index, path, main, dataIndex, global) {
     for (let e of main) {
         e.addEventListener('keydown',
         (event) => {
-            if (event.altKey && event.shiftKey && event.key==="_") {
+            if (event.altKey && event.shiftKey && event.key==="<") {
                 //DOM change
                 Block.parentNode.insertBefore(Block, Block.previousSibling)
                 event.target.focus()
@@ -40,7 +40,7 @@ export async function createBlock (index, path, main, dataIndex, global) {
                 Block.dataIndex -= 1
                 global.blockDataList.splice(Block.dataIndex, 0, prevData)
             }
-            else if (event.altKey && event.shiftKey && event.key==="+") {
+            else if (event.altKey && event.shiftKey && event.key===">") {
                 //DOM change
                 Block.parentNode.insertBefore(Block, Block.nextSibling.nextSibling)
                 event.target.focus()
@@ -49,6 +49,10 @@ export async function createBlock (index, path, main, dataIndex, global) {
                 global.blockDataList.splice(Block.dataIndex, 1)
                 Block.dataIndex += 1
                 global.blockDataList.splice(Block.dataIndex, 0, prevData)
+            }
+            else if (event.altKey && event.ctrlKey && event.key==="+") {
+            }
+            else if (event.altKey && event.ctrlKey && event.key==="+") {
             }
         }, false)
     }
@@ -64,7 +68,9 @@ export async function createBlock (index, path, main, dataIndex, global) {
     
 
     function onBlockClick(event) {
-        if (global.SelectedBlock) global.SelectedBlock.classList.remove("selected")
+        if (global.SelectedBlock) {
+            global.SelectedBlock.classList.remove("selected")
+        }
         global.SelectedBlock = Block
         Block.classList.add("selected")
     }
