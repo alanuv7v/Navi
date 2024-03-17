@@ -54,16 +54,16 @@ works:
 }
 let RootsDB = new Dexie("RootsDB");
 
-// DB with single table "friends" with primary key "id" and
-// indexes on properties "name" and "age"
 RootsDB.version(1).stores({
-  docs: `
+  roots: `
     ++id,
     usage,
-    filehandle`,
+    handle`,
 });
-let q = await RootsDB.docs.toArray()
-console.log(RootsDB, RootsDB.docs, q)
+console.log((await RootsDB.roots.where("usage").equals("lastOpened").toArray())[0])
+console.log(await listAllFilesAndDirs(
+  (await RootsDB.roots.where("usage").equals("lastOpened").toArray())[0].filehandle
+))
 
 const FileList = async (head, path) => {
   let pathResult = nestedObj(head, path)
@@ -291,19 +291,15 @@ async function listAllFilesAndDirs(dirHandle) {
 async function onFileInputClick(e) {
     const directoryHandle = await window.showDirectoryPicker()
     global.docs = await listAllFilesAndDirs(directoryHandle);
-    console.log(await global.docs)
+    console.log(directoryHandle, await global.docs)
 
     let root = global.docs.find((d) => {return d.name==="@root"})
 
-    RootsDB.docs.add({
+    //save root directory handle to IndexedDB
+    RootsDB.roots.add({
       usage: "lastOpened",
       filehandle: directoryHandle
     })
-    
-    await RootsDB.docs.add({
-      usage: "lastOpened",
-      filehandle: root
-    });
     console.log(await RootsDB)
     
 }
