@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import ViteYaml from '@modyfi/vite-plugin-yaml';
-import plainText from 'vite-plugin-plain-text';
 
 export default defineConfig({
     //root: 'src',
@@ -12,7 +11,6 @@ export default defineConfig({
     },
     plugins: [
         ViteYaml(), 
-        plainText('**/*.txt')
     ],
 });
 

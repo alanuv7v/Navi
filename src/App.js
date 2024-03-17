@@ -139,8 +139,8 @@ let defaultMenu = [
     },
     {name: 'fit to viewport',
     action: function () {
-        if (global.FileViewer.style.width === "100%") global.FileViewer.style.width = "1000px"
-        else global.FileViewer.style.width = "100%"
+        if (global.InnerView.style.width === "100%") global.InnerView.style.width = "1000px"
+        else global.InnerView.style.width = "100%"
     }
     },
     {name: 'Blocks to YAML',
@@ -283,7 +283,11 @@ async function onFileInputClick(e) {
 
 global.View = div({id: "view", class:"main"})
 global.FileViewer = FileViewer([])
-global.View.append(global.FileViewer)
+global.InnerView = div({class: "InnerView"},
+  global.FileViewer,
+  div({class: "YAMLpreview"}, "asfd")
+)
+global.View.append(global.InnerView)
 global.FileList = div({id: "FileList"})
 global.FileViewer.append(global.FileList)
 global.ContextMenu = d({style: "bottom: 0px; display: flex; flex-direction: column-reverse; z-index: 2; width: 100%; padding: 0.5em;"})

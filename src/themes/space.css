@@ -114,7 +114,7 @@ textarea {
   overflow: auto; /* !! 결국 그게 되야하는데... 자동 리자이징. */
 }
 
-input:hover, button:hover, button:focus, textarea:hover {
+input:hover, button:hover, textarea:hover {
     border-radius: 0px;
     box-shadow: inset 0px 0px 0px 1px var(--light),
     0px 0px 10px 0px var(--light);
@@ -238,7 +238,7 @@ input:focus, button:active, textarea:focus {
 
 .FileViewer {
   border: 1px solid var(--deep);
-  width: 100%;
+  flex-grow: 1;
   min-height: 100%;
   margin: auto; /* !!! Important !!! it aligns this to the horizontal center of the view */
 
@@ -362,9 +362,8 @@ input:focus, button:active, textarea:focus {
 }
 .Block input:hover, .Block textarea:hover  {
   border-radius: 0px;
-  border-bottom: 1px solid var(--light);
-  /* box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 1), 
-  0px 0px 10px 0px var(--light); */
+  box-shadow: inset 0px -1px 0px 0px var(--light), 
+  0px 10px 10px 0px var(--light); 
 }
 
 .Block.selected {
@@ -412,4 +411,13 @@ a:hover {
     background-color: var(--dark);
     width: 100%;
     text-align: left;
+}
+
+.InnerView {
+  display: flex;
+  height: 100%;
+}
+
+.YAMLpreview {
+  flex-grow: 1;
 }
