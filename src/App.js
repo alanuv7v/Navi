@@ -32,8 +32,25 @@ const global = {}
 
 let head = (async function () {return await import('./data/docs/Alan.yaml')})()
 
-global.thisDoc = import('./data/docs/Alan.yaml').then((module) => {return module.default})
-global.thisDocName = "Alan"
+global.thisDoc = {}
+global.thisDoc.parsed = import('./data/docs/Alan.yaml').then((module) => {return module.default})
+global.thisDoc.name = "Alan"
+global.thisDoc.original = 
+`_: This is the first document ever created using Root.
+name: Alan
+personas: 
+  Vital: "@"
+  Dane(Urbantopia): "@"
+  D(War In Near): "@"
+birth: "2003.10.31"
+works: 
+  fictions: 
+    Urbantopia: "@"
+    War In Near: "@"
+    Joyland: "@"
+    Mist River: "@"
+  non-fictions:
+    Intentions: "@"`
 
 global.docYAML = import('./data/docs/Alan.txt')
 let initTargets = {
@@ -52,6 +69,12 @@ const FileList = async (head, path) => {
     let indexInDepth = 0
 
     items = await objectToBlocks(head, global)
+    global.thisDoc.edited = global.thisDoc.original
+    //global.thisDoc.filehandle = 
+    console.log(global.thisDoc.edited)
+    global.YAMLPreview.append(div(
+      global.thisDoc.edited
+    ))
     return items
 }
 
@@ -197,7 +220,7 @@ global.TextModifiers = div(
     "Syntax",
     [button(
       {onclick: () => {
-        let newBlock = Head("Item", null, [global.thisDocName, "Item"], global)
+        let newBlock = Head("Item", null, [global.thisDoc.name, "Item"], global)
         if (global.SelectedBlock) {
           newBlock.depth(Math.max(1, global.SelectedBlock.depth_))
           global.FileList.insertBefore(newBlock, global.SelectedBlock.nextSibling)
@@ -283,9 +306,10 @@ async function onFileInputClick(e) {
 
 global.View = div({id: "view", class:"main"})
 global.FileViewer = FileViewer([])
+global.YAMLPreview = div({class: "YAMLpreview"}, "asfd")
 global.InnerView = div({class: "InnerView"},
   global.FileViewer,
-  div({class: "YAMLpreview"}, "asfd")
+  global.YAMLPreview
 )
 global.View.append(global.InnerView)
 global.FileList = div({id: "FileList"})
