@@ -23,7 +23,7 @@ import Dexie from "dexie"
 codeanywhere에서 변경사항 있을 시 커밋 뿐만 아니라 push도 꼭 해야한다. 하고나서 깃허브에서 잘됬는지 한번더 확인할것
 */
 
-//global variables
+//  INIT
 const global = {}
 
 let head = (async function () {return await import('./data/docs/Alan.yaml')})()
@@ -60,25 +60,36 @@ RootsDB.version(1).stores({
     usage,
     handle`,
 });
-console.log((await RootsDB.roots.where("usage").equals("lastOpened").toArray())[0])
-console.log(await listAllFilesAndDirs(
-  (await RootsDB.roots.where("usage").equals("lastOpened").toArray())[0].filehandle
-))
+
+if (RootsDB.roots.where("usage").equals("lastOpened")) {
+  console.log((await RootsDB.roots.where("usage").equals("lastOpened").toArray())[0])
+  try {
+    let docsList = await listAllFilesAndDirs(
+      (await RootsDB.roots.where("usage").equals("lastOpened").toArray())[0].handle
+    )
+    let rootFile = await docsList.find((doc) => {return doc.name === "@root.yaml"}).handle.getFile()
+    let rootDocText = await rootFile.text()
+    console.log(rootDocText)
+    global.thisDoc.original = rootDocText
+    
+  } catch (err) {
+    console.log(new Error(err))
+  }
+}
+
+
+
+// define GUI components
 
 const FileList = async (head, path) => {
-  let pathResult = nestedObj(head, path)
-  let items = []
-  let depth = 0
-    let indexInDepth = 0
-
-    items = await objectToBlocks(head, global)
-    global.thisDoc.edited = global.thisDoc.original
-    //global.thisDoc.filehandle = 
-    console.log(global.thisDoc.edited)
-    global.YAMLPreview.append(div(
-      global.thisDoc.edited
-    ))
-    return items
+  global.thisDoc.obj = yaml.parse(global.thisDoc.original)
+  global.thisDoc.edited = global.thisDoc.original
+  global.thisDoc.editedRaw = []
+  global.YAMLPreview.append(div(
+    global.thisDoc.edited
+  ))
+  let blocks = await objectToBlocks(global.thisDoc.obj, global)
+  return blocks
 }
 
 const FileViewer = (path) => {
@@ -298,7 +309,7 @@ async function onFileInputClick(e) {
     //save root directory handle to IndexedDB
     RootsDB.roots.add({
       usage: "lastOpened",
-      filehandle: directoryHandle
+      handle: directoryHandle
     })
     console.log(await RootsDB)
     
