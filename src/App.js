@@ -84,11 +84,11 @@ if (RootsDB.roots.where("usage").equals("lastOpened")) {
 const FileList = async (head, path) => {
   global.thisDoc.obj = yaml.parse(global.thisDoc.original)
   global.thisDoc.edited = global.thisDoc.original
-  global.thisDoc.editedRaw = []
+  global.thisDoc.editedRaw = global.thisDoc.original.split("\n")
   global.YAMLPreview.append(div(
     global.thisDoc.edited
   ))
-  let blocks = await objectToBlocks(global.thisDoc.obj, global)
+  let blocks = await objectToBlocks(global.thisDoc.obj, global.thisDoc.editedRaw, global)
   return blocks
 }
 

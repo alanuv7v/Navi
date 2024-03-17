@@ -3,7 +3,8 @@
 import Head from "./Head"
 import Body from "./Body"
 
-export default async function (obj, global, originalPath=[]) {
+export default async function (obj, raw, global, originalPath=[]) {
+    // param originalPath is used when a block tries to open its children.
     let blocks = []
     for (let e of Object.entries(obj)) {
         let key = e[0]
