@@ -26,30 +26,16 @@ codeanywhere에서 변경사항 있을 시 커밋 뿐만 아니라 push도 꼭 �
 //  INIT
 const global = {}
 
-global.thisDoc = {}
-global.thisDoc.parsed = import('./data/docs/Alan.yaml').then((module) => {return module.default})
-global.thisDoc.name = global.thisDoc.parsed["name"] ? global.thisDoc.parsed["name"] : "Unnamed Document"
-global.docYAML = import('./data/docs/Alan.txt')
-
 let initTargets = {
   'MultilineTextarea' : []
 }
 
-  
-head.then((h) => {
-  console.log("GLOBAL:", global)
-  global.head = h.default
-  head = h.default
-  van.add(document.body, App({"Root": h.default}))
-  updateFileList(head, [])
-  init()
-})
 
 //Init DB
 
-//check if RootDB already exists in the browser
-(await indexedDB.databases()).find(d => d.name === "RootDB")
-
+//if RootDB already exists in the browser, Dexie will open the existing one
+//otherwise Dexie will create a new one and return it
+//so don't worry about creating duplicated DB
 let RootDB = new Dexie("RootsDB");
 
 RootDB.version(1).stores({
@@ -59,21 +45,27 @@ RootDB.version(1).stores({
     handle`,
 });
 
-if (RootDB.roots.where("usage").equals("lastOpened")) { //if lastOpened root is defined in RootsDB(IndexedDB):
+global.thisDoc = {}
+
+//if lastOpened root is defined in RootsDB(IndexedDB), set global.thisDoc props 
+if (RootDB.roots.where("usage").equals("lastOpened")) { 
   let lastOpenedRoot = (await RootDB.roots.where("usage").equals("lastOpened").toArray())[0]
   console.log(lastOpenedRoot)
   try {
     let docsList = await listAllFilesAndDirs(lastOpenedRoot.handle)
     let rootFile = await docsList.find((doc) => {return doc.name === "@root.yaml"}).handle.getFile()
     let rootDocText = await rootFile.text()
-    console.log(rootDocText)
     global.thisDoc.original = rootDocText
+    global.thisDoc.parsed = yaml.parse(rootDocText)
+    global.thisDoc.name = global.thisDoc.parsed["name"] ? global.thisDoc.parsed["name"] : "Unnamed Document"
+
+    console.log("GLOBAL:", global)
+    console.log(global.thisDoc.original)
     
   } catch (err) {
     console.log(new Error(err))
   }
 }
-
 
 
 // define GUI components
@@ -370,3 +362,8 @@ const App = () => {
       global.ContextMenu,
     )
 }
+
+    
+van.add(document.body, App())
+updateFileList(global.thisDoc.parsed, [])
+init()
