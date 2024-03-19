@@ -243,9 +243,7 @@ input:focus, button:active, textarea:focus {
 
 .FileViewer {
   border: 1px solid var(--deep);
-  flex-grow: 1;
   min-height: 100%;
-  flex-shrink: 0;
 
 }
 
@@ -308,6 +306,8 @@ input:focus, button:active, textarea:focus {
   overflow-x: auto;
   overflow-y: auto;
   border: 1px solid var(--deep);
+  flex-basis: 0;
+  flex-grow: 1;
 }
 
 .Block {
@@ -408,6 +408,7 @@ a:hover {
   display: flex;
   height: 100%;
   margin: auto; /* !!! Important !!! it aligns this to the horizontal center of the view */
+  justify-content: space-evenly;
 }
 
 .YAMLpreview {
