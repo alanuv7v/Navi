@@ -84,7 +84,7 @@ const FileList = async () => {
 const FileViewer = (path) => {
   let This = "root"
   return div(
-      {class: "FileViewer"},
+      {class: "FileViewer window"},
       div({class: "h-flex Block", style: "margin-bottom: 0px;"},
         div({class: "Name"}, This),
         div({class: "h-flex"}, span("["),a("edit"), span("]"))
@@ -308,7 +308,7 @@ async function onFileInputClick(e) {
 
 global.View = div({id: "view", class:"main"})
 global.FileViewer = FileViewer([])
-global.YAMLPreview = div({class: "YAMLpreview"})
+global.YAMLPreview = div({class: "YAMLpreview window"})
 global.InnerView = div({class: "InnerView"},
   global.FileViewer,
   global.YAMLPreview

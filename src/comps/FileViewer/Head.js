@@ -11,7 +11,7 @@ export default async function Head (key, value, index, path, dataIndex, global) 
     let main = []
     if (typeof value === "string") {
         if (value[0] === "@") {
-            main.push(a({class: "link head", /* href="" */}, key))
+            main.push(input({class: "link head", value: key}))
         }
         else {
             main.push(keyInput)

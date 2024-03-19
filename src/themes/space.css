@@ -11,8 +11,6 @@
 * {
   font-size: 14px;
   box-sizing: border-box;
-
-  overflow: hidden;
   
   color: var(--light);
 
@@ -43,6 +41,9 @@ div {
   justify-content: center;
   align-items: center;
 }
+textarea {
+  width: 100%;
+}
 
 #App {
     background-color: var(--dark);
@@ -56,6 +57,10 @@ div {
 }
 #App > * {
   flex-shrink: 0;
+}
+
+#header * {
+  height: 100%;
 }
 
 #view {
@@ -240,6 +245,7 @@ input:focus, button:active, textarea:focus {
   border: 1px solid var(--deep);
   flex-grow: 1;
   min-height: 100%;
+  flex-shrink: 0;
 
 }
 
@@ -286,11 +292,6 @@ input:focus, button:active, textarea:focus {
 	
 }
 
-#TextModifiers::-webkit-scrollbar-track {
-
-	
-}
-
 .group {
   box-shadow: inset 0px 0px 0px 1px var(--deep);
   display: flex; 
@@ -303,35 +304,6 @@ input:focus, button:active, textarea:focus {
   margin-bottom: 10px;
 }
 
-.FileSystemItem {
-  padding-bottom: 0.5em;
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-  align-items: center;
-  transition: background-color 0.5s cubic-bezier(0, 0, 0.15, 0.64);
-}
-
-.File {
-}
-
-.Folder {
-}
-
-.FileSystemItem:hover {
-  background-color: rgba(99, 99, 253, 0.7);
-}
-.hoverIndicator {
-  width: 0.5em; 
-  height: 1em; 
-  background-color: var(--deep); 
-  margin-right: 0.5em;  
-  transition: background-color 0.5s cubic-bezier(0, 0, 0.15, 0.64);
-}
-.FileSystemItem:hover .hoverIndicator  {
-  background-color: var(--light); 
-}
-
 .window {
   overflow-x: auto;
   overflow-y: auto;
@@ -339,6 +311,7 @@ input:focus, button:active, textarea:focus {
 }
 
 .Block {
+  width: max-content;
   padding-left: 0.5em;
   margin-bottom: 0.5em;
   display: flex;
@@ -352,6 +325,7 @@ input:focus, button:active, textarea:focus {
   background-color: var(--hilight);
 }
 .Block .options {
+  display: flex;
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -373,9 +347,11 @@ input:focus, button:active, textarea:focus {
   box-shadow: inset 0px 0px 0px 1px var(--light); */
 }
 .Block input:hover, .Block textarea:hover  {
-  border-radius: 0px;
+  border-radius: 0px;/* 
   box-shadow: inset 0px -1px 0px 0px var(--light), 
-  0px 10px 10px 0px var(--light); 
+  8px 0px 20px -4px var(--light); */
+  box-shadow: inset 0px 0px 0px 1px var(--light), 
+  8px 0px 20px -4px var(--light);
 }
 
 .Block.selected {
@@ -389,6 +365,7 @@ input:focus, button:active, textarea:focus {
 
 .Block input, .Block textarea {
   box-shadow: none;
+  
 }
 
 .icon {
@@ -397,7 +374,7 @@ input:focus, button:active, textarea:focus {
 button:has(.icon) {
 }
 
-a {
+a, .link {
   text-decoration: none;
   color: var(--link)
 }
@@ -436,8 +413,7 @@ a:hover {
 .YAMLpreview {
   border: 1px solid var(--deep);
   line-height: 2;
-  flex-grow: 1;
-  white-space: pre;
+  white-space: pre-wrap;
   padding: 10px;
   overflow: auto;
 }
