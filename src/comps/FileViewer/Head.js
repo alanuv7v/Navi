@@ -6,14 +6,24 @@ import objectToBlocks from "./objectToBlocks"
 
 export default async function Head (key, value, index, path, dataIndex, global) {
     //create elements first so they can be referenced
-    let keyInput = input({class: "head", type: "text", placeholder: "key", value: key, })
+    let keyInput = input({class: "head", type: "text", placeholder: "key", value: key})
 
-    let main = [keyInput]
-    if (typeof value === "string") main.push(input({className: "valuePreview", value: value}))
+    let main = []
+    if (typeof value === "string") {
+        if (value[0] === "@") {
+            main.push(a({class: "link head", /* href="" */}, key))
+        }
+        else {
+            main.push(keyInput)
+            main.push(input({class: "valuePreview", value: value}))
+        }
+    } else {
+        main.push(keyInput)
+    }
     
     let embedButton = button("embed")
     let openButton = button("open")
-    main.push(embedButton, openButton)
+    main.push(div({class: "options"}, [embedButton, openButton]))
 
     let Block = await createBlock(index, path, main, global)
     

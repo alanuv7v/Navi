@@ -26,47 +26,44 @@ codeanywhere에서 변경사항 있을 시 커밋 뿐만 아니라 push도 꼭 �
 //  INIT
 const global = {}
 
-let head = (async function () {return await import('./data/docs/Alan.yaml')})()
-
 global.thisDoc = {}
 global.thisDoc.parsed = import('./data/docs/Alan.yaml').then((module) => {return module.default})
-global.thisDoc.name = "Alan"
-global.thisDoc.original = 
-`_: This is the first document ever created using Root.
-name: Alan
-personas: 
-  Vital: "@"
-  Dane(Urbantopia): "@"
-  D(War In Near): "@"
-  birth: "2003.10.31"
-works: 
-  fictions: 
-  Urbantopia: "@"
-  War In Near: "@"
-  Joyland: "@"
-  Mist River: "@"
-  non-fictions:
-    Intentions: "@"`
+global.thisDoc.name = global.thisDoc.parsed["name"] ? global.thisDoc.parsed["name"] : "Unnamed Document"
+global.docYAML = import('./data/docs/Alan.txt')
 
-    global.docYAML = import('./data/docs/Alan.txt')
-    let initTargets = {
-      'MultilineTextarea' : []
+let initTargets = {
+  'MultilineTextarea' : []
 }
-let RootsDB = new Dexie("RootsDB");
 
-RootsDB.version(1).stores({
+  
+head.then((h) => {
+  console.log("GLOBAL:", global)
+  global.head = h.default
+  head = h.default
+  van.add(document.body, App({"Root": h.default}))
+  updateFileList(head, [])
+  init()
+})
+
+//Init DB
+
+//check if RootDB already exists in the browser
+(await indexedDB.databases()).find(d => d.name === "RootDB")
+
+let RootDB = new Dexie("RootsDB");
+
+RootDB.version(1).stores({
   roots: `
     ++id,
     usage,
     handle`,
 });
 
-if (RootsDB.roots.where("usage").equals("lastOpened")) {
-  console.log((await RootsDB.roots.where("usage").equals("lastOpened").toArray())[0])
+if (RootDB.roots.where("usage").equals("lastOpened")) { //if lastOpened root is defined in RootsDB(IndexedDB):
+  let lastOpenedRoot = (await RootDB.roots.where("usage").equals("lastOpened").toArray())[0]
+  console.log(lastOpenedRoot)
   try {
-    let docsList = await listAllFilesAndDirs(
-      (await RootsDB.roots.where("usage").equals("lastOpened").toArray())[0].handle
-    )
+    let docsList = await listAllFilesAndDirs(lastOpenedRoot.handle)
     let rootFile = await docsList.find((doc) => {return doc.name === "@root.yaml"}).handle.getFile()
     let rootDocText = await rootFile.text()
     console.log(rootDocText)
@@ -81,14 +78,14 @@ if (RootsDB.roots.where("usage").equals("lastOpened")) {
 
 // define GUI components
 
-const FileList = async (head, path) => {
+const FileList = async () => {
   global.thisDoc.obj = yaml.parse(global.thisDoc.original)
   global.thisDoc.edited = global.thisDoc.original
   global.thisDoc.editedRaw = global.thisDoc.original.split("\n")
   global.YAMLPreview.append(div(
     global.thisDoc.edited
   ))
-  let blocks = await objectToBlocks(global.thisDoc.obj, global.thisDoc.editedRaw, global)
+  let blocks = await objectToBlocks(global.thisDoc.obj, /* global.thisDoc.editedRaw, */ global)
   return blocks
 }
 
@@ -307,11 +304,11 @@ async function onFileInputClick(e) {
     let root = global.docs.find((d) => {return d.name==="@root"})
 
     //save root directory handle to IndexedDB
-    RootsDB.roots.add({
+    RootDB.roots.add({
       usage: "lastOpened",
       handle: directoryHandle
     })
-    console.log(await RootsDB)
+    console.log(await RootDB)
     
 }
 
@@ -340,7 +337,7 @@ Object.defineProperty(global, 'path', {
 });
 global.path = "Alan"
 
-const App = (head) => {
+const App = () => {
     
     return div({id: 'App', /* style: "display: flex; flex-direction: row; " */},
       div({id: "header", style: "display: flex; flex-direction: row; align-items: center; "},
@@ -373,15 +370,3 @@ const App = (head) => {
       global.ContextMenu,
     )
 }
-  
-head.then((h) => {
-    console.log("GLOBAL:", global)
-    global.head = h.default
-    head = h.default
-    van.add(document.body, App({"Root": h.default}))
-    updateFileList(head, [])
-    init()
-
-
-})
-

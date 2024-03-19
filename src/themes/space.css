@@ -351,6 +351,15 @@ input:focus, button:active, textarea:focus {
 .Block:hover {
   background-color: var(--hilight);
 }
+.Block .options {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.Block:hover .options {
+  opacity: 1;
+}
+
+
 .hoverIndicator {
   height: 1em; 
   background-color: var(--deep); 
@@ -390,6 +399,7 @@ button:has(.icon) {
 
 a {
   text-decoration: none;
+  color: var(--link)
 }
 
 a:hover {
@@ -398,6 +408,7 @@ a:hover {
 
 .head {
   font-size: 1.2em;
+  padding: 0.5em 0.5em 0.5em 0.5em
 }
 .body {
   flex-grow: 1;
