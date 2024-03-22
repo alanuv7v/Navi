@@ -3,14 +3,16 @@ const {div, span, button, textarea, input, a, img} = van.tags
 import {createBlock} from "./Block"
 import Body from "./Body"
 import objectToBlocks from "./objectToBlocks"
+import pureFilename from "../../libs/pureFilename"
+import * as yaml from 'yaml'
 
-export default async function Head (key, value, index, path, dataIndex, global) {
+export default async function Head (key, value, index, path, /* dataIndex, */ global) {
     //create elements first so they can be referenced
     let keyInput = input({class: "head", type: "text", placeholder: "key", value: key})
 
     let main = []
     if (typeof value === "string") {
-        if (value[0] === "@") {
+        if (value === "@") {
             main.push(input({class: "link head", value: key}))
         }
         else {
@@ -34,18 +36,37 @@ export default async function Head (key, value, index, path, dataIndex, global) 
     embedButton.addEventListener('click', 
         async () => {
             let toEmbed = []
-            switch (typeof value) {
-                case "object":
-                    toEmbed = await objectToBlocks(value, global, path)
-                    break
+            if (value === "@") {
+                let linkFile = await global.docs.find((i) => {return pureFilename(i.name) === key}).handle.getFile()
+                let linkRaw = await linkFile.text()
+                let linkParsed = await yaml.parse(linkRaw)
+                toEmbed = await objectToBlocks(linkParsed, global, path)
+                console.log(toEmbed, path, value)
+                if (toEmbed.length>0) for (let e of toEmbed.reverse()) Block.addChild(e)
+            } else {
+                switch (typeof value) {
+                    case "object":
+                        toEmbed = await objectToBlocks(value, global, path)
+                        console.log(toEmbed, path, value)
+                        if (toEmbed.length>0) for (let e of toEmbed.reverse()) Block.addChild(e)
+                        break
+                }
             }
-            console.log(toEmbed, path, value)
-            if (toEmbed.length>0) for (let e of toEmbed.reverse()) Block.addChild(e)
-            //if the value is link
-            //let toEmbed = (async function () {return await import('./data/docs/Alan.yaml')})()
         }
     )
 
+    openButton.addEventListener('click', 
+        async () => {
+            if (value === "@") {
+                global.openDoc(global.docs.find((i) => {return pureFilename(i.name) === key}).handle)
+            } else {
+                switch (typeof value) {
+                    case "object":
+                        break
+                }
+            }
+        }
+    )
     
     keyInput.addEventListener('keydown', 
         (event) => {

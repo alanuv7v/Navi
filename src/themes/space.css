@@ -242,23 +242,23 @@ input:focus, button:active, textarea:focus {
     background: #be9eff;
 }
 
-.FileViewer {
+.Editor {
   border: 1px solid var(--deep);
   min-height: 100%;
 
 }
 
-.FileViewer .heading {
+.Editor .heading {
   display: flex; 
   flex-direction: row;
 }
 
-.FileViewer .heading * {
+.Editor .heading * {
   font-size: 16px;
   margin-right: 10px;
 }
 
-.FileViewer .Folder {
+.Editor .Folder {
     width: 100%;
 }
 
@@ -298,7 +298,7 @@ input:focus, button:active, textarea:focus {
   flex-shrink: 0;
 }
 
-.Name {
+.title {
   font-size: 2em;
   margin-bottom: 10px;
 }

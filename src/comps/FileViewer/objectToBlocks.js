@@ -19,7 +19,6 @@ export default async function (obj, global, originalPath=[]) {
                 let h = await Head(key, value, null, [...originalPath, key], global)
                 h.depth(path.length)
                 blocks.push(h)
-                console.log(key, value)
                 break
 
         }
