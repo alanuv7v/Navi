@@ -5,220 +5,66 @@ const d = div
 
 import { createEvent, createStore } from "effector" 
 
+import nestedObj from "./libs/nestedObj"
 import * as yaml from 'yaml'
 import File from "./comps/FileViewer/File"
 import Folder from "./comps/FileViewer/Folder"
+import {createBlock as Block} from "./comps/FileViewer/Block"
 import { MultilineTextarea, resizeTextarea } from "./comps/MultilineTextarea"
-
+import Head from "./comps/FileViewer/Head"
+import Body from "./comps/FileViewer/Body"
+import AutoComplete from "./comps/AutoComplete"
+import objectToBlocks from "./comps/FileViewer/objectToBlocks"
+import blocksToObject from "./comps/FileViewer/blocksToObject"
+import Dexie from "dexie"
 
 /* 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 codeanywhere에서 변경사항 있을 시 커밋 뿐만 아니라 push도 꼭 해야한다. 하고나서 깃허브에서 잘됬는지 한번더 확인할것
 */
 
-//util
-const log = (text) => console.log(text)
-
-
-//global variables
+//  INIT
 const global = {}
-
-let head = (async function () {return await import('./data/docs/Alan.yaml')})()
 
 let initTargets = {
   'MultilineTextarea' : []
 }
 
-const FileList = (head, path) => {
-  let pathResult = nestedObj(head, path)
-  let items = []
-  for (let e of Object.entries(pathResult)) {
-      switch (typeof e[1]) {
-          case "object":
-              items.push(Folder(e[0], path, updateFileList))
-              break
-          default:
-              items.push(File(e[0], e[1]))
-      }
-  }
-  return items
+
+
+
+// define GUI components
+
+const FileList = async () => {
+  global.thisDoc.obj = yaml.parse(global.thisDoc.original)
+  global.thisDoc.edited = global.thisDoc.original
+  global.thisDoc.editedRaw = global.thisDoc.original.split("\n")
+  global.YAMLPreview.append(div(
+    global.thisDoc.edited
+  ))
+  let blocks = await objectToBlocks(global.thisDoc.obj, /* global.thisDoc.editedRaw, */ global)
+  let title = 
+  div({class: "h-flex Block", style: "margin-bottom: 0px;"},
+    div({class: "Name"}, global.thisDoc.name),
+    div({class: "h-flex"}, span("["),a("edit"), span("]"))
+  )
+
+  return [title, blocks]
 }
 
 const FileViewer = (path) => {
-    return div(
-        {class: "FileViewer"},
-        div({class: "heading"},
-            button("<"),
-            button(">"),
-            button("⟳"),
-            button({onclick: () => updateFileViewer(path.slice(0, -1))}, "⇑"),
-            input({type: "text", value: ["root", ...path].join("/")})
-        ),
-        global.FileList
-    )
+  return div(
+      {class: "FileViewer window"},
+      global.FileList
+  )
 }
 
-function updateFileList(head, path) {
-  let list = FileList(head, path)
+async function updateFileList(head, path) {
+  let list = await FileList(head, path)
   for (let item of list) {
     global.FileList.append(item)
   }
   return list
-}
-
-
-const InOutInterface = (path=[], head, iteration, keyType) => {
-    //if ('name' in data) data.name = 'asdf'; console.log(data, head); return
-    //proved that the data property is referencing prop in head. But still input elems cannot change head's prop.
-    if (iteration < 1) {
-        return
-    }
-    if (!head) {
-        return
-    }
-
-    let resizeTargets = []
-
-    let key = path.length > 0 ? path[path.length-1] : ""
-    let data = nestedObj(head, path)
-    console.log(path, key, data, head)
-
-    let prevKey = key
-    
-    let key_
-
-    if (keyType==="Array") {
-        key_ = MultilineTextarea(
-        textarea(key),
-        textarea({style: "color: rgb(61 210 227)"}, key)
-        )
-    } else {
-        key_ = MultilineTextarea(
-        textarea({oninput: (event) => {
-            let originalValue = (nestedObj(head, path))
-            nestedObj(head, path.slice(0, -1), 
-                {...nestedObj(head, path.slice(0, -1))/* siblings */,
-                [event.target.value]: originalValue}
-            )
-            path = [...path.slice(0, -1), event.target.value]
-            if (prevKey) nestedObj(head, [...path.slice(0, -1), prevKey], null, "delete")
-            prevKey = event.target.value
-            console.log(nestedObj(head, path), head, prevKey)
-        }}, key),
-        textarea({style: "color: rgb(80 215 154)"}, key)
-        )
-    }
-
-    resizeTargets.push(key_)
-
-    //!!!!!!!! textarea에서 set할 때도 head에서부터 nestedObj 함수로 안에 있는 값을 바꿔야 한다. Path가 너무 길어지는 비효율의 발생은 Dictionary를 만들고, 사전에 고유명사가 등록되면 고유명사에 nested된 prop은 고유명사 obj 안에만 들어있게 하자. 아니면 진짜 head를 listify해버리자. 쉬운 레퍼런스, shallow copy 위해.
-    //setting values_
-    let values_ = []
-    if (typeof data != 'object') { // value is not Object, or it is null
-        values_ = MultilineTextarea(
-        textarea({oninput: (event) => {
-            nestedObj(head, path, event.target.value)
-            console.log(nestedObj(head, path), head)
-        }}, data),
-        textarea(data)
-        )
-        resizeTargets.push(values_)
-
-    } else { // value is Object
-        if (data == null) {
-            values_ = d({style:"display: flex"},
-                t.select(
-                    t.option("null"),
-                    t.option("String"),
-                    t.option("Number"),
-                    t.option("List"),
-                    t.option("Object"),
-                    t.option("Boolean"),
-                    t.option("Image"),
-                    t.option("File"),
-                    t.option("Else..."),
-                )
-            )
-        }
-        let childKeyType
-        if (Array.isArray(data)) childKeyType = "Array"
-        for (let key in data) {
-            values_.push(IOI([...path, key], head, iteration, childKeyType))
-        }
-    }
-    iteration--
-
-    let valueWrapper = d({class:"valueWrapper", style: "padding-left: 1em; padding-bottom: 1em; padding-right: 1em;"},
-            values_
-        )
-
-
-    function resize() {
-        for (let mt of resizeTargets) {
-            resizeTextarea(mt.children[0], mt.children[1])
-        }   
-        console.log(values_)
-        for (let v of values_) {
-            resizeIOI(v)
-        }
-    }
-
-    let foldArrow = d({style: "margin-left: auto"}, "\u25BD")
-
-    function fold() {
-        valueWrapper.style.display = "none";
-        foldArrow.innerText = "\u25C1"
-    }
-    function open() {
-        valueWrapper.style.display = "block";
-        foldArrow.innerText = "\u25BD"
-        resize()
-        
-    }
-
-    function onIOIwheel(event) {
-        
-        if (!event.shiftKey) {return}
-
-        event.preventDefault()
-        event.stopPropagation()
-
-        if (event.deltaY < 0) {//up
-            open()
-        }
-        else { 
-            fold()
-        }
-    }
-    fold()
-
-    initTargets["MultilineTextarea"].push(...resizeTargets)
-
-    let main = div({class: "main IOI", onwheel: () => onIOIwheel(event)}, 
-        d({style: "display:flex; flex-direction: row"},
-            key_,
-            foldArrow
-        ),
-        valueWrapper
-    )
-
-    return main
-}
-
-const IOI = InOutInterface
-
-
-
-
-function resizeIOI(target) {
-    let children = Array.from(target.children)
-    let resizeTargets = [...children.filter((c) => {return c.classList.contains("MultilineTextarea")}), 
-                        ...Array.from(children.find((c) => {return c.classList.contains("valueWrapper")}).children).filter((c) => {return c.classList.contains("MultilineTextarea")})
-                        ]
-    console.log(resizeTargets)
-    for (let mt of resizeTargets) {
-        resizeTextarea(mt.children[0], mt.children[1])
-    }   
 }
 
 
@@ -227,7 +73,7 @@ const MenuItem = (menuIndex, name, action, children) => {
   console.log('At MenuItem init, menus.getState() = ', JSON.stringify(menus.getState(), null, 2) + '. Index is ' + menuIndex)  
   return button({onclick: (event) => {
     action();
-    updateContextMenu({fromIndex: menuIndex, toAdd: children});
+    if (children) updateContextMenu({fromIndex: menuIndex, toAdd: children});
   }}, name
   )
 }
@@ -272,18 +118,49 @@ function updateMenus(fromIndex, childrenMenus) {
 
 
 
-function init() {
 
-  let defaultMenu = [
-    {name: 'Item', action: function() {alert('!')}, 
-      children: [
+let defaultMenu = [
+    {name: 'Item', 
+    action: function() {alert('!')}, 
+    children: [
         {name: 'child 1'}, 
         {name: 'child 2', action: function() {alert('child 2')}, 
-          children: [{name: 'childrennnn'}]
+            children: [{name: 'childrennnn'}]
         }
-      ]
+    ]
+    },
+    {name: 'fit to viewport',
+    action: function () {
+        if (global.InnerView.style.width === "100%") global.InnerView.style.width = "1000px"
+        else global.InnerView.style.width = "100%"
     }
-  ]
+    },
+    {name: 'Blocks to YAML',
+    action: function () {
+        console.log(blocksToObject(Array.from(global.FileList.children)))
+    }
+    }
+]
+
+//yaml: 
+/* `
+name: Item
+action: 
+    args: []
+    body: "alert"
+children: 
+    - {
+        name:
+        action:
+        children:
+    }
+    - {}
+    - {}
+
+` */
+
+
+function init() {
 
   for (let mt of initTargets['MultilineTextarea']) {
     resizeTextarea(mt.children[0], mt.children[1])
@@ -295,82 +172,219 @@ function init() {
 }
 
 
-function nestedObj(obj, props, value, command=false) {
-    if (!props) return obj;
-    if (props.length === 0) return obj
-    let prop;
-    for (var i = 0, iLen = props.length - 1; i < iLen; i++) {
-      prop = props[i];
-      let candidate = obj[prop];
-      if (candidate !== undefined) {
-        obj = candidate;
-      } else {
-        break;
-      }
-    }
-    if (value) {
-        obj[props[i]] = value;
-        return obj
-    }
-    switch (command) {
-        case "delete":
-            delete obj[props[i]]
-            return
-        default: 
-            break
-    }
-    return obj[props[i]]
+
+
+const Group = (name, innie) => {
+  return div({class: "group"},
+    div({style: "text-align: center; width: 100%; align-items: center;"}, name),
+    div({style: "display: flex; flex-direction: row; align-items: center;"},
+      innie
+    )
+  )
 }
 
-//nestObj 사용 예시:
-/* var obj = {
-    foo: {
-        bar: {
-        baz: 'x'
+global.TextModifiers = div(
+  {id: "TextModifiers", class:"main"},
+  Group(
+    "Syntax",
+    [button(
+      {onclick: () => {
+        let newBlock = Head("Item", null, [global.thisDoc.name, "Item"], global)
+        if (global.SelectedBlock) {
+          newBlock.depth(Math.max(1, global.SelectedBlock.depth_))
+          global.FileList.insertBefore(newBlock, global.SelectedBlock.nextSibling)
+          return
+        }
+        global.FileList.append(newBlock)
+        newBlock.depth(1)
+      }},    
+      "#Key"),
+    button(
+      {onclick: () => {
+        let newBlock = Body("body", null, global)
+        if (global.SelectedBlock) {
+          global.FileList.insertBefore(newBlock, global.SelectedBlock.nextSibling)
+          return
+        }
+        global.FileList.append(newBlock)
+      }},    
+      "Value"),
+    button({
+      onclick: () => {
+        global.SelectedBlock.depth(-1)
+      }
+    }, "<depth-"),
+    button({
+      onclick: () => {
+        global.SelectedBlock.depth(+1)
+      }
+    }, ">depth+"),
+    button("[link]"),
+    button("[tie|link]")]
+  ),
+  Group(
+    "Style",
+    [button("!Bold!"),
+    button("_Underline_"),
+    button("/Italic/"),
+    button("~Strike~"),]
+  ),
+  Group(
+    "Organize",
+    [button("* Ul"),
+    button("1. Ol"),
+    button("“quote”"),]
+  ),
+  Group(
+    "Custom",
+    [button("?c.compile")]
+  ),
+)
+
+async function listAllFilesAndDirs(dirHandle) {
+    const files = [];
+    for await (let [name, handle] of dirHandle) {
+        const {kind} = handle;
+        if (handle.kind === 'directory') {
+            files.push({name, handle, kind, children: await listAllFilesAndDirs(handle)});
+        } else {
+            files.push({name, handle, kind});
         }
     }
-};
+    return files;
+}
 
-nestedObj(obj, ["foo", "bar", "baz"], 'y'); */
+async function onFileInputClick(e) {
+    const directoryHandle = await window.showDirectoryPicker()
+    await directoryHandle.requestPermission()
 
+    global.root = directoryHandle
+    global.docs = await listAllFilesAndDirs(directoryHandle)
 
+    let root = global.docs.find((d) => {return d.name==="@root"})
+    //save root directory handle to IndexedDB
+    RootDB.roots.add({
+        usage: "lastOpenedRoot",
+        handle: directoryHandle
+    })
+    openLastOpenedRoot()
+
+}
 
 //App
 
 global.View = div({id: "view", class:"main"})
 global.FileViewer = FileViewer([])
-global.View.append(global.FileViewer)
+global.YAMLPreview = div({class: "YAMLpreview window"})
+global.InnerView = div({class: "InnerView"},
+  global.FileViewer,
+  global.YAMLPreview
+)
+global.View.append(global.InnerView)
 global.FileList = div({id: "FileList"})
 global.FileViewer.append(global.FileList)
 global.ContextMenu = d({style: "bottom: 0px; display: flex; flex-direction: column-reverse; z-index: 2; width: 100%; padding: 0.5em;"})
+global._path = "Alan.yaml"
+Object.defineProperty(global, 'path', {
+    get: function() {
+        return this._path
+    },
+    set: function(p) {
+        this._path = p + ".yaml"
+        return true
+    }
+});
+global.path = "Alan"
+global.LogPreview = div({id: "LogPreview"})
 
-const App = (head) => {
+const App = () => {
     
-    let seed = Folder()
-    //let seed = InOutInterface([], head, 10)
-  
-  
     return div({id: 'App', /* style: "display: flex; flex-direction: row; " */},
-      div({id: "header", style: "display: flex; flex-direction: row; "},
-        button({style: "flex-grow: 1;"}, "Root: Alan √"),
-        button("axis: All"),
-        button("account"),
-        button("settings"),
-        button({style: "margin-left: auto"}, "Root ver 0.1")
+      div({id: "header", style: "display: flex; flex-direction: row; align-items: center; "},
+        button({onclick: 
+            (event) => {onFileInputClick(event)}
+        },  
+        "root: Alan"),
+        button("◁"),
+        button("▷"),
+        button({onclick: () => updateFileViewer(path.slice(0, -1))}, "⇑"),
+        button("⇓"),
+        button("⟳"),
+        input({style: "flex-grow: 1;", type: "text", value: "@root", placeholder: "search a thot", onchange: async function (event) {
+            let searchResult = global.docs.find((doc) => {
+                let docName = doc.name.slice(0, doc.name.lastIndexOf(".")) //removing the extension str
+                return docName === event.target.value
+            })
+            let file = await searchResult.handle.getFile() // get Blob
+            let obj = await yaml.parse(await file.text())
+            console.log(global.docs, searchResult, await obj)
+        },
+        oninput: (event) => {
+            AutoComplete(event.target, global.docs)
+        }
+        }),
+        button("👁 All"),
       ),
-      [global.View, global.ContextMenu]
+      global.View, 
+      global.TextModifiers,
+      global.ContextMenu,
+      global.LogPreview,
     )
 }
-  
-head.then((h) => {
-    console.log("GLOBAL:", global)
-    global.head = h.default
-    global.NO = nestedObj
-    head = h.default
-    van.add(document.body, App({"Root": h.default}))
-    updateFileList(head, [])
-    init()
+
+    
+van.add(document.body, App())
+init()
 
 
-})
+//Init DB
 
+//if RootDB already exists in the browser, Dexie will open the existing one
+//otherwise Dexie will create a new one and return it
+//so don't worry about creating duplicated DB
+let RootDB = new Dexie("RootsDB");
+
+RootDB.version(1).stores({
+  roots: `
+    ++id,
+    usage,
+    handle`,
+});
+
+global.thisDoc = {}
+
+function log(error) {
+  console.log(error)
+}
+
+//open lastOpened root
+async function openLastOpenedRoot() {
+  if (RootDB.roots.where("usage").equals("lastOpenedRoot")) { 
+    let lastOpenedRoot = (await RootDB.roots.where("usage").equals("lastOpenedRoot").toArray())[0]
+    if (!(await lastOpenedRoot.handle.queryPermission()) === "granted") {
+      await lastOpenedRoot.handle.requestPermission()
+    } 
+    let docsList = await listAllFilesAndDirs(lastOpenedRoot.handle)
+    let root = await docsList.find((doc) => {return doc.name === "@root.yaml"}).handle
+    openDoc(root)
+  } else {
+    log("Open a root to explore and edit.")
+  }
+}
+
+
+async function openDoc(handle) {
+    if (!(await handle.queryPermission()) === "granted") {
+      await handle.requestPermission()
+    } 
+    let docFile = await handle.getFile()
+    let docRaw = await docFile.text()
+    global.thisDoc.original = docRaw
+    global.thisDoc.parsed = yaml.parse(docRaw)
+    global.thisDoc.name = global.thisDoc.parsed["name"] ? global.thisDoc.parsed["name"] : "Unnamed Document"
+
+    updateFileList(global.thisDoc.parsed, [])
+    log(`Document name: ${global.thisDoc.name}. Successfully opened the document.`)
+}
+
+openLastOpenedRoot()

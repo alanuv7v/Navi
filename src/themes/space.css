@@ -1,18 +1,21 @@
 :root {
     --light: rgba(225, 245, 231, 1);
     --vivid: rgba(151, 200, 128, 1);
+    --link: rgb(153, 247, 225);
+    --mild: rgb(225, 245, 231, 0.5);
     --deep: rgba(71, 71, 71, 1);
     --dark: rgba(0, 0, 0, 1);
-    --hilight: rgb(108, 125, 255);
+    --hilight: rgba(99, 99, 253, 0.3);
+    --alert: rgba(255, 0, 0, 0.3);
 }
   
 * {
   font-size: 14px;
   box-sizing: border-box;
-
-  overflow: hidden;
   
   color: var(--light);
+
+  text-overflow: ellipsis;
   
 }
 *:focus {
@@ -22,10 +25,25 @@
 }
 
 div {
-    text-align: left;
+  text-align: left;
 }
 
-div, span, button {
+.h-flex {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  align-items: center;
+}
+
+.v-flex {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  justify-content: center;
+  align-items: center;
+}
+textarea {
+  width: 100%;
 }
 
 #App {
@@ -38,14 +56,23 @@ div, span, button {
     height: 100vh;
 
 }
+#App > * {
+  flex-shrink: 0;
+}
+
+#header * {
+  height: 100%;
+}
 
 #view {
   overflow: auto;
   
   width: 100%;
-  height: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
 
 }
+
 #background {
   position: fixed;
   top: 0px;
@@ -60,15 +87,6 @@ body {
     margin: 0px;
   }
 
-.IOI {
-    width: 100%;
-}
-.IOI:hover {
-    box-shadow: inset 0px 0px 0px 1px var(--light);
-}
-.IOI:not(:has(.IOI:hover)):hover {
-    box-shadow: inset 0px 0px 0px 4px var(--light);
-}
 .main {
     text-align: center;
     background-color: var(--dark);
@@ -80,12 +98,12 @@ body {
     margin-bottom: -1px; */
 }
 
-button, input, select {
+button, input, textarea, select, .buttonlike {
   
   font-size: 14px;
   padding: 0.5em 0.5em 0.5em 0.5em;
 
-  background-color: var(--dark);
+  background-color: transparent;
   color: var(--light);
   
   border: 0px solid transparent;
@@ -93,25 +111,30 @@ button, input, select {
 
   box-shadow: inset 0px 0px 0px 1px var(--deep);
 
-}
-button:hover {
+  flex-shrink: 0;
 
+}
+
+textarea {
+  resize: none;
+  overflow: auto; /* !! 결국 그게 되야하는데... 자동 리자이징. */
+}
+
+input:hover, button:hover, textarea:hover {
     border-radius: 0px;
-
     box-shadow: inset 0px 0px 0px 1px var(--light),
-                0px 0px 10px 0px var(--light);
+    0px 0px 10px 0px var(--light);
+    /*text-decoration: solid underline var(--light) 4px;
+    box-shadow: inset 0px 0px 0px 1px var(--light);*/
+    
 }
-button:active {
+input:focus, button:active, textarea:focus {
 
     border-radius: 0px;
 
     background-color: var(--light);
     color: var(--dark);
 }
-button:focus {
-
-}
-
 
 .border {
   border: 1px solid var(--light);
@@ -168,17 +191,13 @@ button:focus {
 }
 
 ::-webkit-scrollbar {
-	width: 6px;
+	height: 14px;
 }
-
-/* 스크롤바 막대 꾸미기 */
 ::-webkit-scrollbar-thumb {
 	background-color: white;
   min-height: 50px;
 	
 }
-
-/* 스크롤바 트랙 꾸미기 */
 ::-webkit-scrollbar-track {
 
 	
@@ -224,17 +243,186 @@ button:focus {
 }
 
 .FileViewer {
-    display: flex;
-    flex-direction: column;
-    .heading {
-        display: flex; 
-        flex-direction: row;
-        * {
-            font-size: 16px;
-            margin-right: 10px;
-        }
-    }
-    .Folder {
-        width: 100%;
-    }
+  border: 1px solid var(--deep);
+  min-height: 100%;
+
+}
+
+.FileViewer .heading {
+  display: flex; 
+  flex-direction: row;
+}
+
+.FileViewer .heading * {
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.FileViewer .Folder {
+    width: 100%;
+}
+
+#TextModifiers {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  align-items: center;
+}
+
+#TextModifiers * {
+  white-space: nowrap;
+}
+
+#TextModifiers :first-child {
+  margin-left: auto;
+}
+
+#TextModifiers :last-child {
+  margin-right: auto;
+}
+
+#TextModifiers::-webkit-scrollbar {
+	height: 2px;
+}
+
+#TextModifiers::-webkit-scrollbar-thumb {
+	background-color: var(--light);
+  min-height: 20px;
+	
+}
+
+.group {
+  box-shadow: inset 0px 0px 0px 1px var(--deep);
+  display: flex; 
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.Name {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.window {
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 1px solid var(--deep);
+  flex-basis: 0;
+  flex-grow: 1;
+}
+
+.Block {
+  width: max-content;
+  padding-left: 0.5em;
+  margin-bottom: 0.5em;
+  display: flex;
+  flex-direction: row;
+  /* overflow-x: auto; */
+  align-items: center;
+  transition: background-color 0.5s cubic-bezier(0, 0, 0.15, 0.64);
+}
+
+.Block:hover {
+  background-color: var(--hilight);
+}
+.Block .options {
+  display: flex;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.Block:hover .options {
+  opacity: 1;
+}
+
+
+.hoverIndicator {
+  height: 1em; 
+  background-color: var(--deep); 
+  margin-right: 0.5em;  
+  transition: background-color 0.5s cubic-bezier(0, 0, 0.15, 0.64);
+}
+.Block:hover .hoverIndicator  {
+  background-color: var(--light); 
+}
+.Block:hover input, .Block:hover textarea  {/* 
+  box-shadow: inset 0px 0px 0px 1px var(--light); */
+}
+.Block input:hover, .Block textarea:hover  {
+  border-radius: 0px;/* 
+  box-shadow: inset 0px -1px 0px 0px var(--light), 
+  8px 0px 20px -4px var(--light); */
+  box-shadow: inset 0px 0px 0px 1px var(--light), 
+  8px 0px 20px -4px var(--light);
+}
+
+.Block.selected {
+  /* box-shadow: inset 0px 0px 0px 1px var(--mild); */
+  background-color: var(--hilight);
+}
+
+.Block:focus {
+    background-color: var(--vivid);
+}
+
+.Block input, .Block textarea {
+  box-shadow: none;
+  
+}
+
+.icon {
+  height: 1.5em;
+}
+button:has(.icon) {
+}
+
+a, .link {
+  text-decoration: none;
+  color: var(--link)
+}
+
+a:hover {
+  text-decoration: solid underline var(--link) 1px;
+}
+
+.head {
+  font-size: 1.2em;
+  padding: 0.5em 0.5em 0.5em 0.5em
+}
+.body {
+  flex-grow: 1;
+}
+.valuePreview {
+    font-size: 1.25em;
+    color: var(--vivid);
+}
+
+.autoCompletion {
+    
+}
+.autoCompletionItem {
+    background-color: var(--dark);
+    width: 100%;
+    text-align: left;
+}
+
+.InnerView {
+  display: flex;
+  height: 100%;
+  margin: auto; /* !!! Important !!! it aligns this to the horizontal center of the view */
+  justify-content: space-evenly;
+}
+
+.YAMLpreview {
+  border: 1px solid var(--deep);
+  line-height: 2;
+  white-space: pre-wrap;
+  padding: 10px;
+  overflow: auto;
+}
+
+#LogPreview {
+  height: 1.5em; 
+  width: 100%; 
+  background-color: var(--dark);
+  border: 1px solid var(--deep);
 }
