@@ -5,6 +5,8 @@ import Body from "./Body"
 import objectToBlocks from "./objectToBlocks"
 import pureFilename from "../../libs/pureFilename"
 import * as yaml from 'yaml'
+import findChildrenBlocks from "./findChildrenBlocks"
+
 
 export default async function Head (key, value, index, path, /* dataIndex, */ global) {
     //create elements first so they can be referenced
@@ -29,14 +31,26 @@ export default async function Head (key, value, index, path, /* dataIndex, */ gl
 
     let Block = await createBlock(index, path, main, global)
     
-    Block.key = key
-    Block.value = value //later blocks will provide the value of this object anyway BUT may not, if the blocks weren't embeded. SO we put the value.
-    Block.path = path
+    Block.rawData = {
+        key,
+        value
+    }
+    
+    Block.embeded = false
 
     embedButton.addEventListener('click', 
         async () => {
+            if (Block.embeded) {
+                let childrenBlocks = findChildrenBlocks(Block)
+                for (let c of childrenBlocks) c.remove()
+                Block.rawData.value = value
+                Block.embeded = false
+                return
+            }
+            Block.embeded = true
             let toEmbed = []
             if (value === "@") {
+                Block.rawData.value = {}
                 let linkFile = await global.docs.find((i) => {return pureFilename(i.name) === key}).handle.getFile()
                 let linkRaw = await linkFile.text()
                 let linkParsed = await yaml.parse(linkRaw)

@@ -47,9 +47,7 @@ async function updateEditor() {
   global.thisDoc.obj = await yaml.parse(global.thisDoc.original)
   global.thisDoc.edited = global.thisDoc.original
   global.thisDoc.editedRaw = global.thisDoc.original.split("\n")
-  global.YAMLPreview.innerHTML = div(
-    global.thisDoc.edite
-  )
+  global.YAMLPreview.innerHTML = global.thisDoc.original
 
   global.Editor.innerHTML = ""
   global.Editor.append(
