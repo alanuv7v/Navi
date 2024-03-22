@@ -256,18 +256,19 @@ async function listAllFilesAndDirs(dirHandle) {
 
 async function onFileInputClick(e) {
     const directoryHandle = await window.showDirectoryPicker()
-    global.docs = await listAllFilesAndDirs(directoryHandle);
-    console.log(directoryHandle, await global.docs)
+    await directoryHandle.requestPermission()
+
+    global.root = directoryHandle
+    global.docs = await listAllFilesAndDirs(directoryHandle)
 
     let root = global.docs.find((d) => {return d.name==="@root"})
-
     //save root directory handle to IndexedDB
     RootDB.roots.add({
-      usage: "lastOpened",
-      handle: directoryHandle
+        usage: "lastOpenedRoot",
+        handle: directoryHandle
     })
-    console.log(await RootDB)
-    
+    openLastOpenedRoot()
+
 }
 
 //App
@@ -356,30 +357,34 @@ function log(error) {
   console.log(error)
 }
 
-//if lastOpened root is defined in RootsDB(IndexedDB), set global.thisDoc props 
-if (RootDB.roots.where("usage").equals("lastOpened")) { 
-  let lastOpenedRoot = (await RootDB.roots.where("usage").equals("lastOpened").toArray())[0]
-  console.log(lastOpenedRoot)
-  try {
+//open lastOpened root
+async function openLastOpenedRoot() {
+  if (RootDB.roots.where("usage").equals("lastOpenedRoot")) { 
+    let lastOpenedRoot = (await RootDB.roots.where("usage").equals("lastOpenedRoot").toArray())[0]
     if (!(await lastOpenedRoot.handle.queryPermission()) === "granted") {
-      await fileHandle.requestPermission()
+      await lastOpenedRoot.handle.requestPermission()
     } 
     let docsList = await listAllFilesAndDirs(lastOpenedRoot.handle)
-    let rootFile = await docsList.find((doc) => {return doc.name === "@root.yaml"}).handle.getFile()
-    let rootDocText = await rootFile.text()
-    global.thisDoc.original = rootDocText
-    global.thisDoc.parsed = yaml.parse(rootDocText)
+    let root = await docsList.find((doc) => {return doc.name === "@root.yaml"}).handle
+    openDoc(root)
+  } else {
+    log("Open a root to explore and edit.")
+  }
+}
+
+
+async function openDoc(handle) {
+    if (!(await handle.queryPermission()) === "granted") {
+      await handle.requestPermission()
+    } 
+    let docFile = await handle.getFile()
+    let docRaw = await docFile.text()
+    global.thisDoc.original = docRaw
+    global.thisDoc.parsed = yaml.parse(docRaw)
     global.thisDoc.name = global.thisDoc.parsed["name"] ? global.thisDoc.parsed["name"] : "Unnamed Document"
 
-    console.log("GLOBAL:", global)
-    console.log(global.thisDoc.original)
-
     updateFileList(global.thisDoc.parsed, [])
-    log("Successfully opened your root.")
-    
-  } catch (err) {
-    log(err)
-  }
-} else {
-  log("Open a root to explore and edit.")
+    log(`Document name: ${global.thisDoc.name}. Successfully opened the document.`)
 }
+
+openLastOpenedRoot()
