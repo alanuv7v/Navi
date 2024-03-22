@@ -31,41 +31,6 @@ let initTargets = {
 }
 
 
-//Init DB
-
-//if RootDB already exists in the browser, Dexie will open the existing one
-//otherwise Dexie will create a new one and return it
-//so don't worry about creating duplicated DB
-let RootDB = new Dexie("RootsDB");
-
-RootDB.version(1).stores({
-  roots: `
-    ++id,
-    usage,
-    handle`,
-});
-
-global.thisDoc = {}
-
-//if lastOpened root is defined in RootsDB(IndexedDB), set global.thisDoc props 
-if (RootDB.roots.where("usage").equals("lastOpened")) { 
-  let lastOpenedRoot = (await RootDB.roots.where("usage").equals("lastOpened").toArray())[0]
-  console.log(lastOpenedRoot)
-  try {
-    let docsList = await listAllFilesAndDirs(lastOpenedRoot.handle)
-    let rootFile = await docsList.find((doc) => {return doc.name === "@root.yaml"}).handle.getFile()
-    let rootDocText = await rootFile.text()
-    global.thisDoc.original = rootDocText
-    global.thisDoc.parsed = yaml.parse(rootDocText)
-    global.thisDoc.name = global.thisDoc.parsed["name"] ? global.thisDoc.parsed["name"] : "Unnamed Document"
-
-    console.log("GLOBAL:", global)
-    console.log(global.thisDoc.original)
-    
-  } catch (err) {
-    console.log(new Error(err))
-  }
-}
 
 
 // define GUI components
@@ -78,17 +43,18 @@ const FileList = async () => {
     global.thisDoc.edited
   ))
   let blocks = await objectToBlocks(global.thisDoc.obj, /* global.thisDoc.editedRaw, */ global)
-  return blocks
+  let title = 
+  div({class: "h-flex Block", style: "margin-bottom: 0px;"},
+    div({class: "Name"}, global.thisDoc.name),
+    div({class: "h-flex"}, span("["),a("edit"), span("]"))
+  )
+
+  return [title, blocks]
 }
 
 const FileViewer = (path) => {
-  let This = "root"
   return div(
       {class: "FileViewer window"},
-      div({class: "h-flex Block", style: "margin-bottom: 0px;"},
-        div({class: "Name"}, This),
-        div({class: "h-flex"}, span("["),a("edit"), span("]"))
-      ),
       global.FileList
   )
 }
@@ -328,6 +294,7 @@ Object.defineProperty(global, 'path', {
     }
 });
 global.path = "Alan"
+global.LogPreview = div({id: "LogPreview"})
 
 const App = () => {
     
@@ -360,10 +327,59 @@ const App = () => {
       global.View, 
       global.TextModifiers,
       global.ContextMenu,
+      global.LogPreview,
     )
 }
 
     
 van.add(document.body, App())
-updateFileList(global.thisDoc.parsed, [])
 init()
+
+
+//Init DB
+
+//if RootDB already exists in the browser, Dexie will open the existing one
+//otherwise Dexie will create a new one and return it
+//so don't worry about creating duplicated DB
+let RootDB = new Dexie("RootsDB");
+
+RootDB.version(1).stores({
+  roots: `
+    ++id,
+    usage,
+    handle`,
+});
+
+global.thisDoc = {}
+
+function log(error) {
+  console.log(error)
+}
+
+//if lastOpened root is defined in RootsDB(IndexedDB), set global.thisDoc props 
+if (RootDB.roots.where("usage").equals("lastOpened")) { 
+  let lastOpenedRoot = (await RootDB.roots.where("usage").equals("lastOpened").toArray())[0]
+  console.log(lastOpenedRoot)
+  try {
+    if (!(await lastOpenedRoot.handle.queryPermission()) === "granted") {
+      await fileHandle.requestPermission()
+    } 
+    let docsList = await listAllFilesAndDirs(lastOpenedRoot.handle)
+    let rootFile = await docsList.find((doc) => {return doc.name === "@root.yaml"}).handle.getFile()
+    let rootDocText = await rootFile.text()
+    global.thisDoc.original = rootDocText
+    global.thisDoc.parsed = yaml.parse(rootDocText)
+    global.thisDoc.name = global.thisDoc.parsed["name"] ? global.thisDoc.parsed["name"] : "Unnamed Document"
+
+    console.log("GLOBAL:", global)
+    console.log(global.thisDoc.original)
+
+    updateFileList(global.thisDoc.parsed, [])
+    log("Successfully opened your root.")
+    
+  } catch (err) {
+    log(err)
+  }
+} else {
+  log("Open a root to explore and edit.")
+}

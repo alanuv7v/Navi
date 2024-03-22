@@ -6,6 +6,7 @@
     --deep: rgba(71, 71, 71, 1);
     --dark: rgba(0, 0, 0, 1);
     --hilight: rgba(99, 99, 253, 0.3);
+    --alert: rgba(255, 0, 0, 0.3);
 }
   
 * {
@@ -417,4 +418,11 @@ a:hover {
   white-space: pre-wrap;
   padding: 10px;
   overflow: auto;
+}
+
+#LogPreview {
+  height: 1.5em; 
+  width: 100%; 
+  background-color: var(--dark);
+  border: 1px solid var(--deep);
 }
