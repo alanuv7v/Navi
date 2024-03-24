@@ -2,26 +2,32 @@ components
   Contexted
   
 Editor (pot)
-  Block
+  Block:
+    order:
     depth: van.state()
-    key
-    value
+    key: van.state()
+    value: van.state()
     global 
   Head
   Body
-  Blocks_: elem
+  Blocks_: elem under Editor
+  blocksData: new WeakMap()
+    "Block DOM node : {order, depth, key, value}"
   blockActions: shown in context menu
-    moveUp: alt + w
-    moveDown: alt + s
-    depthUp: alt + d
-    depthDown: alt + a
+    editTree: when executed, changes corresponding blocksData everytime.
+      blocksData.get(Block_).*prop such depth/order/key/value* = *value*
+      moveUp: alt + w
+      moveDown: alt + s
+      depthUp: alt + d
+      depthDown: alt + a
+      join (= embed): the block's value gets emptied.
+      fold: the block's value is rebuilt by parsing children blockData, then reassigned.
+      open: 
+      delete:
     focusUp:
     focusDown:
     focusDepthUp:
     focusDepthDown:
-    join (= embed):
-    open:
-    delete:
     copyData:
     pasteData:
   visitHistory: list of the names of visited thots
@@ -37,8 +43,7 @@ Editor (pot)
   channel: function
   currentChannel: key(tie\relation) name
   stringify: blocks to yaml.
-    for (let c of this.Blocks_.children) 
-      let {key, value} = c.data
+    blocksData.
 
   save
 
@@ -56,40 +61,47 @@ RawEditor
   save
 
 
-global
-  root
+global:
+  root:
     handle: filehandle (folder handle)
     about (metadata): "_about.yaml" file parsed
-  tree
+  tree:
     raw
     editedRaw
-    parsed
+    parsed: vanX.reactive()
+      when global.tree.parsed is updated in any window, other windows are updated in sync.
     name
-  actions
+  actions:
     openRoot: 
       set global.root props after showDirectoryPicker()
       open global.root.about.enterance
     openTree
-  settings
-    yamlParseRules
-      indicators
-        raw
+  settings:
+    yamlParseRules:
+      indicators:
+        raw:
           body: //
           non-mirrored link: @!link
-        media
+        media:
           body: 
           link: @link
           named link: @[name|link]
-        query
+        query:
           divider: "/"
       "Parse key as link": true
-    rootmarkParseRules
+    rootmarkParseRules:
       depth: "#"
       link: @link
       named link: @[name|link]
-    shortcuts
-      
-  App
+    shortcuts:
+      blockActions
+      open root
+      open tree
+      search
+      view editor
+      view raw editor
+      view logs
+  App (DOM)
 
 App
   RootIO
