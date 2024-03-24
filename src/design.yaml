@@ -10,7 +10,7 @@ Editor
   Head
   Body
   Blocks
-  blockActions
+  blockActions: shown in context menu
     moveUp: alt + w
     moveDown: alt + s
     depthUp: alt + d
@@ -20,7 +20,7 @@ Editor
     join (= embed)
     open
     delete
-  visitHistory
+  visitHistory: list of the names of visited thots
   visitHistoryActions: same as the typical web browsers
     goBack: alt + ArrowLeft
     goForward: alt + ArrowRight
@@ -63,11 +63,15 @@ global
     openTree
   settings
     parseRules
-       body
-       link (=relation)
-       named link
-       non-mirrored link
+      raw
+       body: //
+       non-mirrored link: @!link
        media
+      body: 
+       link: @link
+       named link: @[name|link]
+      query
+
     shortcuts
       
   App
@@ -75,7 +79,7 @@ global
 App
   RootIO
   SearchBar
-  TreeEditor
+  Editor
   RawEditor
   LogsPreview
   LogsView

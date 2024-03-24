@@ -181,7 +181,17 @@ const Group = (name, innie) => {
     )
   )
 }
-
+/* 
+    button({
+      onclick: () => {
+        global.SelectedBlock.depth(-1)
+      }
+    }, "<depth-"),
+    button({
+      onclick: () => {
+        global.SelectedBlock.depth(+1)
+      }
+    }, ">depth+"), */
 global.TextModifiers = div(
   {id: "TextModifiers", class:"main"},
   Group(
@@ -208,16 +218,6 @@ global.TextModifiers = div(
         global.Editor.blocks.append(newBlock)
       }},    
       "Value"),
-    button({
-      onclick: () => {
-        global.SelectedBlock.depth(-1)
-      }
-    }, "<depth-"),
-    button({
-      onclick: () => {
-        global.SelectedBlock.depth(+1)
-      }
-    }, ">depth+"),
     button("[link]"),
     button("[tie|link]")]
   ),
@@ -226,16 +226,11 @@ global.TextModifiers = div(
     [button("!Bold!"),
     button("_Underline_"),
     button("/Italic/"),
-    button("~Strike~"),]
-  ),
-  Group(
-    "Organize",
-    [button("* Ul"),
-    button("1. Ol"),
+    button("~Strike~"),
     button("“quote”"),]
   ),
   Group(
-    "Custom",
+    "Compile",
     [button("?c.compile")]
   ),
 )
