@@ -342,6 +342,7 @@ RootDB.version(1).stores({
     handle`,
 });
 
+global.DB = RootDB
 global.thisDoc = {}
 
 function log(str) {

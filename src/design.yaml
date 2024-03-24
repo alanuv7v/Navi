@@ -5,9 +5,19 @@
 Blocks를 쓰는 화려한 에디터는 나중으로 미루자.
 다만 채널링과 링크 접속 안되는건 아쉽긴 하지.
 
+libs
+  nestedObj
+  pureFilename
+  yamlTools
 
 components
   Contexted
+  Block
+  Head
+  Body
+  AutoComplete
+  ResizedTextarea
+  ResizedInput
   
 Editor (pot)
   Block:
@@ -19,8 +29,7 @@ Editor (pot)
   Head
   Body
   Blocks_: elem under Editor
-  blocksData: new WeakMap()
-    "Block DOM node : {order, depth, key, value}"
+  blocksData: list of {depth, key, value}. When moveUp / moveDown, the order of the items gets swapped.
   blockActions: shown in context menu
     editTree: when executed, changes corresponding blocksData everytime.
       blocksData.get(Block_).*prop such depth/order/key/value* = *value*
@@ -50,8 +59,13 @@ Editor (pot)
     goForward: alt + shift + Z
   channel: function
   currentChannel: key(tie\relation) name
-  stringify: blocks to yaml.
-    blocksData.
+  stringify: | 
+    blocks to yaml.
+    let newRaw = []
+    for (let {depth, key, value} of blocksData) {
+      let line = (depth 갯수만큼의 indent) + yaml.parse({key: value})
+      newRaw.push(line)
+    }
 
   save
 
