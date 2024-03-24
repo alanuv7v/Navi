@@ -1,0 +1,82 @@
+components
+  Contexted
+  
+Editor
+  Block
+    depth
+    key
+    value
+    global 
+  Head
+  Body
+  Blocks
+  blockActions
+    moveUp
+    moveDown
+    depthUp
+    depthDown
+    copyData
+    pasteData    
+    join (= embed)
+    open
+    delete
+  visitHistory
+  visitHistoryActions
+    goBack
+    goForward
+    goUp
+    goDown
+  editHistory
+  editHistoryActions
+    goBack
+    goForward
+    goUp
+    goDown
+  channel
+  parse
+  stringify
+  save
+
+---
+그냥 텍스트 에디터만 주면 되겠는데. yaml 편집하게.
+파싱해서 일부분만 떼서 보게 하는 기능만 있으면 되잖아. 그럼 편하잖아.
+파싱해서 미러링크 달고.
+Blocks를 쓰는 화려한 에디터는 나중으로 미루자.
+다만 채널링과 링크 접속 안되는건 아쉽긴 하지.
+
+RawEditor 
+  parse
+  stringify
+  mirror
+  save
+
+
+global
+  root
+  tree
+    raw
+    editedRaw
+    parsed
+    name
+  actions
+    openRoot
+    openTree
+  settings
+    parseRules
+       body
+       link (=relation)
+       named link
+       non-mirrored link
+       media
+    shortcuts
+      
+  App
+
+App
+  RootIO
+  SearchBar
+  TreeEditor
+  RawEditor
+  LogsPreview
+  LogsView
+  ContextMenu
