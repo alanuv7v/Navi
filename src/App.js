@@ -259,7 +259,6 @@ async function onFileInputClick(e) {
 
     global.root = directoryHandle
 
-    let root = global.docs.find((d) => {return d.name==="@root"})
     //save root directory handle to IndexedDB
     RootDB.roots.add({
         usage: "lastOpenedRoot",
