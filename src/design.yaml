@@ -1,25 +1,29 @@
 components
   Contexted
   
-Editor
+Editor (pot)
   Block
-    depth
+    depth: van.state()
     key
     value
     global 
   Head
   Body
-  Blocks
+  Blocks_: elem
   blockActions: shown in context menu
     moveUp: alt + w
     moveDown: alt + s
     depthUp: alt + d
     depthDown: alt + a
-    copyData
-    pasteData    
-    join (= embed)
-    open
-    delete
+    focusUp:
+    focusDown:
+    focusDepthUp:
+    focusDepthDown:
+    join (= embed):
+    open:
+    delete:
+    copyData:
+    pasteData:
   visitHistory: list of the names of visited thots
   visitHistoryActions: same as the typical web browsers
     goBack: alt + ArrowLeft
@@ -28,13 +32,14 @@ Editor
     goDown: alt + ArrowDown
   editHistory
   editHistoryActions
-    goBack
-    goForward
-    goUp
-    goDown
-  channel
-  parse
-  stringify
+    goBack: alt + z
+    goForward: alt + shift + Z
+  channel: function
+  currentChannel: key(tie\relation) name
+  stringify: blocks to yaml.
+    for (let c of this.Blocks_.children) 
+      let {key, value} = c.data
+
   save
 
 ---
@@ -53,32 +58,42 @@ RawEditor
 
 global
   root
+    handle: filehandle (folder handle)
+    about (metadata): "_about.yaml" file parsed
   tree
     raw
     editedRaw
     parsed
     name
   actions
-    openRoot
+    openRoot: 
+      set global.root props after showDirectoryPicker()
+      open global.root.about.enterance
     openTree
   settings
-    parseRules
-      raw
-       body: //
-       non-mirrored link: @!link
-       media
-      body: 
-       link: @link
-       named link: @[name|link]
-      query
-
+    yamlParseRules
+      indicators
+        raw
+          body: //
+          non-mirrored link: @!link
+        media
+          body: 
+          link: @link
+          named link: @[name|link]
+        query
+          divider: "/"
+      "Parse key as link": true
+    rootmarkParseRules
+      depth: "#"
+      link: @link
+      named link: @[name|link]
     shortcuts
       
   App
 
 App
   RootIO
-  SearchBar
+  Search (also shows tree name)
   Editor
   RawEditor
   LogsPreview
