@@ -11,21 +11,21 @@ Editor
   Body
   Blocks
   blockActions
-    moveUp
-    moveDown
-    depthUp
-    depthDown
+    moveUp: alt + w
+    moveDown: alt + s
+    depthUp: alt + d
+    depthDown: alt + a
     copyData
     pasteData    
     join (= embed)
     open
     delete
   visitHistory
-  visitHistoryActions
-    goBack
-    goForward
-    goUp
-    goDown
+  visitHistoryActions: same as the typical web browsers
+    goBack: alt + ArrowLeft
+    goForward: alt + ArrowRight
+    goUp: alt + ArrowUp
+    goDown: alt + ArrowDown
   editHistory
   editHistoryActions
     goBack
