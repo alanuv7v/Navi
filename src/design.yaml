@@ -19,64 +19,71 @@ components
   ResizedTextarea
   ResizedInput
   
-Editor (pot)
-  Block:
-    order:
-    depth: van.state()
-    key: van.state()
-    value: van.state()
-    global 
-  Head
-  Body
-  Blocks_: elem under Editor
-  blocksData: list of {depth, key, value}. When moveUp / moveDown, the order of the items gets swapped.
-  blockActions: shown in context menu
-    editTree: when executed, changes corresponding blocksData everytime.
-      blocksData.get(Block_).*prop such depth/order/key/value* = *value*
-      moveUp: alt + w
-      moveDown: alt + s
-      depthUp: alt + d
-      depthDown: alt + a
-      join (= embed): the block's value gets emptied.
-      fold: the block's value is rebuilt by parsing children blockData, then reassigned.
-      open: 
-      delete:
-    focusUp:
-    focusDown:
-    focusDepthUp:
-    focusDepthDown:
-    copyData:
-    pasteData:
-  visitHistory: list of the names of visited thots
-  visitHistoryActions: same as the typical web browsers
-    goBack: alt + ArrowLeft
-    goForward: alt + ArrowRight
-    goUp: alt + ArrowUp
-    goDown: alt + ArrowDown
-  editHistory
-  editHistoryActions
-    goBack: alt + z
-    goForward: alt + shift + Z
-  channel: function
-  currentChannel: key(tie\relation) name
-  stringify: | 
-    blocks to yaml.
-    let newRaw = []
-    for (let {depth, key, value} of blocksData) {
-      let line = (depth 갯수만큼의 indent) + yaml.parse({key: value})
-      newRaw.push(line)
-    }
+# Editor (pot)
+#   Block:
+#     order:
+#     depth: van.state()
+#     key: van.state()
+#     value: van.state()
+#     global 
+#   Head
+#   Body
+#   Blocks_: elem under Editor
+#   blocksData: list of {depth, key, value}. When moveUp / moveDown, the order of the items gets swapped.
+#   blockActions: shown in context menu
+#     editTree: when executed, changes corresponding blocksData everytime.
+#       blocksData.get(Block_).*prop such depth/order/key/value* = *value*
+#       moveUp: alt + w
+#       moveDown: alt + s
+#       depthUp: alt + d
+#       depthDown: alt + a
+#       join (= embed): the block's value gets emptied.
+#       fold: the block's value is rebuilt by parsing children blockData, then reassigned.
+#       open: 
+#       delete:
+#     focusUp:
+#     focusDown:
+#     focusDepthUp:
+#     focusDepthDown:
+#     copyData:
+#     pasteData:
+#   visitHistory: list of the names of visited thots
+#   visitHistoryActions: same as the typical web browsers
+#     goBack: alt + ArrowLeft
+#     goForward: alt + ArrowRight
+#     goUp: alt + ArrowUp
+#     goDown: alt + ArrowDown
+#   editHistory
+#   editHistoryActions
+#     goBack: alt + z
+#     goForward: alt + shift + Z
+#   channel: function
+#   currentChannel: key(tie\relation) name
+#   stringify: | 
+#     blocks to yaml.
+#     let newRaw = []
+#     for (let {depth, key, value} of blocksData) {
+#       let line = (depth 갯수만큼의 indent) + yaml.parse({key: value})
+#       newRaw.push(line)
+#     }
 
-  save
+#   save
 
-RawEditor 
-  parse
+RawEditor:
+  parse: parse text as obj
   stringify
   mirror
   save
+  channel
+  currentChannel
+  
+createMirroredLink
+
 
 
 global:
+  DB: new Dexie("RootDB")
+    roots:
   root:
     handle: filehandle (folder handle)
     about (metadata): "_about.yaml" file parsed
@@ -90,7 +97,7 @@ global:
     openRoot: 
       set global.root props after showDirectoryPicker()
       open global.root.about.enterance
-    openTree
+    openTree:
   settings:
     yamlParseRules:
       indicators:
