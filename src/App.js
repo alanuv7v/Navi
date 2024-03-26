@@ -8,7 +8,7 @@ import { createEvent, createStore } from "effector"
 import nestedObj from "./libs/nestedObj"
 import * as yaml from 'yaml'
 import {createBlock as Block} from "./components/Block"
-import { MultilineTextarea, resizeTextarea } from "./components/MultilineTextarea"
+import { MultilineTextarea, resizeTextarea } from "./components/ResizedTextarea"
 import Head from "./components/Head"
 import Body from "./components/Body"
 import AutoComplete from "./components/AutoComplete"
@@ -45,7 +45,7 @@ async function updateEditor() {
   global.thisDoc.obj = await yaml.parse(global.thisDoc.original)
   global.thisDoc.edited = global.thisDoc.original
   global.thisDoc.editedRaw = global.thisDoc.original.split("\n")
-  global.YAMLPreview.innerHTML = global.thisDoc.original
+  global.YAMLPreview.value = global.thisDoc.original
 
   global.Editor.innerHTML = ""
   global.Editor.append(
@@ -265,7 +265,7 @@ async function onFileInputClick(e) {
 
 global.View = div({id: "view", class:"main"})
 global.Editor = Editor([])
-global.YAMLPreview = div({class: "YAMLpreview window"})
+global.YAMLPreview = textarea({class: "YAMLpreview window"})
 global.InnerView = div({class: "InnerView"},
   global.Editor,
   global.YAMLPreview

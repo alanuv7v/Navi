@@ -128,12 +128,15 @@ input:hover, button:hover, textarea:hover {
     box-shadow: inset 0px 0px 0px 1px var(--light);*/
     
 }
-input:focus, button:active, textarea:focus {
+input:focus, button:active {
 
     border-radius: 0px;
 
     background-color: var(--light);
     color: var(--dark);
+}
+textarea:focus {
+    border-radius: 0px;
 }
 
 .border {
