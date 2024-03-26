@@ -5,19 +5,24 @@
 Blocks를 쓰는 화려한 에디터는 나중으로 미루자.
 다만 채널링과 링크 접속 안되는건 아쉽긴 하지.
 
-libs
-  nestedObj
-  pureFilename
-  yamlTools
+src:
+  libs:
+    nestedObj
+    pureFilename
+    yamlTools
 
-components
-  Contexted
-  Block
-  Head
-  Body
-  AutoComplete
-  ResizedTextarea
-  ResizedInput
+  components:
+    Contexted
+    Block
+    Head
+    Body
+    AutoComplete
+    ResizedTextarea
+    ResizedInput
+
+  actions: #libs specifically made for this app, Root.
+    parseQuery(str, docs)
+    createMirroredLink(from:str, to:str, tie:id, docs, ties)
   
 # Editor (pot)
 #   Block:
@@ -77,8 +82,6 @@ RawEditor:
   channel
   currentChannel
   
-createMirroredLink
-
 
 
 global:

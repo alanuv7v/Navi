@@ -17,6 +17,8 @@ import blocksToObject from "./components/blocksToObject"
 import Dexie from "dexie"
 
 import pureFilename from "./libs/pureFilename"
+import createMirrorLink from "./actions/createMirrorLink"
+import * as yamlTools from "./libs/yamlTools"
 
 /* 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -261,11 +263,24 @@ async function onFileInputClick(e) {
 
 }
 
+function YAMLPreview() {
+  return textarea({class: "YAMLpreview window", onblur: (event) => {
+    let yamlLines = yamlTools.parse(event.target.value)
+    
+    let mirrorLinkFrom = yamlLines.filter(line => line.value[0]==="@" || line.value ==='"@"')
+    console.log(yamlLines, mirrorLinkFrom)
+    for (let i=0; i<mirrorLinkFrom.length; i++) {
+      let line = mirrorLinkFrom[i]
+      createMirrorLink(yamlTools.getPath(global.thisDoc.name, i, mirrorLinkFrom), line.key, "_default", global.docs)
+    }
+  }})
+}
+
 //App
 
 global.View = div({id: "view", class:"main"})
 global.Editor = Editor([])
-global.YAMLPreview = textarea({class: "YAMLpreview window"})
+global.YAMLPreview = YAMLPreview()
 global.InnerView = div({class: "InnerView"},
   global.Editor,
   global.YAMLPreview
