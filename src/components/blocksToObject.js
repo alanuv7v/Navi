@@ -1,4 +1,4 @@
-import nestedObj from "../../libs/nestedObj"
+import nestedObj from "../libs/nestedObj"
 import * as yaml from 'yaml'
 
 

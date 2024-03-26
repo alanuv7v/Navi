@@ -1,14 +1,11 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a, img} = van.tags
-import nestedObj from "../../libs/nestedObj"
+import nestedObj from "../libs/nestedObj"
 import objectToBlocks from "./objectToBlocks"
 
 import Head from "./Head"
 import Body from "./Body"
-import * as docs from "../../docs"
-import embedPNG from '../../icons/embed.png'
-import expandPNG from '../../icons/expand.png'
-import outerPNG from '../../icons/outer.png'
+import * as docs from "../docs"
 
 
 

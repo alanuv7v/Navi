@@ -3,7 +3,7 @@ const {div, span, button, textarea, input, a, img} = van.tags
 import {createBlock} from "./Block"
 import Body from "./Body"
 import objectToBlocks from "./objectToBlocks"
-import pureFilename from "../../libs/pureFilename"
+import pureFilename from "../libs/pureFilename"
 import * as yaml from 'yaml'
 import findChildrenBlocks from "./findChildrenBlocks"
 
