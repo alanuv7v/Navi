@@ -33,7 +33,7 @@ Pleistocene: "@"
 로 미러 링크 생성.
 birth가 ol(ordered list)일 경우
 {
-  key(tie): ":Human/birth",
+  key(tie): ":Human/birth/i",
   value: "Human/birth/i"
 }
 로 저장.
@@ -42,13 +42,13 @@ birth가 ol(ordered list)일 경우
 the Pleistocene epoch: "@Pleistocene"
 => Pleistocene 문서에 
 {
-  key(tie): ":Pleistocene",
+  key(tie): ":Human/birth",
   value: "Human/birth"
 }
 로 미러 링크 생성.
 birth가 ol(ordered list)일 경우
 {
-  key(tie): ":Pleistocene",
+  key(tie): ":Human/birth/i",
   value: "Human/birth/i"
 }
 로 저장.
@@ -58,3 +58,13 @@ birth가 ol(ordered list)일 경우
 그게 바로 "tie", 연관서인 거지.
 Human이라는 대상과 Pleistocened이라는 대상이 갖는 관계는 바로 (인간의)birth인 거잖아.
 알려주는게 적절하지.
+
+근데 문제가 있다.
+그럼 상대 문서에는 이렇게 적힌다
+
+Human/birth: Human/birth
+
+이거 동어반복이잖아.
+...
+
+

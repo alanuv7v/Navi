@@ -266,12 +266,12 @@ async function onFileInputClick(e) {
 function YAMLPreview() {
   return textarea({class: "YAMLpreview window", onblur: (event) => {
     let yamlLines = yamlTools.parse(event.target.value)
-    
     for (let i=0; i<yamlLines.length; i++) {
       let line = yamlLines[i]
       if (!(line.value[0]==="@" || line.value ==='"@"')) continue
-      console.log(yamlTools.getPath(global.thisDoc.name, i, yamlLines)) //mirror link value
-      createMirrorLink(yamlTools.getPath(global.thisDoc.name, i, yamlLines), line.key, "_default", global.docs)
+      let mirrorLinkValue = yamlTools.getPath(global.thisDoc.name, i, yamlLines)
+      let mirrorTarget = line.key
+      createMirrorLink(mirrorLinkValue, mirrorTarget, "_default", global.docs)
     }
   }})
 }
