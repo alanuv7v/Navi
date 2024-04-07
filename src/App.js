@@ -269,9 +269,10 @@ function YAMLPreview() {
     for (let i=0; i<yamlLines.length; i++) {
       let line = yamlLines[i]
       if (!(line.value[0]==="@" || line.value ==='"@"')) continue
-      let mirrorLinkValue = yamlTools.getPath(global.thisDoc.name, i, yamlLines)
+      let mirrorLinkValue = "@"
       let mirrorTarget = line.key
-      createMirrorLink(mirrorLinkValue, mirrorTarget, "_default", global.docs)
+      let mirrorLinkTie = yamlTools.getPath(global.thisDoc.name, i, yamlLines)
+      createMirrorLink(mirrorLinkValue, mirrorTarget, mirrorLinkTie, global.docs)
     }
   }})
 }

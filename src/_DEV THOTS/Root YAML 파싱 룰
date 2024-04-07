@@ -62,9 +62,14 @@ Human이라는 대상과 Pleistocened이라는 대상이 갖는 관계는 바로
 근데 문제가 있다.
 그럼 상대 문서에는 이렇게 적힌다
 
-Human/birth: Human/birth
+:Human/birth: Human/birth
 
 이거 동어반복이잖아.
 ...
 
+:Human/birth: "@"
+이게 최선인가.
 
+is: Human/birth
+==: Human/birth
+tie를 지정하는 이상적 케이스
