@@ -7,7 +7,6 @@ export default async function (str, docs) {
         let targetDoc = docs.find((doc) => pureFilename(doc.name) === path[0])
         let file = await targetDoc.handle.getFile()
         let raw = await file.text()
-        console.log(`parsing query. doc: ${targetDoc}, file: ${file}, raw: ${raw}`)
         return {obj: await parse(raw),
             path, 
             handle: targetDoc.handle}

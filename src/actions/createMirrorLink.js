@@ -4,8 +4,13 @@ import nestedObj from "../libs/nestedObj"
 
 
 export default async function (from, to, tie, docs, mirrorLinkKey) {
-    let {obj, path, handle} = await parseQuery(to, docs)
-    console.log(`creating mirror link, from ${from} to ${to}, tie: ${tie}. success: `, parseQuery(to, docs))
+    let targetQueryResult =  await parseQuery(to, docs)
+    let {obj, path, handle} = targetQueryResult
+    console.log(`creating mirror link, 
+    from [${from}] 
+    to [${to}], 
+    tie: ${tie}. 
+    success: `, targetQueryResult)
     if (obj && path) {
         nestedObj(obj, [...path.slice(1), tie], from, null, true)
         let targetNewRaw = await yaml.stringify(obj)

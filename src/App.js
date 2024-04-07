@@ -378,13 +378,23 @@ async function openRoot(handle) {
 async function openLastOpenedRoot() {
   if (RootDB.roots.where("usage").equals("lastOpenedRoot")) { 
     await openRoot((await RootDB.roots.where("usage").equals("lastOpenedRoot").toArray())[0].handle)
-    let rootDoc = await global.docs.find((doc) => {return doc.name === "@root.yaml"}).handle
+    let config = await parseDoc(global.docs.find((doc) => {return doc.name === "_config.yaml"}).handle)
+    let rootDoc = await global.docs.find((doc) => {return doc.name === config.root}).handle
     openDoc(rootDoc).then(() => {
       global.RootIO.innerText = "root: " + global.thisDoc.name
     })
   } else {
     log("Open a root to explore and edit.")
   }
+}
+
+async function parseDoc(handle) {
+  if (!(await handle.queryPermission()) === "granted") {
+    await handle.requestPermission()
+  } 
+  let docFile = await handle.getFile()
+  let docRaw = await docFile.text()
+  return await yaml.parse(docRaw)
 }
 
 

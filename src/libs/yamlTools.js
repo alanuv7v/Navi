@@ -46,7 +46,6 @@ export function getParent (lineIndex, lines=[], directOnly=true) {
 }
 
 export function getPath (docName, lineIndex, lines) {
-    console.log(getParent(lineIndex, lines, false))
     let propAncestorNames = []
     for (let parentLineIndex of getParent(lineIndex, lines, false)) propAncestorNames.push(lines[parentLineIndex].key)
     return [docName, propAncestorNames.reverse(), lines[lineIndex].key].join("/")
