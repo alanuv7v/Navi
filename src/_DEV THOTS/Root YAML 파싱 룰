@@ -1,0 +1,60 @@
+_: This document describes humans.
+name: Human
+alias: 
+  Homo Sapiens: "@"
+  The apes:
+  Sons of bitches: 
+distinctive features: 
+  walking upright: "@"
+  degenerated jaw:
+birth: 
+  the Pleistocene epoch: "@Pleistocene"
+  Pleistocene: "@"
+mind: 
+  _: "kinda [fucked up|@fuck]. ain't it?"
+subsets: 
+  Alan: "@"
+_default: 
+  Alan: "@"
+
+---
+name: Alan
+:subset: Human
+
+  
+---
+
+Pleistocene: "@"
+=> Homo Sapiens 문서에 
+{
+  key(tie): ":Human/birth",
+  value: "Human/birth"
+}
+로 미러 링크 생성.
+birth가 ol(ordered list)일 경우
+{
+  key(tie): ":Human/birth",
+  value: "Human/birth/i"
+}
+로 저장.
+
+
+the Pleistocene epoch: "@Pleistocene"
+=> Pleistocene 문서에 
+{
+  key(tie): ":Pleistocene",
+  value: "Human/birth"
+}
+로 미러 링크 생성.
+birth가 ol(ordered list)일 경우
+{
+  key(tie): ":Pleistocene",
+  value: "Human/birth/i"
+}
+로 저장.
+
+이게 맞는것 같다.
+상대 문서에서도 자기가 어떤 프롭의 밸류로써 링크됬는지 정도는 알고 싶을거 아냐.
+그게 바로 "tie", 연관서인 거지.
+Human이라는 대상과 Pleistocened이라는 대상이 갖는 관계는 바로 (인간의)birth인 거잖아.
+알려주는게 적절하지.
