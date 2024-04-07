@@ -19,7 +19,7 @@ export function getDepth (line="") {
     let depth = 0
     for (let char of line) {
         if (char===" ") {
-            depth++
+            depth += 0.5 //if double spaces = 1 depth
         } else {
             return depth
         }
@@ -27,18 +27,26 @@ export function getDepth (line="") {
 }
 
 export function getParent (lineIndex, lines=[], directOnly=true) {
-    let line = lines[lineIndex]
+    let childLine = lines[lineIndex]
     let lastParentDepthDiff = 0
     let allAncestors = []
     for (let i=lineIndex; i>=0; i--) {
-        if (line.depth-1 === lines[i].depth && directOnly) return i
-        else if (line.depth-(lastParentDepthDiff+1) === lines[i].depth) allAncestors.push(i); lastParentDepthDiff++
+        let line = lines[i]
+        if (line.depth-1 === childLine.depth && directOnly) return line
+        else if (childLine.depth-(lastParentDepthDiff+1) === line.depth) {
+            allAncestors.push(i)
+            lastParentDepthDiff++
+        }
     }
-    return allAncestors
+    if (allAncestors.length > 0) return allAncestors 
+    else {
+        let err = new Error("No ancestors found for line at index(starts from 0) " + lineIndex)
+        throw err
+    }
 }
 
 export function getPath (docName, lineIndex, lines) {
-    return getParent(docName, lineIndex, lines, false).reverse().join("/")
+    return getParent(lineIndex, lines, false).reverse().join("/")
 }
 
 

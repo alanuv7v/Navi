@@ -267,11 +267,12 @@ function YAMLPreview() {
   return textarea({class: "YAMLpreview window", onblur: (event) => {
     let yamlLines = yamlTools.parse(event.target.value)
     
-    let mirrorLinkFrom = yamlLines.filter(line => line.value[0]==="@" || line.value ==='"@"')
-    console.log(yamlLines, mirrorLinkFrom)
-    for (let i=0; i<mirrorLinkFrom.length; i++) {
-      let line = mirrorLinkFrom[i]
-      createMirrorLink(yamlTools.getPath(global.thisDoc.name, i, mirrorLinkFrom), line.key, "_default", global.docs)
+    for (let i=0; i<yamlLines.length; i++) {
+      let line = yamlLines[i]
+      if (!(line.value[0]==="@" || line.value ==='"@"')) continue
+      console.log(global.thisDoc.name, i, yamlLines)
+      console.log(yamlTools.getPath(global.thisDoc.name, i, yamlLines))
+      createMirrorLink(yamlTools.getPath(global.thisDoc.name, i, yamlLines), line.key, "_default", global.docs)
     }
   }})
 }
