@@ -20,6 +20,14 @@ import pureFilename from "./libs/pureFilename"
 import createMirrorLink from "./actions/createMirrorLink"
 import * as yamlTools from "./libs/yamlTools"
 
+//debug tools
+const debug = {
+  log: function (str) {
+    console.log(str)
+    global.LogPreview.innerText = str
+  }
+}
+
 /* 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 codeanywhere에서 변경사항 있을 시 커밋 뿐만 아니라 push도 꼭 해야한다. 하고나서 깃허브에서 잘됬는지 한번더 확인할것
@@ -272,7 +280,9 @@ function YAMLPreview() {
       let mirrorLinkValue = "@"
       let mirrorTarget = line.key
       let mirrorLinkTie = yamlTools.getPath(global.thisDoc.name, i, yamlLines)
-      createMirrorLink(mirrorLinkValue, mirrorTarget, mirrorLinkTie, global.docs)
+      let res = createMirrorLink(mirrorLinkValue, mirrorTarget, mirrorLinkTie, global.docs)
+      console.log(res)
+      if (res) debug.log(`Created mirror link. target: [${mirrorTarget}], key(tie): "${mirrorLinkTie}", value: "${mirrorLinkValue}".`)
     }
   }})
 }
@@ -359,10 +369,6 @@ RootDB.version(1).stores({
 global.DB = RootDB
 global.thisDoc = {}
 
-function log(str) {
-  console.log(str)
-  global.LogPreview.innerText = str
-}
 
 async function openRoot(handle) {
   global.root = handle
@@ -370,7 +376,7 @@ async function openRoot(handle) {
   if (!(await handle.queryPermission()) === "granted") {
     await handle.requestPermission()
   } 
-  log("Open a root to explore and edit.")
+  debug.log("Open a root to explore and edit.")
   return true
 }
 
@@ -384,7 +390,7 @@ async function openLastOpenedRoot() {
       global.RootIO.innerText = "root: " + global.thisDoc.name
     })
   } else {
-    log("Open a root to explore and edit.")
+    debug.log("Open a root to explore and edit.")
   }
 }
 
@@ -409,7 +415,7 @@ async function openDoc(handle) {
     global.thisDoc.name = pureFilename(handle.name)
 
     updateEditor(global.thisDoc.parsed, [])
-    log(`Successfully opened the document [${global.thisDoc.name}]`)
+    debug.log(`Successfully opened the document [${global.thisDoc.name}]`)
     return true
 }
 global.openDoc = openDoc

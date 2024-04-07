@@ -424,8 +424,24 @@ a:hover {
 }
 
 #LogPreview {
-  height: 1.5em; 
+  padding: 0.5em;
   width: 100%; 
   background-color: var(--dark);
   border: 1px solid var(--deep);
+  animation-name: logAppear;
+  animation-duration: 2s;
+  animation-iteration-count: 2;
+  animation-timing-function: ease-out;
+}
+
+@keyframes logAppear{
+  0% {
+    background-color: inherit;
+  }
+  50% {
+    background-color: var(--hilight);
+  }
+  100% {
+    background-color: inherit;
+  }
 }
