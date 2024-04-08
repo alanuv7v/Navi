@@ -24,6 +24,7 @@ import * as yamlTools from "./libs/yamlTools"
 const debug = {
   log: function (str) {
     console.log(str)
+    console.trace()
     global.LogPreview.innerText = str
   }
 }
@@ -376,19 +377,26 @@ async function openRoot(handle) {
   if (!(await handle.queryPermission()) === "granted") {
     await handle.requestPermission()
   } 
-  debug.log("Open a root to explore and edit.")
   return true
 }
 
 //open lastOpened root
 async function openLastOpenedRoot() {
   if (RootDB.roots.where("usage").equals("lastOpenedRoot")) { 
-    await openRoot((await RootDB.roots.where("usage").equals("lastOpenedRoot").toArray())[0].handle)
-    let config = await parseDoc(global.docs.find((doc) => {return doc.name === "_config.yaml"}).handle)
-    let rootDoc = await global.docs.find((doc) => {return doc.name === config.root}).handle
-    openDoc(rootDoc).then(() => {
-      global.RootIO.innerText = "root: " + global.thisDoc.name
-    })
+    try {
+      await openRoot((await RootDB.roots.where("usage").equals("lastOpenedRoot").toArray())[0].handle)
+      let config = await parseDoc(global.docs.find((doc) => {return doc.name === "_config.yaml"}).handle)
+      let rootDoc = await global.docs.find((doc) => {return doc.name === config.root}).handle
+      openDoc(rootDoc).then(() => {
+        global.RootIO.innerText = "root: " + global.thisDoc.name
+      })
+    } catch (err) {
+      debug.log(
+`Could not open lastOpenedRoot from RootDB. 
+Error: 
+${err}`
+      )
+    }
   } else {
     debug.log("Open a root to explore and edit.")
   }
