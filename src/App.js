@@ -384,20 +384,14 @@ async function openRoot(handle) {
 //open lastOpened root
 async function openLastOpenedRoot() {
   if (RootDB.roots.where("usage").equals("lastOpenedRoot")) { 
-    try {
-      await openRoot((await RootDB.roots.where("usage").equals("lastOpenedRoot").toArray())[0].handle)
-      let config = await parseDoc(global.docs.find((doc) => {return doc.name === "_config.yaml"}).handle)
-      let rootDoc = await global.docs.find((doc) => {return doc.name === config.root}).handle
-      openDoc(rootDoc).then(() => {
-        global.RootIO.innerText = "root: " + global.thisDoc.name
-      })
-    } catch (err) {
-      debug.log(
-`Could not open lastOpenedRoot from RootDB. 
-Error: 
-${err}`
-      )
-    }
+    let lastOpenedRootHandle = (await RootDB.roots.where("usage").equals("lastOpenedRoot").toArray())[0].handle
+    await openRoot(lastOpenedRootHandle)
+    global.config = await parseDoc(global.docs.find((doc) => {return doc.name === "_config.yaml"}).handle)
+    console.log(global.config.root, global.docs)
+    let rootDoc = await global.docs.find((doc) => {return doc.name === global.config.root}).handle
+    openDoc(rootDoc).then(() => {
+      global.RootIO.innerText = "root: " + global.thisDoc.name
+    })
   } else {
     debug.log("Open a root to explore and edit.")
   }
