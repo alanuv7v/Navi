@@ -277,7 +277,8 @@ function YAMLPreview() {
     let yamlLines = yamlTools.parse(event.target.value)
     for (let i=0; i<yamlLines.length; i++) {
       let line = yamlLines[i]
-      if (!(line.value[0]==="@" || line.value ==='"@"')) continue
+      const checkLink = line.value[0]==="@" || line.value ==='"@"' || line.value ==="@"
+      if (!checkLink) continue
       let mirrorLinkValue = "@"
       let mirrorTarget = line.key
       let mirrorLinkTie = yamlTools.getPath(global.thisDoc.name, i, yamlLines)

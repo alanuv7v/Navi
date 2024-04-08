@@ -11,7 +11,7 @@ export default async function (from, to, tie, docs, mirrorLinkKey) {
     to [${to}], 
     tie: ${tie}. 
     success: `, targetQueryResult)
-    if (obj && path) {
+    if (obj && path) { 
         nestedObj(obj, [...path.slice(1), tie], from, null, true)
         let targetNewRaw = await yaml.stringify(obj)
         let targetWritable = (await handle.createWritable())
