@@ -3,12 +3,11 @@ import van from "vanjs-core"
 const t = van.tags
 const {div, span, a} = t
 
-import Head from "./Head"
-import Body from "./Body"
+import Head from "../components/Head"
+import Body from "../components/Body"
 
-export const Editor = {
-    DOM: div({class: "Editor window"}),
-    document: {
+export default Editor = {
+    docuemnt: {
         handle: null,
         original: {
             raw: null,
@@ -20,8 +19,8 @@ export const Editor = {
         }
     },
     blocks: [],
-    async update () {
-        
+    update: async () => {
+
         this.document.obj = await yaml.parse(this.document.original)
         this.document.edited = this.document.original
         this.document.editedRaw = this.document.original.split("\n")
@@ -44,35 +43,35 @@ export const Editor = {
             global.Editor.append(block)
         }
     },
-    blocksToObject (blockDataList=[]) {
+    blocksToObject: (blockDataList=[]) => {
         let resultYAML = ``
         for (let row of blockDataList) {
             resultYAML += row
         }
         return resultYAML
     },
-    async objectToBlocks (obj, global, originalPath=[]) {
+    objectToBlocks: async (obj, global, originalPath=[]) => {
         // param originalPath is used when a block tries to open its children.
-        let blocks = []
+        let result = []
         for (let e of Object.entries(obj)) {
             let key = e[0]
             let value = e[1]
             let path = [...originalPath, key]
             switch (key) {
                 case "_":
-                    blocks.push(await Body(value, null, [...originalPath, key], global))
+                    result.push(await Body(value, null, [...originalPath, key], global))
                     break
                 default:
                     let h = await Head(key, value, null, [...originalPath, key], global)
                     h.depth(path.length)
-                    blocks.push(h)
+                    result.push(h)
                     break
     
             }
         }
-        return blocks
+        return result
     },
-    findChildrenBlocks (Block) {
+    findChildrenBlocks: (Block) => {
         //nextSibling 이용하는걸로 바꾸자
         let children = []
         for (let i=0; i<blocks.length; i++) {
@@ -83,6 +82,5 @@ export const Editor = {
         }
         return children
     }
-
 }
 

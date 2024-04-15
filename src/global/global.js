@@ -1,12 +1,15 @@
+import { Editor } from "../actions/Editor";
+
 export default  {
-    DOM: {},
+    DOM: {
+        Editor: div({class: "Editor window"})
+    },
     DB: null,
     root: {
         handle: null,
         metadata: null,
     },
     docs: null,
-    Editor: null,
     settings: {
         handle: null,
         parsed: null,

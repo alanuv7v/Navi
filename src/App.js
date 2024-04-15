@@ -3,13 +3,11 @@ const t = van.tags
 const {div, span, button, textarea, input, a} = t
 const d = div
 
-import { createEvent, createStore } from "effector" 
-
 import nestedObj from "./libs/nestedObj"
 import * as yaml from 'yaml'
 
 import AutoComplete from "./components/AutoComplete"
-import { objectToBlocks, blocksToObject } from "./components/Editor"
+import { objectToBlocks, blocksToObject } from "./actions/Editor"
 import Dexie from "dexie"
 
 import { pureFileName } from "./libs/utils"
@@ -18,64 +16,14 @@ import * as yamlUtils from "./libs/yamlUtils"
 
 import debug from "./global/debug"
 import global from "./global/global"
+import ContextMenu from "./actions/ContextMenu"
 
 /* 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 codeanywhere에서 변경사항 있을 시 커밋 뿐만 아니라 push도 꼭 해야한다. 하고나서 깃허브에서 잘됬는지 한번더 확인할것
 */
 
-
-const MenuItem = (menuIndex, name, action, children) => {
-  //console.log('At MenuItem init, menus.getState() = ', JSON.stringify(menus.getState(), null, 2) + '. Index is ' + menuIndex)  
-  return button({onclick: (event) => {
-    action();
-    if (children) updateContextMenu({fromIndex: menuIndex, toAdd: children});
-  }}, name
-  )
-}
-
-const Menu = (menuItems) => {
-  let index = menus.getState().length
-  let MenuItems = []
-  for (let m of menuItems) {
-    MenuItems.push(MenuItem(index, m.name, m.action, m.children))
-  }
-  return div({style: "display: flex; flex-direction: row"}, MenuItems)
-}
-global.menus = createStore([])
-let menus = global.menus
-
-menus.watch(ms => {
-  if (global.ContextMenu) {
-    while (global.ContextMenu.hasChildNodes()) {
-      global.ContextMenu.firstChild.remove() 
-    }
-    for (let menuItems of ms) {
-      menuItems = Array.isArray(menuItems) ? menuItems : [menuItems]
-      global.ContextMenu.append(Menu(menuItems))
-    }
-  }
-})
-
-let updateContextMenu = createEvent()
-
-menus
-  .on(updateContextMenu, function(prev, props) {
-        let {fromIndex, toAdd} = props
-        //console.log('update ContextMenu: ' + JSON.stringify([...prev.slice(0, fromIndex), toAdd], null, 2))
-        return [...prev.slice(0, fromIndex), toAdd]
-      })
-
-  /* 
-function updateMenus(fromIndex, childrenMenus) {
-  menus.val = [...menus.val.slice(0, fromIndex), childrenMenus]
-  return menus.val
-} */
-
-
-
-
-let defaultMenu = [
+let initMenuData = [
     {name: 'Item', 
     action: function() {alert('!')}, 
     children: [
@@ -98,26 +46,9 @@ let defaultMenu = [
     }
 ]
 
-//yaml: 
-/* `
-name: Item
-action: 
-    args: []
-    body: "alert"
-children: 
-    - {
-        name:
-        action:
-        children:
-    }
-    - {}
-    - {}
-
-` */
-
 
 function init() {
-  updateContextMenu({fromIndex: 0, toAdd: defaultMenu})
+  ContextMenu
 }
 
 
