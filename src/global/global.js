@@ -1,4 +1,4 @@
-import { Editor } from "../actions/Editor";
+import { Editor } from "../calc/Editor";
 
 export default  {
     DOM: {

@@ -6,17 +6,17 @@ const d = div
 import nestedObj from "./libs/nestedObj"
 import * as yaml from 'yaml'
 
-import AutoComplete from "./components/AutoComplete"
-import { objectToBlocks, blocksToObject } from "./actions/Editor"
+import AutoComplete from "./io/AutoComplete"
+import { objectToBlocks, blocksToObject } from "./calc/Editor"
 import Dexie from "dexie"
 
 import { pureFileName } from "./libs/utils"
-import createMirrorLink from "./actions/createMirrorLink"
+import createMirrorLink from "./calc/createMirrorLink"
 import * as yamlUtils from "./libs/yamlUtils"
 
 import debug from "./global/debug"
 import global from "./global/global"
-import ContextMenu from "./actions/ContextMenu"
+import ContextMenu from "./calc/ContextMenu"
 
 /* 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

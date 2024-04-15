@@ -1,9 +1,0 @@
-이제부터:
-모든 DOM은 init.js의 export default function init이 실행됨으로써 global의 각 구석에 저장된다.
-즉 모든 DOM은 global에 저장된다.
-App.js는 global에서 각 DOM 파트들을 가져와 자기 DOM 안에 넣는다.
-App.js는 자신의 DOM을 export한다.
-그럼 main.js에서 App.js의 DOM을 브라우저에 출력한다.
-
-Editor, ContextMenu 등은 이제 단순 유틸이 되었다.
-정확히는 모듈로 읽어오고 수정하는 global 객체 안에 들어있는 DOM을 수정하는 유틸이다.

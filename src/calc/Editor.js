@@ -3,8 +3,8 @@ import van from "vanjs-core"
 const t = van.tags
 const {div, span, a} = t
 
-import Head from "../components/Head"
-import Body from "../components/Body"
+import Head from "../io/Head"
+import Body from "../io/Body"
 
 export default Editor = {
     docuemnt: {
