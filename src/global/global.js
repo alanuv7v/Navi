@@ -2,7 +2,7 @@ import van from "vanjs-core"
 const t = van.tags
 const {div, span, button, textarea, input, a} = t
 
-import { createMirrorLinks } from "../calc/RawEditor"
+import * as RawEditor from "../calc/RawEditor"
 
 export default {
     App: null,
@@ -12,7 +12,10 @@ export default {
     //추후 여러 군데에서의 DOM reference를 위해 미리 DOM 노드를 생성한 것일 뿐, "완성되어 있을 필요"는 없다. 즉 자식과 프롭과 이벤트리스너가 다 들어있지 않아도 된다.
     {
         Editor: div({id: "Editor", class: "window"}),
-        RawEditor: textarea({id: "RawEditor", class: "window", onblur: (event) => {createMirrorLinks(event.target.value)}}),
+        RawEditor: textarea({id: "RawEditor", class: "window", onblur: (event) => {
+            RawEditor.createMirrorLinks()
+            RawEditor.UnmirrorLinks()
+        }}),
         View: div({id: "view", class:"main"}),
         ContextMenu: div({id: "ContextMenu", style: "bottom: 0px; display: flex; flex-direction: column-reverse; z-index: 2; width: 100%; padding: 0.5em;"}),
         LogPreview: div({id: "LogPreview", class: "clickable"}),

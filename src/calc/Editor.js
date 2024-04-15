@@ -103,8 +103,8 @@ export const findChildrenBlocks = (Block) => {
     }
     return children
 }
-export async function createMirrorLink (from, to, tie, docs, mirrorLinkKey) {
-    let targetQueryResult =  await parseQuery(to, docs)
+export async function createMirrorLink (from, to, tie, mirrorLinkKey) {
+    let targetQueryResult =  await parseQuery(to, global.docs)
     let {obj, path, handle} = targetQueryResult
     if (obj && path) { 
         nestedObj(obj, [...path.slice(1), "%"+tie], from, null, true)
@@ -115,9 +115,30 @@ export async function createMirrorLink (from, to, tie, docs, mirrorLinkKey) {
         })
         console.log(`created mirror link, 
         from [${from}] 
-        to [${to}], 
-        tie: ${tie}. 
-        success: `, targetQueryResult)
+        to [${to}] 
+        tie: ${tie}
+        target found: ${targetQueryResult}
+        res: `, targetNewRaw)
+        return targetNewRaw
+    } else {
+        return false
+    }
+}
+export async function deleteProperty (pathQuery) {
+    let targetQueryResult =  await parseQuery(pathQuery, global.docs)
+    let {obj, path, handle} = targetQueryResult
+    if (obj && path) { 
+        nestedObj(obj, path, null, "delete")
+        let targetNewRaw = await yaml.stringify(obj)
+        let targetWritable = (await handle.createWritable())
+        targetWritable.write(targetNewRaw).then(() => {
+            targetWritable.close()
+        })
+        console.log(`deleted property,
+        from: [${from}] 
+        path: ${path}
+        target found: ${targetQueryResult}
+        res: `, targetNewRaw)
         return targetNewRaw
     } else {
         return false

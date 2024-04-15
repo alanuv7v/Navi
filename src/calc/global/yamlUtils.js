@@ -53,7 +53,6 @@ export function getPath (docName, lineIndex, lines, raw=false) {
 }
 
 
-
 export function getChildren (lineIndex, lines=[], directOnly=true) {
     let line = lines[lineIndex]
     let result = []
