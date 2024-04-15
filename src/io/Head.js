@@ -2,10 +2,8 @@ import van from "vanjs-core"
 const {div, span, button, textarea, input, a, img} = van.tags
 import { createBlock } from "./Block"
 import Body from "./Body"
-import { objectToBlocks } from "./Editor"
-import { pureFileName } from "../libs/utils"
+import { objectToBlocks, findChildrenBlocks } from "../calc/Editor"
 import * as yaml from 'yaml'
-import findChildrenBlocks from "./findChildrenBlocks"
 
 
 export default async function Head (key, value, index, path, /* dataIndex, */ global) {

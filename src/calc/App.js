@@ -1,6 +1,7 @@
+import global from "../global/global"
 import { listAllFilesAndDirs } from "./global/utils"
 import * as yaml from 'yaml'
-import log from "./Logs"
+import { log } from "./Logs"
 
 export async function openRoot(handle) {
     global.root = handle
@@ -12,12 +13,12 @@ export async function openRoot(handle) {
 }
   
 export async function openLastOpenedRoot() {
-    if (RootDB.roots.where("usage").equals("lastOpenedRoot")) { 
-        let lastOpenedRootHandle = (await RootDB.roots.where("usage").equals("lastOpenedRoot").toArray())[0].handle
+    if (global.DB.roots.where("usage").equals("lastOpenedRoot")) { 
+        let lastOpenedRootHandle = (await global.DB.roots.where("usage").equals("lastOpenedRoot").toArray())[0].handle
         await openRoot(lastOpenedRootHandle)
         global.config = await parseDocumentHandle(global.docs.find((doc) => {return doc.name === "_config.yaml"}).handle)
         console.log(global.config.root, global.docs)
-        let rootDoc = await global.docs.find((doc) => {return doc.name === global.config.root}).handle
+        let rootDoc = await global.docs.find((doc) => {return doc.name === global.root.config.root}).handle
         openDoc(rootDoc).then(() => {
         global.RootIO.innerText = "root: " + global.thisDoc.name
         })

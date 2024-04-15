@@ -7,8 +7,8 @@ import { blocksToObject } from "./calc/Editor"
 import Dexie from "dexie"
 
 import global from "./global/global"
-import ContextMenu from "./calc/ContextMenu"
-import { openRoot, openLastOpenedRoot, openDocument, parseDocumentHandle} from "./calc/App"
+import * as ContextMenu from "./calc/ContextMenu"
+import { openRoot, openLastOpenedRoot, openDocument, parseDocumentHandle } from "./calc/App"
 
 /* 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -54,7 +54,7 @@ function initDB () {
   global.DB = RootDB
 }
 
-ContextMenu.update(initMenuData)
+ContextMenu.update(-1, initMenuData)
 /* global.TextModifiers = div(
   {id: "TextModifiers", class:"main"},
   Group(
@@ -101,7 +101,7 @@ ContextMenu.update(initMenuData)
 //App
 const App = div({id: 'App'},
   div({id: "header", style: "display: flex; flex-direction: row; align-items: center; "},
-    global.RootIO,
+    global.DOM.rootIO,
     button("◁"),
     button("▷"),
     button({onclick: () => updateFileViewer(path.slice(0, -1))}, "⇑"),
@@ -123,31 +123,31 @@ const App = div({id: 'App'},
     }),
     button("👁 All"),
   ),
-  global.View, 
-  global.TextModifiers,
-  global.ContextMenu,
-  global.LogPreview,
+  global.DOM.View, 
+  global.DOM.TextModifiers,
+  global.DOM.ContextMenu,
+  global.DOM.LogPreview,
 )
 
 function IOSetUp() {
-  global.InnerView = div({class: "InnerView"},
+  global.DOM.InnerView = div({class: "InnerView"},
     global.Editor,
     global.RawEditor
   )
-  global.View.append(global.InnerView)
-  global.RootIO.addEventListener("click", async (event) => {
+  global.DOM.View.append(global.InnerView)
+  global.DOM.rootIO.addEventListener("click", async (event) => {
       const directoryHandle = await window.showDirectoryPicker()
       await directoryHandle.requestPermission()
       openRoot(directoryHandle)
       //save root directory handle to IndexedDB
-      RootDB.roots.add({
+      global.DB.roots.add({
         usage: "lastOpenedRoot",
         handle: directoryHandle
       })
   })
 }
     
-van.add(document.body, App())
+van.add(document.body, App)
 IOSetUp()
 initDB()
 openLastOpenedRoot()
