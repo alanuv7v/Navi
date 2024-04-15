@@ -24,6 +24,7 @@ export default {
         metadata: null,
     },
     docs: null,
+    contextMenu: [],
     settings: {
         handle: null,
         parsed: null,

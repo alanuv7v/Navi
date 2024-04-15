@@ -7,24 +7,25 @@ export default ContextMenu  = {
           if (children) updateContextMenu(rowIndex,  children);
         }}, name)
     },
-    Menu: (menuData) => {
+    Row: (data) => {
         return div(
             {style: "display: flex; flex-direction: row"}, 
-            menuData.map(m => MenuItem(index, m.name, m.action, m.children))
+            data.map(i => MenuItem(index, i.name, i.action, i.children))
         )
     },
-    replace: (rows) => {
-        let rows = Array.isArray(rows) ? rows : [rows]
+    replace: (rowsData) => {
+        global.contextMenu = rowsData
         //remove prev
-        global.ContextMenu.innerHTML = ""
+        global.DOM.ContextMenu.innerHTML = ""
         /* while (global.ContextMenu.hasChildNodes()) {
             global.ContextMenu.firstChild.remove() 
         } */
+        let rows = rowsData.map((r) => this.Row(r))
         for (let row of rows) {
-            global.ContextMenu.append(row)
+            global.DOM.ContextMenu.append(row)
         }
     },
-    update: (prev, fromRowIndex, toAdd) => {
-        this.replace([...prev.slice(0, fromRowIndex), Menu(toAdd)])
+    update: (fromRowIndex, nextRowData) => {
+        this.replace([...global.contextMenu.slice(0, fromRowIndex), nextRowData])
     }
 }
