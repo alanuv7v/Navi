@@ -13,7 +13,7 @@ export async function openRoot(handle) {
 }
   
 export async function openLastOpenedRoot() {
-    if (global.DB.roots.where("usage").equals("lastOpenedRoot")) { 
+    if (global.DB.roots.where("usage").equals("lastOpenedRoot").toArray().length > 0) { 
         let lastOpenedRootHandle = (await global.DB.roots.where("usage").equals("lastOpenedRoot").toArray())[0].handle
         await openRoot(lastOpenedRootHandle)
         global.config = await parseDocumentHandle(global.docs.find((doc) => {return doc.name === "_config.yaml"}).handle)
