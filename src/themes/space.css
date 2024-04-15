@@ -100,7 +100,7 @@ body {
     margin-bottom: -1px; */
 }
 
-button, input, textarea, select, .buttonlike {
+button, input, textarea, select {
   
   font-size: 14px;
   padding: 0.5em 0.5em 0.5em 0.5em;
@@ -122,7 +122,7 @@ textarea {
   overflow: auto; /* !! 결국 그게 되야하는데... 자동 리자이징. */
 }
 
-input:hover, button:hover, textarea:hover {
+input:hover, button:hover, textarea:hover, .clickable:hover {
     border-radius: 0px;
     box-shadow: inset 0px 0px 0px 1px var(--light),
     0px 0px 10px 0px var(--light);
@@ -130,7 +130,7 @@ input:hover, button:hover, textarea:hover {
     box-shadow: inset 0px 0px 0px 1px var(--light);*/
     
 }
-input:focus, button:active {
+input:focus, button:active, .clickable:focus {
 
     border-radius: 0px;
 
@@ -426,14 +426,17 @@ a:hover {
 }
 
 #LogPreview {
+  overflow: hidden;
   padding: 0.5em;
   width: 100%; 
+  max-height: 50%;
   background-color: var(--dark);
   border: 1px solid var(--deep);
   animation-name: logAppear;
   animation-duration: 2s;
   animation-iteration-count: 2;
   animation-timing-function: ease-out;
+  overflow-y: auto;
 }
 
 @keyframes logAppear{

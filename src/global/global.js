@@ -15,7 +15,7 @@ export default {
         RawEditor: textarea({id: "RawEditor", class: "YAMLpreview window", onblur: (event) => {createMirrorLinks(event.target.value)}}),
         View: div({id: "view", class:"main"}),
         ContextMenu: div({id: "ContextMenu", style: "bottom: 0px; display: flex; flex-direction: column-reverse; z-index: 2; width: 100%; padding: 0.5em;"}),
-        LogPreview: div({id: "LogPreview"}),
+        LogPreview: div({id: "LogPreview", class: "clickable"}),
         rootIO: button({id: "rootIO"}, "root: ") 
     },
     DB: null,
@@ -32,7 +32,8 @@ export default {
         default: {
             yamlParseRules: {
                 "body": str => str[0] === "_",
-                "non-mirrored link": str => str[0]==="@" && str[1]==="!"
+                "mirrored link": str => str[0]==="%", //%기호의 모양이 거울 마주본것 같음
+                "one-directional link": str => str[0]==="@" && str[1]==="!",
             },
             queryParseRuels: {
                 divider: "/"

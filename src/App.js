@@ -142,6 +142,15 @@ function IOSetUp() {
         handle: directoryHandle
       })
   })
+  global.DOM.LogPreview.addEventListener("click", (event) => {
+    if (event.target.style.flexGrow === "2") {
+      event.target.style.flexGrow = "0"
+      event.target.style.whiteSpace = "pre"
+    } else {
+      event.target.style.flexGrow = "2"
+      event.target.style.whiteSpace = "pre-wrap"
+    }
+  })
 }
     
 van.add(document.body, App)

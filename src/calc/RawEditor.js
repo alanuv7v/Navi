@@ -1,4 +1,8 @@
+import global from "../global/global"
+import * as Editor from "./Editor"
 import { createMirrorLink } from "./Editor"
+import * as yamlUtils from "./global/yamlUtils"
+import { log } from "./Logs"
 
 export function createMirrorLinks (raw) {
     let yamlLines = yamlUtils.parse(raw)
@@ -8,9 +12,7 @@ export function createMirrorLinks (raw) {
       if (!checkLink) continue
       let mirrorLinkValue = "@"
       let mirrorTarget = line.key
-      let mirrorLinkTie = yamlUtils.getPath(global.thisDoc.name, i, yamlLines)
-      let res = createMirrorLink(mirrorLinkValue, mirrorTarget, mirrorLinkTie, global.docs)
-      console.log(res)
-      if (res) debug.log(`Created mirror link. target: [${mirrorTarget}], key(tie): "${mirrorLinkTie}", value: "${mirrorLinkValue}".`)
+      let mirrorLinkTie = yamlUtils.getPath(Editor.document.name, i, yamlLines)
+      createMirrorLink(mirrorLinkValue, mirrorTarget, mirrorLinkTie, global.docs)
     }
 }

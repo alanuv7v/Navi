@@ -12,7 +12,6 @@ import { pureFileName } from "./global/utils"
 
 import { log } from "./Logs"
 
-
 export const document = {
     handle: null,
     name: null,
@@ -102,21 +101,21 @@ export const findChildrenBlocks = (Block) => {
     }
     return children
 }
-export const createMirrorLink = async (from, to, tie, docs, mirrorLinkKey) => {
+export async function createMirrorLink (from, to, tie, docs, mirrorLinkKey) {
     let targetQueryResult =  await parseQuery(to, docs)
     let {obj, path, handle} = targetQueryResult
-    console.log(`creating mirror link, 
-    from [${from}] 
-    to [${to}], 
-    tie: ${tie}. 
-    success: `, targetQueryResult)
     if (obj && path) { 
-        nestedObj(obj, [...path.slice(1), tie], from, null, true)
+        nestedObj(obj, [...path.slice(1), "%"+tie], from, null, true)
         let targetNewRaw = await yaml.stringify(obj)
         let targetWritable = (await handle.createWritable())
         targetWritable.write(targetNewRaw).then(() => {
             targetWritable.close()
         })
+        console.log(`created mirror link, 
+        from [${from}] 
+        to [${to}], 
+        tie: ${tie}. 
+        success: `, targetQueryResult)
         return targetNewRaw
     } else {
         return false
