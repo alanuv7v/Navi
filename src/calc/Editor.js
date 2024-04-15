@@ -8,9 +8,11 @@ import Body from "../io/Body"
 
 import * as yaml from 'yaml'
 import { nestedObj, parseQuery } from "./global/utils"
+import { pureFileName } from "./global/utils"
 
 export const document = {
     handle: null,
+    name: null,
     original: {
         raw: null,
         parsed: null,
@@ -21,30 +23,42 @@ export const document = {
     }
 }
 export const blocks = []
-export const update = async () => {
+export const open = async (handle) => {
 
-        this.document.obj = await yaml.parse(this.document.original)
-        this.document.edited = this.document.original
-        this.document.editedRaw = this.document.original.split("\n")
-        global.DOM.YAMLPreview.DOM.value = this.document.original
+    if (!(await handle.queryPermission()) === "granted") {
+        await handle.requestPermission()
+    } 
+    let docFile = await handle.getFile()
+    let docRaw = await docFile.text()
+    document.name = pureFileName(handle.name)
+    document.original.raw = docRaw
+    document.original.parsed = yaml.parse(docRaw)
+    document.edited.raw = document.original.raw
+    document.edited.parsed = document.original.parsed
 
-        //Empty the pre-existing Editor
-        this.DOM.innerHTML = ""
-        //Add Title
-        function addTitle () {
-            this.DOM.append(
-                div({class: "h-flex Block", style: "margin-bottom: 0px;"},
-                    div({class: "title"}, this.document.name),
-                    div({class: "h-flex"}, span("["),a("edit"), span("]"))
-                )
+    global.DOM.RawEditor.value = document.original.raw
+
+    //Empty the pre-existing Editor
+    global.DOM.Editor.innerHTML = ""
+    //Add Title
+    function addTitle () {
+        global.DOM.Editor.append(
+            div({class: "h-flex Block", style: "margin-bottom: 0px;"},
+                div({class: "title"}, document.name),
+                div({class: "h-flex"}, span("["),a("edit"), span("]"))
             )
-        }
-        
-        this.blocks = await objectToBlocks(this.document.obj, /* this.document.editedRaw, */ global)
-        for (let block of this.blocks) {
-            global.Editor.append(block)
-        }
+        )
     }
+    addTitle()
+    
+    blocks = await objectToBlocks(document.obj, /* document.editedRaw, */ global)
+    for (let block of blocks) {
+        global.Editor.append(block)
+    }
+    
+    log(`Successfully opened the document [${document.name}]`)
+}
+
 export const blocksToObject = (blockDataList=[]) => {
     let resultYAML = ``
     for (let row of blockDataList) {
@@ -52,6 +66,7 @@ export const blocksToObject = (blockDataList=[]) => {
     }
     return resultYAML
 }
+
 export const objectToBlocks = async (obj, global, originalPath=[]) => {
     // param originalPath is used when a block tries to open its children.
     let result = []

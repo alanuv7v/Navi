@@ -8,7 +8,7 @@ import Dexie from "dexie"
 
 import global from "./global/global"
 import * as ContextMenu from "./calc/ContextMenu"
-import { openRoot, openLastOpenedRoot, openDocument, parseDocumentHandle } from "./calc/App"
+import { openRoot, openLastOpenedRoot } from "./calc/App"
 
 /* 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -42,16 +42,13 @@ function initDB () {
   //if RootDB already exists in the browser, Dexie will open the existing one
   //otherwise Dexie will create a new one and return it
   //so don't worry about creating duplicated DB
-  let RootDB = new Dexie("RootsDB");
-
-  RootDB.version(1).stores({
+  global.DB = new Dexie("RootsDB");
+  global.DB.version(1).stores({
     roots: `
       ++id,
       usage,
       handle`,
   });
-
-  global.DB = RootDB
 }
 
 ContextMenu.update(-1, initMenuData)
@@ -100,7 +97,7 @@ ContextMenu.update(-1, initMenuData)
 
 //App
 const App = div({id: 'App'},
-  div({id: "header", style: "display: flex; flex-direction: row; align-items: center; "},
+  div({id: "header"},
     global.DOM.rootIO,
     button("◁"),
     button("▷"),
@@ -131,10 +128,10 @@ const App = div({id: 'App'},
 
 function IOSetUp() {
   global.DOM.InnerView = div({class: "InnerView"},
-    global.Editor,
-    global.RawEditor
+    global.DOM.Editor,
+    global.DOM.RawEditor
   )
-  global.DOM.View.append(global.InnerView)
+  global.DOM.View.append(global.DOM.InnerView)
   global.DOM.rootIO.addEventListener("click", async (event) => {
       const directoryHandle = await window.showDirectoryPicker()
       await directoryHandle.requestPermission()

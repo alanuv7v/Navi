@@ -60,8 +60,10 @@ textarea {
   flex-shrink: 0;
 }
 
-#header * {
-  height: 100%;
+#header {
+  display: flex; 
+  flex-direction: row; 
+  align-items: center;
 }
 
 #view {
