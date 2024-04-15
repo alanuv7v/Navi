@@ -6,6 +6,10 @@ const {div, span, a} = t
 import Head from "../io/Head"
 import Body from "../io/Body"
 
+import parseQuery from "./global/utils"
+import * as yaml from 'yaml'
+import nestedObj from "../libs/nestedObj"
+
 export default Editor = {
     docuemnt: {
         handle: null,
@@ -81,6 +85,26 @@ export default Editor = {
             children.push(blocks[i])
         }
         return children
+    },
+    createMirrorLink: async (from, to, tie, docs, mirrorLinkKey) => {
+        let targetQueryResult =  await parseQuery(to, docs)
+        let {obj, path, handle} = targetQueryResult
+        console.log(`creating mirror link, 
+        from [${from}] 
+        to [${to}], 
+        tie: ${tie}. 
+        success: `, targetQueryResult)
+        if (obj && path) { 
+            nestedObj(obj, [...path.slice(1), tie], from, null, true)
+            let targetNewRaw = await yaml.stringify(obj)
+            let targetWritable = (await handle.createWritable())
+            targetWritable.write(targetNewRaw).then(() => {
+                targetWritable.close()
+            })
+            return targetNewRaw
+        } else {
+            return false
+        }
     }
 }
 

@@ -1,4 +1,6 @@
-export default function (obj, props, value, command=false, createNesting=false) {
+import { parse } from "yaml"
+
+export function nestedObj (obj, props, value, command=false, createNesting=false) {
     if (!props) return obj;
     if (props.length === 0) return obj
     let prop = props[0]
@@ -41,3 +43,21 @@ export default function (obj, props, value, command=false, createNesting=false) 
 };
 
 nestedObj(obj, ["foo", "bar", "baz"], 'y'); */
+
+export function pureFileName (str) {
+    return str.slice(0, str.lastIndexOf("."))
+}
+
+export async function parseQuery (str, docs) {
+    try {
+        let path = str.split("/")
+        let targetDoc = docs.find((doc) => pureFileName(doc.name) === path[0])
+        let file = await targetDoc.handle.getFile()
+        let raw = await file.text()
+        return {obj: await parse(raw),
+            path, 
+            handle: targetDoc.handle}
+    } catch (err) {
+        return err
+    }
+}
