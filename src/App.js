@@ -6,17 +6,17 @@ const d = div
 import nestedObj from "./libs/nestedObj"
 import * as yaml from 'yaml'
 
-import AutoComplete from "./AutoComplete"
-import { objectToBlocks, blocksToObject } from "../calc/Editor"
+import AutoComplete from "./io/AutoComplete"
+import { objectToBlocks, blocksToObject } from "./calc/Editor"
 import Dexie from "dexie"
 
 import { pureFileName } from "./libs/utils"
 import createMirrorLink from "../calc/createMirrorLink"
-import * as yamlUtils from "../calc/global/yamlUtils"
+import * as yamlUtils from "./calc/global/yamlUtils"
 
 import debug from "./global/debug"
-import global from "../global/global"
-import ContextMenu from "../calc/ContextMenu"
+import global from "./global/global"
+import ContextMenu from "./calc/ContextMenu"
 
 /* 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -51,17 +51,6 @@ function init() {
   ContextMenu
 }
 
-
-
-
-const Group = (name, innie) => {
-  return div({class: "group"},
-    div({style: "text-align: center; width: 100%; align-items: center;"}, name),
-    div({style: "display: flex; flex-direction: row; align-items: center;"},
-      innie
-    )
-  )
-}
 /* 
     button({
       onclick: () => {
