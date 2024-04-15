@@ -2,6 +2,8 @@ import van from "vanjs-core"
 const t = van.tags
 const {div, span, button, textarea, input, a} = t
 
+import { Tabs } from "./io/vanUI"
+
 import AutoComplete from "./io/AutoComplete"
 import { blocksToObject } from "./calc/Editor"
 import Dexie from "dexie"
@@ -16,26 +18,50 @@ codeanywhere에서 변경사항 있을 시 커밋 뿐만 아니라 push도 꼭 �
 */
 
 const initMenuData = [
-    {name: 'Item', 
+    {name: 'test', 
     action: function() {alert('!')}, 
     children: [
         {name: 'child 1'}, 
         {name: 'child 2', action: function() {alert('child 2')}, 
             children: [{name: 'childrennnn'}]
         }
-    ]
-    },
-    {name: 'fit to viewport',
-    action: function () {
-        if (global.InnerView.style.width === "100%") global.InnerView.style.width = "1000px"
-        else global.InnerView.style.width = "100%"
-    }
+      ]
     },
     {name: 'Blocks to YAML',
     action: function () {
         console.log(blocksToObject(Array.from(global.Editor.blocks.children)))
+      }
+    },
+    {name: 'Fixed width / 100%',
+    action: function () {
+        if (global.DOM.InnerView.style.width === "100%") global.DOM.InnerView.style.width = "1000px"
+        else global.DOM.InnerView.style.width = "100%"
+      }
+    },
+    {name: 'Tabs / Side to side',
+    action: function () {
+      global.sessionStatus.InnerView
+      if (global.sessionStatus.InnerView === "Side to side") {
+        global.DOM.InnerView.append(
+          Tabs(
+            {
+              Editor: global.DOM.Editor,
+              RawEditor: global.DOM.RawEditor
+            }
+          )
+        )
+        global.sessionStatus.InnerView = "Tabs"
+      } else {
+        global.DOM.InnerView.append(
+          global.DOM.Editor,
+          global.DOM.RawEditor
+        )
+        Array.from(global.DOM.InnerView.children).find(c => c.classList.contains("tabs")).remove()
+        for (let c of global.DOM.InnerView.children) c.style.display = "block"
+        global.sessionStatus.InnerView = "Side to side"
+      }
     }
-    }
+  }
 ]
 
 function initDB () {
@@ -51,7 +77,7 @@ function initDB () {
   });
 }
 
-ContextMenu.update(-1, initMenuData)
+ContextMenu.stack(-1, initMenuData)
 /* global.TextModifiers = div(
   {id: "TextModifiers", class:"main"},
   Group(
@@ -127,7 +153,7 @@ const App = div({id: 'App'},
 )
 
 function IOSetUp() {
-  global.DOM.InnerView = div({class: "InnerView"},
+  global.DOM.InnerView = div({class: "InnerView", style: "width: 100%"},
     global.DOM.Editor,
     global.DOM.RawEditor
   )

@@ -18,10 +18,12 @@ export const document = {
     original: {
         raw: null,
         parsed: null,
+        links: [],
     },
     edited: {
         raw: null,
         parsed: null,
+        links: [],
     }
 }
 export const blocks = []

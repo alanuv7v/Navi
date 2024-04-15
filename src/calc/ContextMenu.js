@@ -4,8 +4,9 @@ const {div, span, button, textarea, input, a} = van.tags
 
 const MenuItem = (rowIndex, name, action, children) => {
     return button({onclick: (event) => {
+        console.log("row: " + rowIndex)
         action();
-        if (children) updateContextMenu(rowIndex,  children);
+        if (children) stack(rowIndex,  children);
     }}, name)
 }
 const Row = (index, data) => {
@@ -27,6 +28,7 @@ export const replace = (rowsData) => {
         global.DOM.ContextMenu.append(Row(i, data))
     }
 }
-export const update = (fromRowIndex, nextRowData) => {
-    replace([...global.contextMenu.slice(0, fromRowIndex), nextRowData])
+export const stack = (fromRowIndex, nextRowData) => {
+    console.log(global.contextMenu)
+    replace([...global.contextMenu.slice(0, fromRowIndex+1), nextRowData])
 }

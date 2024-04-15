@@ -314,6 +314,7 @@ textarea:focus {
   border: 1px solid var(--deep);
   flex-basis: 0;
   flex-grow: 1;
+  box-shadow: none;
 }
 
 .Block {
@@ -412,13 +413,13 @@ a:hover {
 
 .InnerView {
   display: flex;
+  width: 100%;
   height: 100%;
   margin: auto; /* !!! Important !!! it aligns this to the horizontal center of the view */
   justify-content: space-evenly;
 }
 
-.YAMLpreview {
-  border: 1px solid var(--deep);
+#RawEditor {
   line-height: 2;
   white-space: pre-wrap;
   padding: 10px;
@@ -449,4 +450,11 @@ a:hover {
   100% {
     background-color: inherit;
   }
+}
+
+.tabs {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }

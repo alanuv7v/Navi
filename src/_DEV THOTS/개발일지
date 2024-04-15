@@ -50,3 +50,15 @@ Editor라는 이름은 말 그대로 Edit을 한다는 의미이다.
 임포트 하는 입장에서의 유연성 때문이다.
 게다가 모듈 내에서 인덴트 한칸을 줄일 수 있단게 마음에 든다.
 게다가 export를 하지 않으면 private 필드처럼 쓸 수 있다. Object나 Function에 비해 갖는 장점.
+
+
+더 만들것 우선순위
+1. RawEditor에서 기존 링크들 저장한 뒤, 기존 링크들 중 지워진 것 있으면 상대 문서에서도 지우기.
+모든 기존 링크들 중 현재 파싱한 obj에 포함된 링크들에 없는 것 찾기.
+2. Blocks 구현
+3. Block의 링크 누르면 Editor.open() 실행
+4. ContextMenu 활성화
+5. ContextMenu로 Block 조작
+6. VanUI 이용, Tabs로 Editor, RawEditor, Logs 등 윈도우들 묶기
+7. 첫 모바일 실행시도
+8. 모바일 PWA 최적화: 모바일 파일시스템에 Root 저장, Root 열기
