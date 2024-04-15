@@ -7,81 +7,22 @@ import { createEvent, createStore } from "effector"
 
 import nestedObj from "./libs/nestedObj"
 import * as yaml from 'yaml'
-import {createBlock as Block} from "./components/Block"
-import { MultilineTextarea, resizeTextarea } from "./components/ResizedTextarea"
-import Head from "./components/Head"
-import Body from "./components/Body"
+
 import AutoComplete from "./components/AutoComplete"
-import objectToBlocks from "./components/objectToBlocks"
-import blocksToObject from "./components/blocksToObject"
+import { objectToBlocks, blocksToObject } from "./components/Editor"
 import Dexie from "dexie"
 
-import pureFilename from "./libs/pureFilename"
+import { pureFileName } from "./libs/utils"
 import createMirrorLink from "./actions/createMirrorLink"
-import * as yamlTools from "./libs/yamlTools"
+import * as yamlUtils from "./libs/yamlUtils"
 
-import { Root } from "./Root"
-import { asdf } from "./asdf"
-console.log(Root)
-Root.str = "!!!"
-console.log(Root)
-asdf()
-
-//debug tools
-const debug = {
-  log: function (str) {
-    console.log(str)
-    console.trace()
-    global.LogPreview.innerText = str
-  }
-}
+import debug from "./global/debug"
+import global from "./global/global"
 
 /* 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 codeanywhere에서 변경사항 있을 시 커밋 뿐만 아니라 push도 꼭 해야한다. 하고나서 깃허브에서 잘됬는지 한번더 확인할것
 */
-
-//  INIT
-const global = {}
-
-let initTargets = {
-  'MultilineTextarea' : []
-}
-
-
-
-
-// define GUI components
-
-
-const Editor = () => {
-  return div({class: "Editor window"})
-}
-
-async function updateEditor() {
-
-  global.thisDoc.obj = await yaml.parse(global.thisDoc.original)
-  global.thisDoc.edited = global.thisDoc.original
-  global.thisDoc.editedRaw = global.thisDoc.original.split("\n")
-  global.YAMLPreview.value = global.thisDoc.original
-
-  global.Editor.innerHTML = ""
-  global.Editor.append(
-    div({class: "h-flex Block", style: "margin-bottom: 0px;"},
-      div({class: "title"}, global.thisDoc.name),
-      div({class: "h-flex"}, span("["),a("edit"), span("]"))
-    )
-  )
-  
-  let blocks = await objectToBlocks(global.thisDoc.obj, /* global.thisDoc.editedRaw, */ global)
-  
-  for (let block of blocks) {
-    global.Editor.append(block)
-  }
-
-  return blocks
-}
-
 
 
 const MenuItem = (menuIndex, name, action, children) => {
@@ -176,14 +117,7 @@ children:
 
 
 function init() {
-
-  for (let mt of initTargets['MultilineTextarea']) {
-    resizeTextarea(mt.children[0], mt.children[1])
-  }
-
   updateContextMenu({fromIndex: 0, toAdd: defaultMenu})
-
-
 }
 
 
@@ -281,14 +215,14 @@ async function onFileInputClick(e) {
 
 function YAMLPreview() {
   return textarea({class: "YAMLpreview window", onblur: (event) => {
-    let yamlLines = yamlTools.parse(event.target.value)
+    let yamlLines = yamlUtils.parse(event.target.value)
     for (let i=0; i<yamlLines.length; i++) {
       let line = yamlLines[i]
       const checkLink = line.value[0]==="@" || line.value ==='"@"' || line.value ==="@"
       if (!checkLink) continue
       let mirrorLinkValue = "@"
       let mirrorTarget = line.key
-      let mirrorLinkTie = yamlTools.getPath(global.thisDoc.name, i, yamlLines)
+      let mirrorLinkTie = yamlUtils.getPath(global.thisDoc.name, i, yamlLines)
       let res = createMirrorLink(mirrorLinkValue, mirrorTarget, mirrorLinkTie, global.docs)
       console.log(res)
       if (res) debug.log(`Created mirror link. target: [${mirrorTarget}], key(tie): "${mirrorLinkTie}", value: "${mirrorLinkValue}".`)

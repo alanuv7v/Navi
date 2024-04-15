@@ -1,5 +1,5 @@
 import { parse } from "yaml"
-import pureFilename from "../libs/pureFilename"
+import { pureFileName } from "../libs/utils"
 
 export default async function (str, docs) {
     try {

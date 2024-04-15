@@ -1,13 +1,9 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a, img} = van.tags
-import nestedObj from "../libs/nestedObj"
-import objectToBlocks from "./objectToBlocks"
 
-import Head from "./Head"
-import Body from "./Body"
-import * as docs from "../docs"
-
-
+export class block {
+    
+}
 
 export async function createBlock (index, path, main, dataIndex, global) {
     //index = just for the visual and convinience
@@ -77,7 +73,6 @@ export async function createBlock (index, path, main, dataIndex, global) {
     Block.addEventListener('click', (event) => {onBlockClick(event)})
     Block.addEventListener('auxclick', (event) => {onBlockAuxClick(event)})
     Block.addEventListener('contextmenu', (event) => {event.stopPropagation(); event.preventDefault(); return false})
-    
     
     Block.depth_ = 0
 

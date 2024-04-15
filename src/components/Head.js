@@ -1,9 +1,9 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a, img} = van.tags
-import {createBlock} from "./Block"
+import { createBlock } from "./Block"
 import Body from "./Body"
-import objectToBlocks from "./objectToBlocks"
-import pureFilename from "../libs/pureFilename"
+import { objectToBlocks } from "./Editor"
+import { pureFileName } from "../libs/utils"
 import * as yaml from 'yaml'
 import findChildrenBlocks from "./findChildrenBlocks"
 
