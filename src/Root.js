@@ -1,4 +1,1 @@
-export default Root = {
-    //cheat codes to use in console
-    //to print all docs and ect
-}
+export let Root = {str: "asap baby hurry up don't say maybe"}

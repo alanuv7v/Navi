@@ -20,6 +20,13 @@ import pureFilename from "./libs/pureFilename"
 import createMirrorLink from "./actions/createMirrorLink"
 import * as yamlTools from "./libs/yamlTools"
 
+import { Root } from "./Root"
+import { asdf } from "./asdf"
+console.log(Root)
+Root.str = "!!!"
+console.log(Root)
+asdf()
+
 //debug tools
 const debug = {
   log: function (str) {
