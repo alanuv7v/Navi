@@ -1,11 +1,7 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a, img} = van.tags
 
-export class block {
-    
-}
-
-export async function createBlock (index, path, main, dataIndex, global) {
+export async function createBlock (index, path, main, dataIndex) {
     //index = just for the visual and convinience
     //path = docName + key or value. needed for embed|open button onclick handler
     
@@ -20,6 +16,7 @@ export async function createBlock (index, path, main, dataIndex, global) {
     
     if (!Array.isArray(main)) main = [main]
 
+    //make the block to recieve inputs
     for (let e of main) {
         e.addEventListener('keydown',
         (event) => {
@@ -59,7 +56,7 @@ export async function createBlock (index, path, main, dataIndex, global) {
     let blockInner = [...beforeInput, ...main, ...afterInput]
     for (let elem of blockInner) Block.append(elem)
     
-
+    
     function onBlockClick(event) {
         if (global.SelectedBlock) {
             global.SelectedBlock.classList.remove("selected")

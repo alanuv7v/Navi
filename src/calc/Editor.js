@@ -67,7 +67,7 @@ export const blocksToObject = (blockDataList=[]) => {
     return resultYAML
 }
 
-export const objectToBlocks = async (obj, global, originalPath=[]) => {
+export const objectToBlocks = async (obj, originalPath=[]) => {
     // param originalPath is used when a block tries to open its children.
     let result = []
     for (let e of Object.entries(obj)) {
@@ -76,10 +76,10 @@ export const objectToBlocks = async (obj, global, originalPath=[]) => {
         let path = [...originalPath, key]
         switch (key) {
             case "_":
-                result.push(await Body(value, null, [...originalPath, key], global))
+                result.push(await Body(value, null, [...originalPath, key]))
                 break
             default:
-                let h = await Head(key, value, null, [...originalPath, key], global)
+                let h = await Head(key, value, null, [...originalPath, key])
                 h.depth(path.length)
                 result.push(h)
                 break

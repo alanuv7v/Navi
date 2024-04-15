@@ -6,7 +6,7 @@ import { objectToBlocks, findChildrenBlocks } from "../calc/Editor"
 import * as yaml from 'yaml'
 
 
-export default async function Head (key, value, index, path, /* dataIndex, */ global) {
+export default async function Head (key, value, index, path) {
     //create elements first so they can be referenced
     let keyInput = input({class: "head", type: "text", placeholder: "key", value: key})
 
@@ -27,7 +27,7 @@ export default async function Head (key, value, index, path, /* dataIndex, */ gl
     let openButton = button("open")
     main.push(div({class: "options"}, [embedButton, openButton]))
 
-    let Block = await createBlock(index, path, main, global)
+    let Block = await createBlock(index, path, main)
     
     Block.rawData = {
         key,
