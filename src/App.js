@@ -18,6 +18,8 @@ import debug from "./global/debug"
 import global from "./global/global"
 import ContextMenu from "./calc/ContextMenu"
 
+import { listAllFilesAndDirs } from "./calc/global/utils"
+
 /* 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 codeanywhere에서 변경사항 있을 시 커밋 뿐만 아니라 push도 꼭 해야한다. 하고나서 깃허브에서 잘됬는지 한번더 확인할것
@@ -46,23 +48,23 @@ let initMenuData = [
     }
 ]
 
+function initDB () {
+  //if RootDB already exists in the browser, Dexie will open the existing one
+  //otherwise Dexie will create a new one and return it
+  //so don't worry about creating duplicated DB
+  let RootDB = new Dexie("RootsDB");
 
-function init() {
-  ContextMenu
+  RootDB.version(1).stores({
+    roots: `
+      ++id,
+      usage,
+      handle`,
+  });
+
+  global.DB = RootDB
 }
 
-/* 
-    button({
-      onclick: () => {
-        global.SelectedBlock.depth(-1)
-      }
-    }, "<depth-"),
-    button({
-      onclick: () => {
-        global.SelectedBlock.depth(+1)
-      }
-    }, ">depth+"), */
-global.TextModifiers = div(
+/* global.TextModifiers = div(
   {id: "TextModifiers", class:"main"},
   Group(
     "Syntax",
@@ -103,80 +105,9 @@ global.TextModifiers = div(
     "Compile",
     [button("?c.compile")]
   ),
-)
-
-async function listAllFilesAndDirs(dirHandle) {
-    const files = [];
-    for await (let [name, handle] of dirHandle) {
-        const {kind} = handle;
-        if (handle.kind === 'directory') {
-            files.push({name, handle, kind, children: await listAllFilesAndDirs(handle)});
-        } else {
-            files.push({name, handle, kind});
-        }
-    }
-    return files;
-}
-
-async function onFileInputClick(e) {
-    const directoryHandle = await window.showDirectoryPicker()
-    await directoryHandle.requestPermission()
-
-    global.root = directoryHandle
-
-    //save root directory handle to IndexedDB
-    RootDB.roots.add({
-        usage: "lastOpenedRoot",
-        handle: directoryHandle
-    })
-    openLastOpenedRoot()
-
-}
-
-function YAMLPreview() {
-  return textarea({class: "YAMLpreview window", onblur: (event) => {
-    let yamlLines = yamlUtils.parse(event.target.value)
-    for (let i=0; i<yamlLines.length; i++) {
-      let line = yamlLines[i]
-      const checkLink = line.value[0]==="@" || line.value ==='"@"' || line.value ==="@"
-      if (!checkLink) continue
-      let mirrorLinkValue = "@"
-      let mirrorTarget = line.key
-      let mirrorLinkTie = yamlUtils.getPath(global.thisDoc.name, i, yamlLines)
-      let res = createMirrorLink(mirrorLinkValue, mirrorTarget, mirrorLinkTie, global.docs)
-      console.log(res)
-      if (res) debug.log(`Created mirror link. target: [${mirrorTarget}], key(tie): "${mirrorLinkTie}", value: "${mirrorLinkValue}".`)
-    }
-  }})
-}
+) */
 
 //App
-
-global.View = div({id: "view", class:"main"})
-global.Editor = Editor([])
-global.YAMLPreview = YAMLPreview()
-global.InnerView = div({class: "InnerView"},
-  global.Editor,
-  global.YAMLPreview
-)
-global.View.append(global.InnerView)
-global.ContextMenu = d({style: "bottom: 0px; display: flex; flex-direction: column-reverse; z-index: 2; width: 100%; padding: 0.5em;"})
-global._path = "Alan.yaml"
-Object.defineProperty(global, 'path', {
-    get: function() {
-        return this._path
-    },
-    set: function(p) {
-        this._path = p + ".yaml"
-        return true
-    }
-});
-global.path = "Alan"
-global.LogPreview = div({id: "LogPreview"})
-global.RootIO = button({onclick: 
-  (event) => {onFileInputClick(event)}
-}, "root: ")
-
 const App = () => {
     
     return div({id: 'App', /* style: "display: flex; flex-direction: row; " */},
@@ -210,27 +141,29 @@ const App = () => {
     )
 }
 
+function IOSetUp() {
+  global.InnerView = div({class: "InnerView"},
+    global.Editor,
+    global.RawEditor
+  )
+  global.View.append(global.InnerView)
+  global.RootIO.addEventListener("click", async (event) => {
+      const directoryHandle = await window.showDirectoryPicker()
+      await directoryHandle.requestPermission()
+      global.root = directoryHandle
+
+      //save root directory handle to IndexedDB
+      RootDB.roots.add({
+          usage: "lastOpenedRoot",
+          handle: directoryHandle
+      })
+      openLastOpenedRoot()
+  })
+}
     
 van.add(document.body, App())
-init()
-
-
-//Init DB
-
-//if RootDB already exists in the browser, Dexie will open the existing one
-//otherwise Dexie will create a new one and return it
-//so don't worry about creating duplicated DB
-let RootDB = new Dexie("RootsDB");
-
-RootDB.version(1).stores({
-  roots: `
-    ++id,
-    usage,
-    handle`,
-});
-
-global.DB = RootDB
-global.thisDoc = {}
+IOSetUp()
+initDB ()
 
 
 async function openRoot(handle) {

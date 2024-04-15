@@ -11,7 +11,7 @@ import * as yaml from 'yaml'
 import nestedObj from "../libs/nestedObj"
 
 export default Editor = {
-    docuemnt: {
+    document: {
         handle: null,
         original: {
             raw: null,
