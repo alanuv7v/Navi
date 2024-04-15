@@ -10,6 +10,9 @@ import * as yaml from 'yaml'
 import { nestedObj, parseQuery } from "./global/utils"
 import { pureFileName } from "./global/utils"
 
+import { log } from "./Logs"
+
+
 export const document = {
     handle: null,
     name: null,
@@ -51,11 +54,11 @@ export const open = async (handle) => {
     }
     addTitle()
     
-    blocks = await objectToBlocks(document.obj, /* document.editedRaw, */ global)
+    /* blocks = await objectToBlocks()
     for (let block of blocks) {
         global.Editor.append(block)
     }
-    
+     */
     log(`Successfully opened the document [${document.name}]`)
 }
 
