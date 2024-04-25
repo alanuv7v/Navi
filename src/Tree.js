@@ -5,7 +5,10 @@ const {Clipboard} = Session
 
 export default class Tree {
 
-    data = null
+    constructor (data) {
+        this.data = data
+    }
+
     selectedNode = null
 
     copyNode() {
@@ -13,7 +16,12 @@ export default class Tree {
     }
 
     pasteNode() {
-        nestedObj(Tree.data, Tree.selectedNode.path, Clipboard.lastItem)
+        const parentNode = Tree.selectedNode
+        if (typeof parentNode.value === "Object") return false
+        const childNode = Clipboard.lastItem
+        parentNode.value[childNode.key] = childNode.value
+        parentNode.update()
+        nestedObj(Tree.data, parentNode.path, childNode)
     }
 
     addNode() {
@@ -23,7 +31,9 @@ export default class Tree {
         return nestedObj(Tree.data, Tree.selectedNode.path)
     }
 
-    deleteNode() {
+    deleteNode(node) {
+        delete node.parent.value[node.key]
+        node.DOM.remove()
         nestedObj(Tree.data, Tree.selectedNode.path, undefined)
     }
 

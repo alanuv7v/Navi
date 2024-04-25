@@ -15,6 +15,14 @@ export default class Node  {
     path = []
     pathString = this.path.join("/")
 
+    DOM = null
+
+    parent = null
+
+    update() {
+        //this.DOM.querySelector(".values").... so on.
+    }
+
     moveUp() {
 
     }
