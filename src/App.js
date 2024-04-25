@@ -1,0 +1,7 @@
+function loadLastSession () {
+    openLastTree()
+
+}
+
+  
+loadLastSession()

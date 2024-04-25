@@ -1,65 +1,56 @@
-const { Parser } = require("yaml")
+import Tree from "./Tree"
 
-function loadLastSession () {
-  openLastTree()
-
+export function createDocument () {
 }
 
-function createDocument () {
+export const Edit = {
 
-}
-
-class Edit {
-
-  copyNode = (node) => {
+  copyNode: (node) => {
     //clipboard.push(node)
     Tree.copyNode()
-  }
-  
-  pasteNode = (parentNodeQueryString) => {
+  },
+  pasteNode: (parentNodeQueryString) => {
     //let parentNode = Tree.getNode(parentNodeQueryString)
     //parentNode.append(clipboard.lastItem)
     Tree.pasteNode()
-  }
-
-  addNode = () => {
+  },
+  addNode: () => {
     //let parentNode = Tree.selectedNode
     //this.pasteNode(parentNode)
     Tree.addNode()
-  }
-  deleteNode = () => {
+  },
+  deleteNode: () => {
     Tree.deleteNode()
-  }
-  changeOrder = (change) => {
+  },
+  changeOrder: (change) => {
     Tree.selectedNode.changeOrder(change)
-  }
-  changeDepth = (change) => {
+  },
+  changeDepth: (change) => {
     Tree.selectedNode.changeDepth(change)
-  }
-  linkNode = (targetNodeQueryString) => {
+  },
+  linkNode: (targetNodeQueryString) => {
     Tree.selectedNode.linkTo(targetNodeQueryString)
   }
+  
 }
 
-class Prune {
+export const Prune = {
 
-  hideNode = () => {
-
-  }
-  filterNodes = () => {
-
+  hideNode: () => {
+  },
+  filterNodes: () => {
   }
 
 }
 
-class Navigate {
-  stemOut = (parentNode) => {
+export const Navigate = {
+  stemOut: (parentNode) => {
     parentNode.stemOut()
-  }
-  search  = (queryString) => {
+  },
+  search: (queryString) => {
     Presenter.renderTree(queryString)
-  }
-  plantNew = (queryString) => {
+  },
+  plantNew: (queryString) => {
     Presenter.renderTree(queryString)
   }
 }
