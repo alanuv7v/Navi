@@ -31,10 +31,10 @@ export default class Node  {
     parent = null
 
     update() {
-        function endNodeUpdate () {
+        const endNodeUpdate = () => {
             this.DOM.querySelector(".value").append(div(this.value))
         }
-        function objectNodeUpdate () {
+        const objectNodeUpdate = () => {
             for (let e of Object.entries(this.value)) {
                 let childNode = new Node({key: e[0], value: e[1]})
                 this.DOM.querySelector(".value").append(
