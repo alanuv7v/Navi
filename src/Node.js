@@ -1,3 +1,6 @@
+import van from "vanjs-core"
+const {div, span, button, textarea, input, a} = van.tags
+
 let documentParsedExample = 
 {
     "Alan": {
@@ -9,18 +12,41 @@ let documentParsedExample =
 }
 
 export default class Node  {
+
+    constructor (key, value) {
+        this.key = key
+        this.value = value
+        this.update()
+    }
     
-    key = ""
-    value = {}
     path = []
     pathString = this.path.join("/")
 
-    DOM = null
+    DOM = div({class: "node"},
+        div({class: "key"}),
+        div({class: "value"}, 
+        ),
+    )
 
     parent = null
 
     update() {
-        //this.DOM.querySelector(".values").... so on.
+        function endNodeUpdate () {
+            this.DOM.querySelector(".value").append(div(this.value))
+        }
+        function objectNodeUpdate () {
+            for (let e of Object.entries(this.value)) {
+                let childNode = new Node({key: e[0], value: e[1]})
+                this.DOM.querySelector(".value").append(
+                    childNode.DOM
+                )
+            }
+        }
+        if (typeof this.value === "object") {
+            objectNodeUpdate()
+        } else {
+            endNodeUpdate()
+        }
     }
 
     moveUp() {
