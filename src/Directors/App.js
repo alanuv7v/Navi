@@ -1,5 +1,5 @@
-import Session from "./Session"
-import { getLastTree } from "./DBActions"
+import Session from "../Session"
+import { getLastTree } from "../Workers/LocalImporter"
 
 export const session = new Session()
 

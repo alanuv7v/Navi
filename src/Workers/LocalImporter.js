@@ -1,4 +1,4 @@
-import DB from "./DB";
+import DB from "../Resources/DB";
 
 async function getSessions () {
     return await DB.sessions.toArray()

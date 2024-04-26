@@ -1,4 +1,4 @@
-import Session from  "./Session"
+import Session from  "../Session"
 import nestedObj from "./utils/nestedObj"
 
 const {Clipboard} = Session
