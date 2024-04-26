@@ -1,4 +1,5 @@
-import Tree from "./Directors/Tree"
+import appSession from "./appSession"
+const {tree} = appSession
 
 export function createDocument () {
 }
@@ -7,29 +8,29 @@ export const Edit = {
 
   copyNode: (node) => {
     //clipboard.push(node)
-    Tree.copyNode()
+    tree.copyNode()
   },
   pasteNode: (parentNodeQueryString) => {
     //let parentNode = Tree.getNode(parentNodeQueryString)
     //parentNode.append(clipboard.lastItem)
-    Tree.pasteNode()
+    tree.pasteNode()
   },
   addNode: () => {
     //let parentNode = Tree.selectedNode
     //this.pasteNode(parentNode)
-    Tree.addNode()
+    tree.addNode()
   },
   deleteNode: () => {
-    Tree.deleteNode()
+    tree.deleteNode()
   },
   changeOrder: (change) => {
-    Tree.selectedNode.changeOrder(change)
+    tree.selectedNode.changeOrder(change)
   },
   changeDepth: (change) => {
-    Tree.selectedNode.changeDepth(change)
+    tree.selectedNode.changeDepth(change)
   },
   linkNode: (targetNodeQueryString) => {
-    Tree.selectedNode.linkTo(targetNodeQueryString)
+    tree.selectedNode.linkTo(targetNodeQueryString)
   }
   
 }
@@ -44,11 +45,11 @@ export const Prune = {
 }
 
 export const Navigate = {
-  stemOut: (parentNode) => {
-    parentNode.stemOut()
-  },
   search: (queryString) => {
     Presenter.renderTree(queryString)
+  },
+  stemOut: (parentNode) => {
+    parentNode.stemOut()
   },
   plantNew: (queryString) => {
     Presenter.renderTree(queryString)

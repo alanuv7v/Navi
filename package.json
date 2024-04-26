@@ -21,7 +21,7 @@
     "excalibur": "^0.28.3",
     "global": "^4.4.0",
     "js-yaml": "^4.1.0",
-    "vanjs-core": "^1.2.6",
+    "vanjs-core": "^1.5.0",
     "vanjs-ui": "^0.10.0",
     "vite-plugin-plain-text": "^1.4.2",
     "yaml": "^2.3.4"

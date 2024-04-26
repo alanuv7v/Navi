@@ -1,40 +1,41 @@
-import Session from  "../Session"
-import nestedObj from "./utils/nestedObj"
+import nestedObj from "../Workers/nestedObj"
+import Node from "./Node"
 
-const {Clipboard} = Session
 
 export default class Tree {
 
-    constructor (data) {
+    constructor (appSession, data) {
+        this.appSession = appSession
         this.data = data
     }
 
     selectedNode = null
 
     copyNode() {
-        Clipboard.data.push(structuredClone(Tree.selectedNode))
+        appSession.clipboard.data.push(structuredClone(this.selectedNode))
     }
 
     pasteNode() {
-        const parentNode = Tree.selectedNode
+        const parentNode = this.selectedNode
         if (typeof parentNode.value === "Object") return false
-        const childNode = Clipboard.lastItem
+        const childNode = appSession.clipboard.lastItem
         parentNode.value[childNode.key] = childNode.value
         parentNode.update()
-        nestedObj(Tree.data, parentNode.path, childNode)
+        nestedObj(this.data, parentNode.path, childNode)
     }
 
     addNode() {
         let nodeToAdd = new Node()
-        let originalObject = nestedObj(Tree.data, Tree.selectedNode.path)
-        nestedObj(Tree.data, Tree.selectedNode.path, {...originalObject, nodeToAdd.data})
-        return nestedObj(Tree.data, Tree.selectedNode.path)
+        let originalObject = nestedObj(this.data, this.selectedNode.path)
+        let dataToAdd = nodeToAdd.data
+        nestedObj(this.data, this.selectedNode.path, {...originalObject, dataToAdd})
+        return nestedObj(this.data, this.selectedNode.path)
     }
 
     deleteNode(node) {
         delete node.parent.value[node.key]
         node.DOM.remove()
-        nestedObj(Tree.data, Tree.selectedNode.path, undefined)
+        nestedObj(this.data, this.selectedNode.path, undefined)
     }
 
 }
