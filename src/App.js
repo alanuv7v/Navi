@@ -11,15 +11,13 @@ import init from "./init"
 
 import Logger from "./Workers/Logger"
 
-
 const App = div({id: 'App'},
     new Logger(UserActions).DOM
 )
-
-
 console.log(UserActions)
-
 
 van.add(document.body, App)
 
 init()
+
+export default App

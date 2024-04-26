@@ -1,7 +1,8 @@
 import appSession from "../appSession"
+import * as Painter from "./Painter"
 
 export function openTree(tree) {
     appSession.tree = tree
-    Presenter.renderTree(tree)
+    Painter.renderTree(tree)
     return true
 }
