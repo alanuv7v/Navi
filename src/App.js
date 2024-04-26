@@ -8,12 +8,11 @@ const {div, span, button, textarea, input, a} = van.tags
 
 import * as UserActions from "./UserActions"
 import init from "./init"
-
+import DOM from "./Resources/DOM"
 import Logger from "./Workers/Logger"
 
-const App = div({id: 'App'},
-    new Logger(UserActions).DOM
-)
+const App = DOM
+
 console.log(UserActions)
 
 van.add(document.body, App)
@@ -21,3 +20,6 @@ van.add(document.body, App)
 init()
 
 export default App
+
+console.log(DOM)
+new Logger(UserActions)

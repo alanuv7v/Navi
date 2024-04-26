@@ -1,22 +1,19 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a} = van.tags
 
-let documentParsedExample = 
-{
-    "Alan": {
-        age: 1,
-        alias: {
-            asdf: "@"
-        }
-    }
-}
-
 export default class Node  {
 
-    constructor (key, value) {
+    constructor (key, value, parent) {
+        
+        //value = can be children
+        //parent reference is needed to override modified data to the parent value
+
         this.key = key
         this.value = value
+        this.parent = parent
         this.update()
+        console.log(key, value, parent)
+
     }
     
     path = []
@@ -24,28 +21,30 @@ export default class Node  {
 
     DOM = div({class: "node"},
         div({class: "key"}),
-        div({class: "value"}, 
-        ),
+        div({class: "value"}),
     )
 
     parent = null
 
     update() {
-        const endNodeUpdate = () => {
+
+        this.DOM.querySelector(".key").innerHTML = this.key
+
+        const addValue = () => {
             this.DOM.querySelector(".value").append(div(this.value))
         }
-        const objectNodeUpdate = () => {
-            for (let e of Object.entries(this.value)) {
-                let childNode = new Node({key: e[0], value: e[1]})
+        const addChildren = () => {
+            for (let [key, value] of Object.entries(this.value)) {
+                let childNode = new Node(key, value, this)
                 this.DOM.querySelector(".value").append(
                     childNode.DOM
                 )
             }
         }
         if (typeof this.value === "object") {
-            objectNodeUpdate()
+            addChildren()
         } else {
-            endNodeUpdate()
+            addValue()
         }
     }
 

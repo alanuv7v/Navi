@@ -1,7 +1,7 @@
-import App from "../App"
+import DOM from "./DOM"
 
 const refs = (id) => {
-    return App.querySelector(id)
+    return DOM.querySelector("#"+id)
 }
 
 export default refs
