@@ -25,6 +25,9 @@ export default div("App", {},
         div("Editor"),
         div("RawEditor"),
     ),
-    div("Logs"),
+    div("Footer", {},
+        div("Logs"),
+        div("States")
+    ),
     div("LogsPreview")
 )

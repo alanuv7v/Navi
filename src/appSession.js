@@ -1,3 +1,15 @@
-import Session from "./Directors/Session";
+import Session from "./Entities/Session";
 
-export default new Session()
+let documentParsedExample = 
+{
+    /* "Alan": {
+        age: 1,
+        alias: {
+            asdf: "@"
+        }
+    } */
+}
+
+export default new Session({
+    treeData: documentParsedExample
+})

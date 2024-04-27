@@ -1,8 +1,10 @@
-import { openTree } from "./Workers/TreeManager"
-import { getLastTreeData } from "./Workers/LocalDBManager"
+import { openTree } from "./Directors/TreeManager"
+import { getLastTreeData } from "./Directors/LocalDBManager"
 
 async function openLastTree() {
-    return openTree(await getLastTreeData())
+    let lastTreeData = await getLastTreeData()
+    if (lastTreeData) return openTree(lastTreeData)
+    else return openTree({})
 }
 
 function loadLastSession () {

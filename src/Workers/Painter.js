@@ -1,18 +1,8 @@
 import refs from "../Resources/DOMRefs";
-import Node from "../Directors/Node";
+import Node from "../Entities/Node";
 
-let documentParsedExample = 
-{
-    "Alan": {
-        age: 1,
-        alias: {
-            asdf: "@"
-        }
-    }
-}
-
-export function renderTree(tree) {
+export function renderTree(treeData) {
     refs("Editor").append(
-        new Node('asfd', documentParsedExample, null).DOM
+        new Node('asfd', treeData, null).DOM
     )
 }

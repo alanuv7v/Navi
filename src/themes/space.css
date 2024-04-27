@@ -188,14 +188,16 @@ a:hover {
 
 #View {
   overflow: auto;
-  
   width: 100%;
   flex-grow: 1;
   flex-shrink: 1;
+  display: flex;
 
 }
 #Editor {
-  border: 1px solid var(--deep);
+  box-shadow: inset 0px 0px 0px 1px var(--deep);
+  flex-grow: 1;
+  padding: 1em;
 }
 
 #Header {
@@ -213,6 +215,24 @@ a:hover {
   flex-grow: 1;
 }
 
+.node {
+  
+}
+.node .key { 
+  padding: 1em;
+  box-shadow: inset 0px 0px 0px 1px var(--deep);
+}
+.node .key:hover { 
+  box-shadow: inset 0px 0px 0px 1px var(--light);
+}
 .node .value {
-  margin-left: 10px;
+  padding-left: 1em;
+}
+
+#Footer {
+  display: flex;
+}
+
+.node.selected {
+  box-shadow: inset 0px 0px 0px 4px var(--light) !important;
 }

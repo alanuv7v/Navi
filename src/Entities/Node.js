@@ -1,6 +1,8 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a} = van.tags
 
+import appSession from "../appSession"
+
 export default class Node  {
 
     constructor (key, value, parent) {
@@ -20,7 +22,7 @@ export default class Node  {
     pathString = this.path.join("/")
 
     DOM = div({class: "node"},
-        div({class: "key"}),
+        textarea({class: "key", onclick: () => this.onclick()}),
         div({class: "value"}),
     )
 
@@ -28,10 +30,10 @@ export default class Node  {
 
     update() {
 
-        this.DOM.querySelector(".key").innerHTML = this.key
+        this.DOM.querySelector(".key").value = this.key
 
         const addValue = () => {
-            this.DOM.querySelector(".value").append(div(this.value))
+            this.DOM.querySelector(".value").append(textarea(this.value))
         }
         const addChildren = () => {
             for (let [key, value] of Object.entries(this.value)) {
@@ -46,6 +48,21 @@ export default class Node  {
         } else {
             addValue()
         }
+    }
+
+    selected = false
+
+    onclick = () => {
+        if (this.selected ) {
+            this.DOM.classList.remove("selected")
+        } else {
+            this.DOM.classList.add("selected")
+            console.log(appSession)
+            appSession.tree.selectedNode = this
+        }
+        
+        this.selected = !this.selected 
+        
     }
 
     moveUp() {

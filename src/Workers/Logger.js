@@ -16,7 +16,7 @@ export default class Logger {
 
         let opened = false
 
-        button.innerText = key
+        button.innerText = typeof value === "function" ? key + "()" : key
         button.onclick = () => {
             
             console.log(value)

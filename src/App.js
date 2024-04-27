@@ -23,3 +23,8 @@ export default App
 
 console.log(DOM)
 new Logger(UserActions)
+
+import refs from "./Resources/DOMRefs"
+refs("States").append(
+    div("Selected node: ")
+)
