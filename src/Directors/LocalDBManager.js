@@ -8,14 +8,15 @@ export async function createSession() {
     
     let now = DateTime.now()
     let newSession = new Session()
-    
-    DB.sessions.add(
+    console.log(await DB.sessions.toArray())
+    await DB.sessions.add(
         {
             dateCreated: now.toISO(),
             dateModified: now.toISO(),
             data: newSession
         }
     )
+    console.log(await DB.sessions.toArray())
 
     return newSession
     

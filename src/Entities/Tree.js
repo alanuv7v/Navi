@@ -1,10 +1,11 @@
 import nestedObj from "../Workers/nestedObj"
 import Node from "./Node"
+import AutosaveProxy from "../Workers/AutosaveProxy"
 
 
 export default class Tree {
     
-    data = null
+    data = AutosaveProxy({})
 
     constructor (data) {
         this.data = data

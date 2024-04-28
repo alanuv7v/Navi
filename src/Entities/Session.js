@@ -1,4 +1,5 @@
 import Tree from "./Tree"
+import AutosaveProxy from "../Workers/AutosaveProxy"
 
 export default class Session {
     
@@ -16,6 +17,6 @@ export default class Session {
 
     docs = null
 
-    tree = new Tree(this.data?.treeData)
+    tree = AutosaveProxy(new Tree(this.data?.treeData))
     
 }
