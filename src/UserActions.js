@@ -17,11 +17,12 @@ export async function openRoot() {
 
 }
 
-export function openTree(queryString) {
+export async function openTree(queryString) {
 
-    let treeData = ImportManager.getTreeDataFromQuery(queryString)
-    appSession.tree = treeData
-    TreeManager.openTree(treeData)
+    let {treeName, treeData} = await ImportManager.getTreeDataFromQuery(queryString)
+    appSession.tree.data = treeData
+    console.log(treeName, treeData)
+    TreeManager.openTree(treeName, treeData)
 
     return appSession.tree
 

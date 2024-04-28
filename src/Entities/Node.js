@@ -14,7 +14,7 @@ export default class Node  {
         this.value = value
         this.parent = parent
         this.update()
-        console.log(key, value, parent)
+        console.log({key, value, parent})
 
     }
     
@@ -43,7 +43,7 @@ export default class Node  {
                 )
             }
         }
-        if (typeof this.value === "object") {
+        if (typeof this.value === "object" && this.value) {
             addChildren()
         } else {
             addValue()

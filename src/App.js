@@ -25,10 +25,11 @@ new Logger(UserActions)
 import DB from "./Resources/DB"
 import DOM from "./Resources/DOM"
 import appSession from "./appSession"
-
+import * as LocalDBManager from "./Directors/LocalDBManager"
 window._debug = {
     DOM,
     UserActions,
     appSession,
-    DB
+    DB,
+    LocalDBManager
 }

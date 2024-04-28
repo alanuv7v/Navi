@@ -19,14 +19,12 @@ export async function getTreeDataFromQuery(queryString) {
     let [targetDocumentName, targetProps] = Translator.queryToDocumentAndProps(queryString)
     
     let targetDocumentHandle = appSession.docs.find(d => d.name === targetDocumentName).handle
-    console.log(appSession.docs, targetDocumentName)
     
     let {file, raw, parsed} = await FileParser.parseDocumentHandle(targetDocumentHandle)
-    console.log({file, raw, parsed})
 
     let treeData = nestedObj(parsed, targetProps)
 
-    return treeData
+    return {treeName: queryString, treeData}
 }
 
 export async function listAllFilesAndDirs(dirHandle) {

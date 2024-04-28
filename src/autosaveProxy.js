@@ -1,9 +1,6 @@
-import * as LocalDBManager from "./Directors/LocalDBManager"
-import Session from "./Entities/Session"
-
-function createSessionProxy(session) {
+export function (original) {
     
-    let appSessionBehavior = {
+    let behaviors = {
         
         set(target, prop, value, receiver) {
             if (target.autosave && target[prop] != value) { //autosave
@@ -19,7 +16,3 @@ function createSessionProxy(session) {
     
     return new Proxy(session, appSessionBehavior);
 }
-
-const appSession = createSessionProxy(new Session())
-
-export default appSession
