@@ -2,8 +2,8 @@ import appSession from "../appSession"
 import * as Painter from "../Workers/Painter"
 import Node from "../Entities/Node"
 
-export function openTree(treeData) {
-    Painter.renderTree(treeData)
+export function openTree(treeName, treeData) {
+    Painter.renderTree(treeName, treeData)
     return true
 }
 

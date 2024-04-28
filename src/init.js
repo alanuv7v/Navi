@@ -27,7 +27,7 @@ export default function init () {
             }
             finally {
                 appSession.autosave = true
-                TreeManager.openTree(appSession.tree.data)
+                TreeManager.openTree("tree", appSession.tree.data)
             }
         })
 }

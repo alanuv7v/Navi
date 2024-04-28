@@ -1,9 +1,12 @@
+import * as yaml from "yaml"
+
 export async function parseDocumentHandle(handle) {
-    if (!(await handle.queryPermission()) === "granted") {
+    console.log(handle)
+    if (await handle.queryPermission() != "granted") {
         await handle.requestPermission()
     }
-    let docFile = await handle.getFile()
-    let docRaw = await docFile.text()
-    let docObj = await yaml.parse(docRaw)
-    return docObj
+    let file = await handle.getFile()
+    let raw = await file.text()
+    let parsed = await yaml.parse(raw)
+    return {file, raw, parsed}
 }
