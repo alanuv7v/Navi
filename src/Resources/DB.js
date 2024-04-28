@@ -7,7 +7,7 @@ DB.version(1).stores({
     ++id,
     dateCreated,
     dateModified,
-    handle`,
+    data`,
 });
 
 export default DB

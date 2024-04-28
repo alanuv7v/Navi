@@ -29,5 +29,6 @@ export default div("App", {},
         div("Logs"),
         div("States")
     ),
+    input("CommandPalette"),
     div("LogsPreview")
 )

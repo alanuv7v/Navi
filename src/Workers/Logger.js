@@ -18,12 +18,22 @@ export default class Logger {
 
         button.innerText = typeof value === "function" ? key + "()" : key
         button.onclick = () => {
-            
-            console.log(value)
-            
             //execute function
             if (typeof value === "function") {
-                value()
+                
+                console.log("executing: ", value) 
+
+                refs("CommandPalette").focus()
+                refs("CommandPalette").placeholder = "arguments..."
+                
+                let onArgumentsSubmit = (event) => {
+                    value(event.target.value)
+                    refs("CommandPalette").placeholder = ""
+                    refs("CommandPalette").removeEventListener("blur", onArgumentsSubmit)
+                }
+
+                refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
+
                 return 
             }
             

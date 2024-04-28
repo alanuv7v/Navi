@@ -4,16 +4,12 @@
 // and merely display and organize them to show the final output to the cilent, not creating one.
 
 import van from "vanjs-core"
-const {div, span, button, textarea, input, a} = van.tags
 
 import * as UserActions from "./UserActions"
 import init from "./init"
-import DOM from "./Resources/DOM"
 import Logger from "./Workers/Logger"
 
 const App = DOM
-
-console.log(UserActions)
 
 van.add(document.body, App)
 
@@ -21,10 +17,18 @@ init()
 
 export default App
 
-console.log(DOM)
+//below is for debugging
+
 new Logger(UserActions)
 
-import refs from "./Resources/DOMRefs"
-refs("States").append(
-    div("Selected node: ")
-)
+
+import DB from "./Resources/DB"
+import DOM from "./Resources/DOM"
+import appSession from "./appSession"
+
+window._debug = {
+    DOM,
+    UserActions,
+    appSession,
+    DB
+}

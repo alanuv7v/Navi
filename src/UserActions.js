@@ -1,24 +1,30 @@
 import appSession from "./appSession"
-const {tree} = appSession
 import * as TreeManager from "./Directors/TreeManager"
 import * as LocalDBManager from "./Directors/LocalDBManager"
+import * as ImportManager from "./Directors/ImportManager"
 
-export function openRoot() {
+export async function openRoot() {
+    
+    const docsHandle = await window.showDirectoryPicker()
+    
+    if (!(await docsHandle.queryPermission()) === "granted") {
+        await docsHandle.requestPermission()
+    }
+    
+    appSession.docs = await ImportManager.listAllFilesAndDirs(docsHandle)
+    appSession.config = await ImportManager.readConfig(appSession.docs)
+    appSession.root = ImportManager.getRoot(appSession.docs)
 
 }
 
 export function openTree(queryString) {
-  let treeData
-  appSession.tree = treeData
-  TreeManager.openTree(treeData)
-  appSession.root
-    global.root = handle
-    global.docs = await listAllFilesAndDirs(handle)
-    global.root.config = await parseDocumentHandle(global.docs.find((doc) => {return doc.name === "_config.yaml"}).handle)
-    if (!(await handle.queryPermission()) === "granted") {
-      await handle.requestPermission()
-    } 
-    return true
+
+    let treeData = ImportManager.getTreeDataFromQuery(queryString)
+    appSession.tree = treeData
+    TreeManager.openTree(treeData)
+
+    return appSession.tree
+
 }
 
 export function saveChange() {
@@ -31,56 +37,56 @@ export function createDocument () {
 }
 
 export const Edit = {
-  title: () => {
+    title: () => {
 
-  },
-  node: {
-    copyNode: (node) => {
-      //clipboard.push(node)
-      tree.copyNode()
     },
-    pasteNode: (parentNodeQueryString) => {
-      //let parentNode = Tree.getNode(parentNodeQueryString)
-      //parentNode.append(clipboard.lastItem)
-      tree.pasteNode()
-    },
-    addNode: () => {
-      //let parentNode = Tree.selectedNode
-      //this.pasteNode(parentNode)
-      tree.addNode()
-    },
-    deleteNode: () => {
-      tree.deleteNode()
-    },
-    changeOrder: (change) => {
-      tree.selectedNode.changeOrder(change)
-    },
-    changeDepth: (change) => {
-      tree.selectedNode.changeDepth(change)
-    },
-    linkNode: (targetNodeQueryString) => {
-      tree.selectedNode.linkTo(targetNodeQueryString)
+    node: {
+        copyNode: (node) => {
+            //clipboard.push(node)
+            appSession.tree.copyNode()
+        },
+        pasteNode: (parentNodeQueryString) => {
+            //let parentNode = Tree.getNode(parentNodeQueryString)
+            //parentNode.append(clipboard.lastItem)
+            appSession.tree.pasteNode()
+        },
+        addNode: () => {
+            //let parentNode = Tree.selectedNode
+            //this.pasteNode(parentNode)
+            appSession.tree.addNode()
+        },
+        deleteNode: () => {
+            appSession.tree.deleteNode()
+        },
+        changeOrder: (change) => {
+            appSession.tree.selectedNode.changeOrder(change)
+        },
+        changeDepth: (change) => {
+            appSession.tree.selectedNode.changeDepth(change)
+        },
+        linkNode: (targetNodeQueryString) => {
+            appSession.tree.selectedNode.linkTo(targetNodeQueryString)
+        }
     }
-  }
 }
 
 export const Prune = {
 
-  hideNode: () => {
-  },
-  filterNodes: () => {
-  }
+    hideNode: () => {
+    },
+    filterNodes: () => {
+    }
 
 }
 
 export const Navigate = {
-  search: (queryString) => {
-    Presenter.renderTree(queryString)
-  },
-  stemOut: (parentNode) => {
-    parentNode.stemOut()
-  },
-  plantNew: (queryString) => {
-    Presenter.renderTree(queryString)
-  }
+    search: (queryString) => {
+        Presenter.renderTree(queryString)
+    },
+    stemOut: (parentNode) => {
+        parentNode.stemOut()
+    },
+    plantNew: (queryString) => {
+        Presenter.renderTree(queryString)
+    }
 }

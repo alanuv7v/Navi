@@ -3,22 +3,30 @@ import Node from "./Node"
 
 
 export default class Tree {
+    
+    data = null
 
-    constructor (appSession, data) {
-        this.appSession = appSession
+    constructor (data) {
         this.data = data
     }
 
     selectedNode = null
 
+    clipboard = {
+        data: [],
+        get lastItem () {
+            return this.data[this.data.length-1]
+        }
+    }
+
     copyNode() {
-        appSession.clipboard.data.push(structuredClone(this.selectedNode))
+        this.clipboard.data.push(structuredClone(this.selectedNode))
     }
 
     pasteNode() {
         const parentNode = this.selectedNode
         if (typeof parentNode.value === "Object") return false
-        const childNode = appSession.clipboard.lastItem
+        const childNode = this.clipboard.lastItem
         parentNode.value[childNode.key] = childNode.value
         parentNode.update()
         nestedObj(this.data, parentNode.path, childNode)
