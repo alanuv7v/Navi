@@ -16,8 +16,6 @@ function createSessionProxy(session) {
         }
         
     }
-
-    
     Object.defineProperty(session, "original", {
         get() {
           return session;
@@ -26,7 +24,7 @@ function createSessionProxy(session) {
     
     return new Proxy(session, appSessionBehavior);
 }
-
+console.log(new Session())
 const appSession = createSessionProxy(new Session())
 
 export default appSession
