@@ -16,15 +16,21 @@ export function getRoot(docs) {
 
 export async function getTreeDataFromQuery(queryString) {
 
-    let [targetDocumentName, targetProps] = Translator.queryToDocumentAndProps(queryString)
+    try {
+        let [targetDocumentName, targetProps] = Translator.queryToDocumentAndProps(queryString)
+        
+        let targetDocumentHandle = appSession.docs.find(d => d.name === targetDocumentName).handle
+        
+        let {file, raw, parsed} = await FileParser.parseDocumentHandle(targetDocumentHandle)
     
-    let targetDocumentHandle = appSession.docs.find(d => d.name === targetDocumentName).handle
+        let treeData = nestedObj(parsed, targetProps)
     
-    let {file, raw, parsed} = await FileParser.parseDocumentHandle(targetDocumentHandle)
+        return {treeName: queryString, treeData}
+    }
+    catch {
+        return undefined
+    }
 
-    let treeData = nestedObj(parsed, targetProps)
-
-    return {treeName: queryString, treeData}
 }
 
 export async function listAllFilesAndDirs(dirHandle) {

@@ -7,7 +7,7 @@ import van from "vanjs-core"
 
 import * as UserActions from "./Natural/UserActions"
 import init from "./Natural/init"
-import Logger from "./Workers/Logger"
+import ActionsIO from "./Workers/ActionsIO"
 
 const App = DOM
 
@@ -19,7 +19,7 @@ export default App
 
 //below is for debugging
 
-new Logger(UserActions)
+new ActionsIO(UserActions)
 
 
 import DB from "./Resources/DB"

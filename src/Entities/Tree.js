@@ -7,8 +7,9 @@ export default class Tree {
     
     data = AutosaveProxy({})
 
-    constructor (data) {
+    constructor (data={}) {
         for (let e of Object.entries(data)) {
+            console.log(data)
             this.data[e[0]] = e[1]
         }
     }

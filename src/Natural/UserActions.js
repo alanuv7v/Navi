@@ -21,6 +21,7 @@ export async function openTree(queryString) {
 
     let {treeName, treeData} = await ImportManager.getTreeDataFromQuery(queryString)
     appSession.tree.data = treeData
+    appSession.tree.seed = queryString
     console.log(treeName, treeData)
     TreeManager.openTree(treeName, treeData)
 

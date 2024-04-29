@@ -3,7 +3,7 @@ const t = van.tags
 
 import refs from "../Resources/DOMRefs"
 
-export default class Logger {
+export default class {
 
     constructor (obj) {
         this.log(obj)
@@ -13,10 +13,17 @@ export default class Logger {
         
         let button = t.button()
         let children = t.div({style: "margin-left: 2em;"})
+        let childrenCount = Object.keys(value).length
 
         let opened = false
 
-        button.innerText = typeof value === "function" ? key + "()" : key
+        button.innerText = key
+        if (typeof value === "object" && value) button.innerText += `[${childrenCount}] `
+        if (typeof value === "function") {
+            button.innerText += "()"
+            button.classList.add("function")
+        }
+
         button.onclick = () => {
             //execute function
             if (typeof value === "function") {
@@ -52,7 +59,7 @@ export default class Logger {
 
         }
 
-        return t.div({class: "Log", style: "border-left: 1px solid var(--light); "},
+        return t.div({class: "Command", style: "border-left: 1px solid var(--light); "},
             button,
             children
         )

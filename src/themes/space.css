@@ -236,3 +236,7 @@ a:hover {
 .node.selected {
   box-shadow: inset 0px 0px 0px 4px var(--light) !important;
 }
+
+.Command .function {
+  color: var(--vivid);
+}
