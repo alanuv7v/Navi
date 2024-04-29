@@ -1,5 +1,5 @@
 import appSession from "../Resources/appSession"
-import * as TreeManager from "../Directors/TreeManager"
+import * as Garner from "../Workers/Garner"
 import * as LocalDBManager from "../Directors/LocalDataManager"
 import * as ImportManager from "../Directors/ImportManager"
 
@@ -20,10 +20,14 @@ export async function openRoot() {
 export async function openTree(queryString) {
 
     let {treeName, treeData} = await ImportManager.getTreeDataFromQuery(queryString)
+    console.log(treeName, treeData)
+
+    let seedNode = Garner.createSeed(treeName, treeData)
+    Garner.plantSeedNode(seedNode)
+
     appSession.tree.data = treeData
     appSession.tree.seed = queryString
-    console.log(treeName, treeData)
-    TreeManager.openTree(treeName, treeData)
+    appSession.tree.seedNode = seedNode
 
     return appSession.tree
 

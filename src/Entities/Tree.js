@@ -16,6 +16,8 @@ export default class Tree {
 
     seed = "" //queryString
 
+    seedNode = null
+
     selectedNode = null
 
     clipboard = {

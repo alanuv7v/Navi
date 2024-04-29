@@ -1,6 +1,7 @@
 import * as TreeManager from "../Directors/TreeManager"
 import * as LocalDBManager from "../Directors/LocalDataManager"
 import * as ImportManager from "../Directors/ImportManager"
+import * as Garner from "../Workers/Garner"
 import appSession from "../Resources/appSession"
 
 import deepEqual from "deep-equal"
@@ -48,7 +49,7 @@ export default function init () {
             } 
             finally {
                 appSession.autosave = true
-                TreeManager.openTree("tree", appSession.tree.data)
+                Garner.plantSeedNode(appSession.tree.seedNode)
             }
 
         })
