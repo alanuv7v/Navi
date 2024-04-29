@@ -1,7 +1,7 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a} = van.tags
 
-import appSession from "../appSession"
+import appSession from "../Resources/appSession"
 
 export default class Node  {
 

@@ -5,8 +5,8 @@
 
 import van from "vanjs-core"
 
-import * as UserActions from "./UserActions"
-import init from "./init"
+import * as UserActions from "./Natural/UserActions"
+import init from "./Natural/init"
 import Logger from "./Workers/Logger"
 
 const App = DOM
@@ -24,8 +24,8 @@ new Logger(UserActions)
 
 import DB from "./Resources/DB"
 import DOM from "./Resources/DOM"
-import appSession from "./appSession"
-import * as LocalDBManager from "./Directors/LocalDBManager"
+import appSession from "./Resources/appSession"
+import * as LocalDBManager from "./Directors/LocalDataManager"
 window._debug = {
     DOM,
     UserActions,

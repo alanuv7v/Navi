@@ -8,8 +8,12 @@ export default class Tree {
     data = AutosaveProxy({})
 
     constructor (data) {
-        this.data = data
+        for (let e of Object.entries(data)) {
+            this.data[e[0]] = e[1]
+        }
     }
+
+    seed = "" //queryString
 
     selectedNode = null
 

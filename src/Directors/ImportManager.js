@@ -1,6 +1,6 @@
 import * as FileParser from "../Workers/FileParser"
 import * as Translator from "../Workers/Translator"
-import appSession from "../appSession"
+import appSession from "../Resources/appSession"
 import nestedObj from "../Workers/nestedObj"
 
 

@@ -1,6 +1,6 @@
 import Tree from "../Entities/Tree"
-import appSession from "../appSession"
-import * as LocalDBManager from "../Directors/LocalDBManager"
+import appSession from "../Resources/appSession"
+import * as LocalDBManager from "../Directors/LocalDataManager"
 
 export default function (originalObject) {
     

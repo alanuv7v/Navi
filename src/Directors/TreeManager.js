@@ -1,4 +1,4 @@
-import appSession from "../appSession"
+import appSession from "../Resources/appSession"
 import * as Painter from "../Workers/Painter"
 import Node from "../Entities/Node"
 

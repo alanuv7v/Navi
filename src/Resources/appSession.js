@@ -1,5 +1,5 @@
-import * as LocalDBManager from "./Directors/LocalDBManager"
-import Session from "./Entities/Session"
+import * as LocalDBManager from "../Directors/LocalDataManager"
+import Session from "../Entities/Session"
 
 function createSessionProxy(session) {
     
@@ -16,6 +16,13 @@ function createSessionProxy(session) {
         }
         
     }
+
+    
+    Object.defineProperty(session, "original", {
+        get() {
+          return session;
+        }
+      })
     
     return new Proxy(session, appSessionBehavior);
 }

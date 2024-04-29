@@ -17,6 +17,6 @@ export default class Session {
 
     docs = null
 
-    tree = AutosaveProxy(new Tree(this.data?.treeData))
+    tree = new Tree(this.data?.treeData)
     
 }
