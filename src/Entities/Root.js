@@ -1,12 +1,20 @@
+import { listAllFilesAndDirs } from "../Directors/ImportManager"
+
 export default class Root {
     constructor (handle) {
         this.handle = handle
-        this.docs = 
     }
-    get root () {
-        this.docs.find((doc) => {return doc.name === "@root.yaml"})?.handle
+    async docs () {
+        let list = []
+        for await (let handle of this.handle.values()) {
+            list.push(handle)
+        }
+        return list
     }
-    get configHandle {
+    get enterance () {
+        return this.docs.find((doc) => {return doc.name === "@root.yaml"})?.handle
+    }
+    get configHandle () {
         return this.docs.find((doc) => {return doc.name === "_config.yaml"})?.handle
     }
     getConfig = async () => {

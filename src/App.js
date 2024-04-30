@@ -8,6 +8,7 @@ import van from "vanjs-core"
 import * as UserActions from "./Natural/UserActions"
 import init from "./Natural/init"
 import ActionsIO from "./Workers/ActionsIO"
+import * as CRUD from "./Natural/CRUD"
 
 const App = DOM
 
@@ -19,7 +20,8 @@ export default App
 
 //below is for debugging
 
-new ActionsIO(UserActions)
+new ActionsIO("UserActions", UserActions)
+new ActionsIO("CRUD", CRUD)
 
 
 import DB from "./Resources/DB"

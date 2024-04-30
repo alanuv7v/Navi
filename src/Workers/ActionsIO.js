@@ -5,8 +5,8 @@ import refs from "../Resources/DOMRefs"
 
 export default class {
 
-    constructor (obj) {
-        this.log(obj)
+    constructor (name="", obj) {
+        this.log(name, obj)
     }
 
     CommandButton = (key, value) => {
@@ -66,7 +66,7 @@ export default class {
     }
 
     log = (obj) => {
-        refs("Logs").append(this.CommandButton("commands", obj))
+        refs("Logs").append(this.CommandButton(name, obj))
     }
     
 }
