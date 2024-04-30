@@ -1,0 +1,24 @@
+CRUD
+= 이게 실상 모든 유저 액션이다.
+
+verb:
+create
+read
+update
+delete
+
+
+entities:
+Session
+Root = dir = docs, config
+Document
+Seed
+Tree
+Node
+Query = string, path, document = get() {return path[0]}, props = get () {return path[0]}
+
+createSession
+createRoot
+createDocument
+createSeed
+create
