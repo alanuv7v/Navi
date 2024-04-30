@@ -21,10 +21,10 @@ export default class Query  {
 
     async result () {
         let targetDocumentHandle = appSession.docs.find(d => d.name === this.documentName).handle
-        let doc = new Document(targetDocumentHandle)
-        let {parsed} = await doc.parse()
+        let document = new Document(targetDocumentHandle)
+        let {parsed} = await document.parse()
         let treeData = nestedObj(parsed, this.props)
-        return {doc, treeData}
+        return {document, treeData}
     }
 
 }

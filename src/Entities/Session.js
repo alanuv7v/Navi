@@ -17,6 +17,8 @@ export default class Session {
 
     docs = null
 
+    seed = null
+
     tree = new Tree(this.data?.treeData)
     
 }

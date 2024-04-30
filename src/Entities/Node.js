@@ -30,11 +30,13 @@ export default class Node  {
 
     update() {
 
+        //show key
         this.DOM.querySelector(".key").value = this.key
 
         const addValue = () => {
             this.DOM.querySelector(".value").append(textarea(this.value))
         }
+
         const addChildren = () => {
             for (let [key, value] of Object.entries(this.value)) {
                 let childNode = new Node(key, value, this)
@@ -43,6 +45,7 @@ export default class Node  {
                 )
             }
         }
+        
         if (typeof this.value === "object" && this.value) {
             addChildren()
         } else {

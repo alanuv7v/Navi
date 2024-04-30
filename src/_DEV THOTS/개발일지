@@ -62,3 +62,7 @@ Editor라는 이름은 말 그대로 Edit을 한다는 의미이다.
 6. VanUI 이용, Tabs로 Editor, RawEditor, Logs 등 윈도우들 묶기
 7. 첫 모바일 실행시도
 8. 모바일 PWA 최적화: 모바일 파일시스템에 Root 저장, Root 열기
+
+
+# 2024.04.30
+console.error() 짱꿀인데.

@@ -4,24 +4,13 @@ import AutosaveProxy from "../Workers/AutosaveProxy"
 
 
 export default class Tree {
-    
-    data = AutosaveProxy({})
 
-    constructor (data={}) {
-        for (let e of Object.entries(data)) {
-            console.log(data)
-            this.data[e[0]] = e[1]
-        }
-    }
-
-    seed = "" //queryString
-
-    seedNode = null
+    seed = null
 
     selectedNode = null
 
     clipboard = {
-        data: [],
+        data: new Array(20),
         get lastItem () {
             return this.data[this.data.length-1]
         }
@@ -37,21 +26,23 @@ export default class Tree {
         const childNode = this.clipboard.lastItem
         parentNode.value[childNode.key] = childNode.value
         parentNode.update()
-        nestedObj(this.data, parentNode.path, childNode)
     }
 
-    addNode() {
-        let nodeToAdd = new Node()
-        let originalObject = nestedObj(this.data, this.selectedNode.path)
-        let dataToAdd = nodeToAdd.data
-        nestedObj(this.data, this.selectedNode.path, {...originalObject, dataToAdd})
-        return nestedObj(this.data, this.selectedNode.path)
+    addNode(key, value) {
+        const parentNode = this.selectedNode
+        if (typeof parentNode != "object") {
+            let originalValue = parentNode.value
+            parentNode.value = {
+                0: originalValue
+            }
+        }
+        parentNode.value[key] = value
+        parentNode.update()
     }
 
-    deleteNode(node) {
-        delete node.parent.value[node.key]
+    deleteNode() {
+        delete this.selectedNode.parent.value[node.key]
         node.DOM.remove()
-        nestedObj(this.data, this.selectedNode.path, undefined)
     }
 
 }
