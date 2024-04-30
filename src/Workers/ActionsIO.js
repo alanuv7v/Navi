@@ -1,3 +1,5 @@
+// !!! 나중엔 이것 조차 Tree로 바뀔 수 있겠다. 버튼 클릭해서 함수  실행하게 해주면 되는거 아녀.
+
 import van from "vanjs-core"
 const t = van.tags
 
@@ -65,7 +67,7 @@ export default class {
         )
     }
 
-    log = (obj) => {
+    log = (name, obj) => {
         refs("Logs").append(this.CommandButton(name, obj))
     }
     

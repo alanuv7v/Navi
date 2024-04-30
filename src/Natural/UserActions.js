@@ -47,10 +47,7 @@ export function createDocument () {
 }
 
 export const Edit = {
-    title: () => {
-
-    },
-    node: {
+    OnSelectedNode: {
         copyNode: (node) => {
             //clipboard.push(node)
             appSession.tree.copyNode()

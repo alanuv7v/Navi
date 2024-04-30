@@ -60,7 +60,6 @@ export default class Node  {
             this.DOM.classList.remove("selected")
         } else {
             this.DOM.classList.add("selected")
-            console.log(appSession)
             appSession.tree.selectedNode = this
         }
         
@@ -80,4 +79,16 @@ export default class Node  {
     DepthDown() {
 
     }
+
+    addChild() {
+        if (typeof this.value != "object") {
+            let originalValue = this.value
+            this.value = {
+                0: originalValue
+            }
+        }
+        this.value[key] = value
+        this.update()
+    }
+    
 }

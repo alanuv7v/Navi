@@ -9,6 +9,10 @@
     --alert: rgba(255, 0, 0, 0.3);
     --executable: rgb(226, 255, 147);
 }
+
+html {
+    background-color: var(--dark);
+}
   
 * {
   font-size: 14px;
@@ -231,7 +235,9 @@ a:hover {
 }
 
 #Footer {
+    max-height: 50%;
   display: flex;
+  overflow: auto;
 }
 
 .node.selected {

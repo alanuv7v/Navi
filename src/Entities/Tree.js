@@ -30,7 +30,7 @@ export default class Tree {
 
     addNode(key, value) {
         const parentNode = this.selectedNode
-        if (typeof parentNode != "object") {
+        if (typeof parentNode.value != "object") {
             let originalValue = parentNode.value
             parentNode.value = {
                 0: originalValue
