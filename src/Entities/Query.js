@@ -1,4 +1,5 @@
 import appSession from "../Resources/appSession"
+import Document from "./Document"
 
 export default class Query  {
 
@@ -18,10 +19,13 @@ export default class Query  {
         return this.path.slice(1)
     }
 
-    result = () => {
-        let document = appSession.docs.find(d => d.name === this.string)
-        //let treeData = nestedObj(document.parsed, this.props)
-        return {document, treeData}
+    async result () {
+        let targetDocumentHandle = appSession.docs.find(d => d.name === this.documentName).handle
+        let doc = new Document(targetDocumentHandle)
+        let {parsed} = await doc.parse()
+        let treeData = nestedObj(parsed, this.props)
+        return {doc, treeData}
     }
 
 }
+        
