@@ -33,11 +33,11 @@ export default class Node  {
         //show key
         this.DOM.querySelector(".key").value = this.key
 
-        const addValue = () => {
+        const showValue = () => {
             this.DOM.querySelector(".value").append(textarea(this.value))
         }
 
-        const addChildren = () => {
+        const showChildren = () => {
             for (let [key, value] of Object.entries(this.value)) {
                 let childNode = new Node(key, value, this)
                 this.DOM.querySelector(".value").append(
@@ -47,10 +47,13 @@ export default class Node  {
         }
         
         if (typeof this.value === "object" && this.value) {
-            addChildren()
+            showChildren()
         } else {
-            addValue()
+            showValue()
         }
+
+        return true
+
     }
 
     selected = false
@@ -80,7 +83,7 @@ export default class Node  {
 
     }
 
-    addChild() {
+    addChild(key, value) {
         if (typeof this.value != "object") {
             let originalValue = this.value
             this.value = {
@@ -89,6 +92,28 @@ export default class Node  {
         }
         this.value[key] = value
         this.update()
+        return this.value
     }
-    
+
+    delete() {
+        delete this.parent.value[this.key]
+        this.DOM.remove()
+        this.parent.update()
+        return true
+    }
+
+    hide () {
+        this.DOM.style.display = "none"
+    }
+
+    show () {
+        this.DOM.style.display = "block"
+    }
+
+    stemOut () {
+        let linkString = this.value
+        let treeData = new Query(linkString).treeData()
+        this.addChild()
+    }
+
 }

@@ -13,7 +13,6 @@ export default class Document {
         this.file = await handle.getFile()
         this.raw = await file.text()
         this.parsed = await yaml.parse(raw)
+        return {file, raw, parsed}
     }
-
-
 }

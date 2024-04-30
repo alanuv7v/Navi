@@ -19,12 +19,15 @@ export default class Query  {
         return this.path.slice(1)
     }
 
-    async result () {
+    get document () {
         let targetDocumentHandle = appSession.docs.find(d => d.name === this.documentName).handle
-        let document = new Document(targetDocumentHandle)
-        let {parsed} = await document.parse()
+        return new Document(targetDocumentHandle)
+    }
+
+    async treeData () {
+        let {parsed} = await this.document.parse()
         let treeData = nestedObj(parsed, this.props)
-        return {document, treeData}
+        return treeData
     }
 
 }

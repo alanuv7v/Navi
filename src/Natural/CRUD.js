@@ -36,7 +36,7 @@ export async function createDocument(nameString) {
 }
 
 export async function createSeed(queryString) {
-    let {document, treeData} = await new Query(queryString).result()
+    let {document, treeData} = await new Query(queryString).treeData()
     return new Seed({document, treeData})
 }
 

@@ -16,33 +16,14 @@ export default class Tree {
         }
     }
 
-    copyNode() {
-        this.clipboard.data.push(structuredClone(this.selectedNode))
+    copyNode(node) {
+        this.clipboard.data.push(structuredClone(node))
     }
 
-    pasteNode() {
-        const parentNode = this.selectedNode
-        if (typeof parentNode.value === "Object") return false
+    pasteNode(node) {
+        if (typeof node.value != "Object") return false
         const childNode = this.clipboard.lastItem
-        parentNode.value[childNode.key] = childNode.value
-        parentNode.update()
-    }
-
-    addNode(key, value) {
-        const parentNode = this.selectedNode
-        if (typeof parentNode.value != "object") {
-            let originalValue = parentNode.value
-            parentNode.value = {
-                0: originalValue
-            }
-        }
-        parentNode.value[key] = value
-        parentNode.update()
-    }
-
-    deleteNode() {
-        delete this.selectedNode.parent.value[node.key]
-        node.DOM.remove()
+        node.addChild(childNode.key, childNode.value)
     }
 
 }

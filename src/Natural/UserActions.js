@@ -47,23 +47,20 @@ export function createDocument () {
 }
 
 export const Edit = {
-    OnSelectedNode: {
+    selectedNode: {
         copyNode: (node) => {
-            //clipboard.push(node)
-            appSession.tree.copyNode()
+            appSession.tree.copyNode(appSession.selectedNode)
         },
         pasteNode: (parentNodeQueryString) => {
-            //let parentNode = Tree.getNode(parentNodeQueryString)
-            //parentNode.append(clipboard.lastItem)
-            appSession.tree.pasteNode()
+            appSession.tree.pasteNode(appSession.selectedNode)
         },
-        addNode: () => {
+        addNode: (key, value) => {
             //let parentNode = Tree.selectedNode
             //this.pasteNode(parentNode)
-            appSession.tree.addNode()
+            appSession.selectedNode.addChild(key, value)
         },
         deleteNode: () => {
-            appSession.tree.deleteNode()
+            appSession.selectedNode.delete()
         },
         changeOrder: (change) => {
             appSession.tree.selectedNode.changeOrder(change)
@@ -71,8 +68,8 @@ export const Edit = {
         changeDepth: (change) => {
             appSession.tree.selectedNode.changeDepth(change)
         },
-        linkNode: (targetNodeQueryString) => {
-            appSession.tree.selectedNode.linkTo(targetNodeQueryString)
+        link: (targetQueryString) => {
+            appSession.tree.selectedNode.linkTo(targetQueryString)
         }
     }
 }
@@ -80,6 +77,7 @@ export const Edit = {
 export const Prune = {
 
     hideNode: () => {
+        appSession.tree.selectedNode.hide()
     },
     filterNodes: () => {
     }
@@ -87,11 +85,9 @@ export const Prune = {
 }
 
 export const Navigate = {
-    search: (queryString) => {
-        Presenter.renderTree(queryString)
-    },
-    stemOut: (parentNode) => {
-        parentNode.stemOut()
+    //search는 openTree와 동일해서 제외.
+    stemOut: () => {
+        appSession.tree.selectedNode.stemOut()
     },
     plantNew: (queryString) => {
         Presenter.renderTree(queryString)
