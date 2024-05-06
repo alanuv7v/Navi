@@ -1,5 +1,6 @@
+import Root from "./Root"
+import Seed from "./Seed"
 import Tree from "./Tree"
-import AutosaveProxy from "../Workers/AutosaveProxy"
 
 export default class Session {
     
@@ -8,16 +9,18 @@ export default class Session {
     }
 
     copy (data) {
-        for (let e of Object.entries(data)) {
-            this[e[0]] = e[1]
+        for (let [key, value] of Object.entries(data)) {
+            if (value.handle) {
+                this[key].handle = value.handle
+            }
         }
     }
 
-    adress = null
+    adress = ""
 
-    root = null 
+    root = new Root()
 
-    seed = null
+    seed = new Seed()
 
     tree = new Tree(this.data?.treeData)
     
