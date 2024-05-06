@@ -62,7 +62,7 @@ export function saveSession() {
 }
 
 export function loadSession () {
-
+    
 }
 
 export async function clearDB () {

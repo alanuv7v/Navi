@@ -189,15 +189,13 @@ a:hover {
     flex-direction: column;
 }
 
-
-
-
 #View {
     overflow: auto;
     width: 100%;
     flex-grow: 1;
     flex-shrink: 1;
     display: flex;
+    flex-direction: column;
 
 }
 #Editor {
@@ -215,8 +213,10 @@ a:hover {
     min-width: 3em;
     min-height: 3em;
 }
+
 #PickRoot {
 }
+
 #GoTo {
     flex-grow: 1;
 }

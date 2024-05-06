@@ -3,30 +3,78 @@ const {div, span, button, textarea, input, a} = van.tags
 
 import appSession from "../Resources/appSession"
 
+
 export default class Node  {
+    
 
     constructor (key, value, parent) {
         
         //value = can be children
         //parent reference is needed to override modified data to the parent value
-
+        
         this.key = key
         this.value = value
         this.parent = parent
+
         this.update()
-        console.log({key, value, parent})
+
+        console.log(this.pathString(), this)
 
     }
+
+    parent = null
+
+    children = []
     
-    path = []
-    pathString = this.path.join("/")
+    path () {
+        let parentPath = this?.parent?.path()
+        if (parentPath) return [...parentPath, this.key]
+        else return [this.key]
+    }
+    
+    pathString () {
+        return this.path().join("/")
+    }
 
     DOM = div({class: "node"},
         textarea({class: "key", onclick: () => this.onclick()}),
         div({class: "value"}),
     )
 
-    parent = null
+    changeParent (value) {
+        
+        let originalParent = this.parent
+        delete originalParent.value[this.key]
+        originalParent.update()
+
+        this.parent = value
+        this.updateParentValue()
+        this.parent.update()
+
+        this.parent.updateParentValue()
+        
+        console.log(originalParent, this.parent)
+        
+        return true
+    }
+    
+    updateParentValue () {
+        if (!this?.parent) return false
+
+        if (typeof this.parent.value === "object" && this.parent.value) {
+            this.parent.value[this.key] = this.value
+        } 
+        else {
+            let originalValue = this.parent.value
+            let newKey = this.key
+            let newValue = this.value
+            this.parent.value = {
+                0: originalValue,
+                [newKey]: newValue
+            }
+        }
+        return this.parent.value
+    }
 
     update() {
 
@@ -38,8 +86,12 @@ export default class Node  {
         }
 
         const showChildren = () => {
+            
+            this.DOM.querySelector(".value").innerHTML = ""
+
             for (let [key, value] of Object.entries(this.value)) {
                 let childNode = new Node(key, value, this)
+                this.children.push(childNode)
                 this.DOM.querySelector(".value").append(
                     childNode.DOM
                 )
@@ -110,10 +162,11 @@ export default class Node  {
         this.DOM.style.display = "block"
     }
 
-    stemOut () {
+    async stemOut () {
         let linkString = this.value
-        let treeData = new Query(linkString).treeData()
-        this.addChild()
+        let query = new Query(linkString)
+        let {document, treeData} = await query.parse()
+        this.addChild(linkString, treeData)
     }
 
 }
