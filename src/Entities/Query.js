@@ -13,7 +13,7 @@ export default class Query  {
     }
 
     get documentName () {
-        return this.path[0]
+        return this.path[0].split(".")[0]
     }
 
     get props () {
@@ -23,7 +23,7 @@ export default class Query  {
     async parse () {
         try {
             let docs = await appSession.root.docs()
-            let targetDocumentHandle = docs.find(d => d.name === this.documentName)
+            let targetDocumentHandle = docs.find(d => d.name === this.documentName + ".yaml")
             let document = new Document(targetDocumentHandle)
             let {parsed} = await document.parse()
             let treeData = nestedObj(parsed, this.props)

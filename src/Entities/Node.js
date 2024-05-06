@@ -2,6 +2,7 @@ import van from "vanjs-core"
 const {div, span, button, textarea, input, a} = van.tags
 
 import appSession from "../Resources/appSession"
+import Query from "./Query"
 
 
 export default class Node  {
@@ -25,6 +26,8 @@ export default class Node  {
     parent = null
 
     children = []
+
+    selected = false
     
     path () {
         let parentPath = this?.parent?.path()
@@ -108,8 +111,6 @@ export default class Node  {
 
     }
 
-    selected = false
-
     onclick = () => {
         if (this.selected ) {
             this.DOM.classList.remove("selected")
@@ -128,10 +129,10 @@ export default class Node  {
     moveDown() {
 
     }
-    DepthUp() {
+    depthUp() {
 
     }
-    DepthDown() {
+    depthDown() {
 
     }
 
@@ -162,11 +163,21 @@ export default class Node  {
         this.DOM.style.display = "block"
     }
 
+    open () {
+        this.update()
+    }
+
+    close () {
+        this.DOM.querySelector(".value").innerHTML = ""
+        this.children = []
+    }
+
     async stemOut () {
-        let linkString = this.value
+        debugger
+        let linkString = this.value.slice(1)
         let query = new Query(linkString)
         let {document, treeData} = await query.parse()
-        this.addChild(linkString, treeData)
+        this.addChild(this.key, treeData)
     }
 
 }
