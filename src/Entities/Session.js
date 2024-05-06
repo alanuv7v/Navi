@@ -16,6 +16,18 @@ export default class Session {
         }
     }
 
+    serialize () {
+        let result = {}
+        for (let [key, value] of Object.entries(this)) {
+            if (value.handle) {
+                result[key] = {
+                    handle: value.handle
+                }
+            }
+        }
+        return result
+    }
+
     adress = ""
 
     root = new Root()

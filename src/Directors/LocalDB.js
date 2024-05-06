@@ -21,7 +21,7 @@ export async function saveSession(session) {
             key: "lastOpened",
             dateCreated: session?.dateCreated,
             dateModified: DateTime.now().toISO(),
-            data: session
+            data: session.serialize()
         }
     )
 }
