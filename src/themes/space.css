@@ -245,6 +245,10 @@ a:hover {
     box-shadow: inset 0px 0px 0px 4px var(--light) !important;
 }
 
+.Command {
+    width: fit-content;
+}
+
 .Command .function { 
     color: var(--executable);
 }

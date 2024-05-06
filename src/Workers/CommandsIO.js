@@ -61,7 +61,7 @@ export default class {
 
         }
 
-        return t.div({class: "Command", style: "border-left: 1px solid var(--light); "},
+        return t.div({class: "Command"},
             button,
             children
         )
