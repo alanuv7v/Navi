@@ -1,7 +1,13 @@
 export default class Root {
+
     constructor (handle) {
         this.handle = handle
     }
+    
+    get name () {
+        return this.handle.name
+    }
+
     async docs () {
         let list = []
         for await (let handle of this.handle.values()) {
@@ -9,11 +15,13 @@ export default class Root {
         }
         return list
     }
-    get enterance () {
-        return this.docs.find((doc) => {return doc.name === "@root.yaml"})?.handle
+    async enterance () {
+        let docs = await this.docs()
+        return docs.find((doc) => {return doc.name === "@root.yaml"})
     }
-    get configHandle () {
-        return this.docs.find((doc) => {return doc.name === "_config.yaml"})?.handle
+    async configHandle () {
+        let docs = await this.docs()
+        return docs.find((doc) => {return doc.name === "_config.yaml"})
     }
     async readConfig () {
         if (!configHandle) return new Error("_config.yaml is not found!")

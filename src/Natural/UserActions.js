@@ -2,6 +2,8 @@ import appSession from "../Resources/appSession"
 import * as LocalDB from "../Directors/LocalDB"
 import Root from "../Entities/Root"
 import Seed from "../Entities/Seed"
+import Query from "../Entities/Query"
+import DB from "../Resources/DB"
 
 export async function openRoot() {
     
@@ -13,21 +15,33 @@ export async function openRoot() {
     
     appSession.root = new Root(rootHandle)
 
+    saveSession()
+
+    console.log(`Opened root: ${appSession.root.name}`)
+
 }
 
 export async function openTree(queryString) {
+    try {
+            
+        let adress = queryString
 
-    let adress = queryString
+        let rootQuery = new Query(queryString)
+        console.log(rootQuery)
 
-    let rootQuery = Query(queryString)
+        let seed = new Seed(await rootQuery.document(), await rootQuery.treeData())
+        let tree = seed.grow()
 
-    let seed = new Seed(rootQuery.document, rootQuery.treeData)
-    let tree = seed.grow()
+        appSession = {...appSession, adress, seed, tree}
 
-    appSession = {...appSession, adress, seed, tree}
+        saveSession()
 
-    return tree
+        return tree
 
+    }
+    catch {
+        console.error(`Failed to open tree by the given query: ${queryString}. the query is formatted wrongly or matching doucment and prop does not exist in the root.`)
+    }
 }
 
 export function saveChange() {
@@ -36,7 +50,20 @@ export function saveChange() {
 }
 
 export function saveSession() {
-    LocalDB.updateSession(appSession.original)
+    try {
+        LocalDB.saveSession(appSession)
+    } 
+    catch {
+        LocalDB.saveSession(appSession)
+    }
+}
+
+export function loadSession () {
+
+}
+
+export async function clearDB () {
+    return await DB.delete()
 }
 
 

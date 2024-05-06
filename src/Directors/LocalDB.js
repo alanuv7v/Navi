@@ -3,20 +3,6 @@ import { DateTime } from "luxon"
 
 //"CRUD"
 
-export async function saveSession(newSession) {
-    
-    let now = DateTime.now()
-    await DB.sessions.add(
-        {
-            dateCreated: now.toISO(),
-            dateModified: now.toISO(),
-            data: newSession
-        }
-    )
-    return true
-    
-}
-
 export async function getSessions() {
     return await DB.sessions.toArray()
 }
@@ -28,14 +14,14 @@ export async function getLastSession() {
     return await DB.sessions.get(1)
 }
 
-
-export async function updateSession(session) {
-    let now = DateTime.now()
-    return await DB.sessions.update(
-        1,
+export async function saveSession(session) {
+    return await DB.sessions.put(
         {   
+            id: 1,
+            key: "lastOpened",
             dateCreated: session?.dateCreated,
-            dateModified: now.toISO(),
+            dateModified: DateTime.now().toISO(),
             data: session
-        })
+        }
+    )
 }

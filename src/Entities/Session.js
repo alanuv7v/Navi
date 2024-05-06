@@ -4,21 +4,19 @@ import AutosaveProxy from "../Workers/AutosaveProxy"
 export default class Session {
     
     constructor (data) {
-        if (data) {
-            for (let e of Object.entries(data)) {
-                this[e[0]] = e[1]
-            }
-        }
+        if (data) this.copy(data)
     }
 
-    original = this //no proxy but pure obj
-
-    autosave = false
+    copy (data) {
+        for (let e of Object.entries(data)) {
+            this[e[0]] = e[1]
+        }
+    }
 
     adress = null
 
     root = null 
-    
+
     seed = null
 
     tree = new Tree(this.data?.treeData)
