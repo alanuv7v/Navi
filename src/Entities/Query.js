@@ -1,5 +1,6 @@
 import appSession from "../Resources/appSession"
 import Document from "./Document"
+import nestedObj from "../Workers/nestedObj"
 
 export default class Query  {
 
@@ -19,27 +20,18 @@ export default class Query  {
         return this.path.slice(1)
     }
 
-    async document () {
+    async parse () {
         try {
             let docs = await appSession.root.docs()
             let targetDocumentHandle = docs.find(d => d.name === this.documentName)
-            return new Document(targetDocumentHandle)
-        }
-        catch {
-            return undefined
-        }
-    }
-
-    async treeData () {
-        try {
-            let {parsed} = await this.document.parse()
+            let document = new Document(targetDocumentHandle)
+            let {parsed} = await document.parse()
             let treeData = nestedObj(parsed, this.props)
-            return treeData
-        } 
+            return {document, treeData}
+        }
         catch {
             return undefined
         }
     }
 
 }
-        

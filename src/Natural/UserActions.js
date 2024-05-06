@@ -27,20 +27,23 @@ export async function openTree(queryString) {
         let adress = queryString
 
         let rootQuery = new Query(queryString)
-        console.log(rootQuery)
-
-        let seed = new Seed(await rootQuery.document(), await rootQuery.treeData())
+        
+        let {document, treeData} = await rootQuery.parse()
+        let seed = new Seed(document, treeData)
+        console.log(document, treeData, seed)
         let tree = seed.grow()
-
-        appSession = {...appSession, adress, seed, tree}
+        
+        appSession.adress = adress
+        appSession.seed = seed
+        appSession.tree = tree
 
         saveSession()
 
         return tree
 
     }
-    catch {
-        console.error(`Failed to open tree by the given query: ${queryString}. the query is formatted wrongly or matching doucment and prop does not exist in the root.`)
+    catch (err) {
+        console.error(err, `Failed to open tree by the given query: ${queryString}. the query is formatted wrongly or matching doucment and prop does not exist in the root.`)
     }
 }
 

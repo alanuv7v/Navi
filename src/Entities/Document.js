@@ -1,3 +1,5 @@
+import * as yaml from "yaml"
+
 export default class Document {
     constructor (handle) {
         this.handle = handle
@@ -10,9 +12,12 @@ export default class Document {
         if (await handle.queryPermission() != "granted") {
             await handle.requestPermission()
         }
-        this.file = await handle.getFile()
-        this.raw = await file.text()
-        this.parsed = await yaml.parse(raw)
+        let file = await handle.getFile()
+        let raw = await file.text()
+        let parsed = await yaml.parse(raw)
+
+        Object.assign(this, {file, raw, parsed})
+
         return {file, raw, parsed}
     }
 }

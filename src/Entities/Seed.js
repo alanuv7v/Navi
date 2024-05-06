@@ -8,11 +8,12 @@ export default class Seed {
         this.treeData = treeData
     }
     
-    node = new Node(document.name, this.treeData, undefined)
+    node = null
 
     grow () {
+        this.node = new Node(this.document.name, this.treeData, undefined)
         refs("Editor").innerHTML = ""
-        refs("Editor").append(seedNode.DOM)
+        refs("Editor").append(this.node.DOM)
         return new Tree(this.treeData)
     }
     

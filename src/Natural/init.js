@@ -8,12 +8,16 @@ import Query from "../Entities/Query"
 import * as UserActions  from "./UserActions"
 
 async function alertSeedLocalDocumentChange() {
-    let localDocumentTreeData = await new Query(appSession.adress).treeData()
-    let seedDocumentChanged = deepEqual(appSession.tree.data, localDocumentTreeData) 
-    if (!seedDocumentChanged) {
-        console.log("!!! The seed document file has changed from the last session. Perhaps you want to regrow the tree.") 
-        console.log("lastSession treeData: ", appSession.tree.data)
-        console.log("document treeData: ", localDocumentTreeData)
+    try {
+        let localDocumentTreeData = (await new Query(appSession.adress).parse()).treeData
+        let seedDocumentChanged = deepEqual(appSession.tree.data, localDocumentTreeData) 
+        if (!seedDocumentChanged) {
+            console.log("!!! The seed document file has changed from the last session. Perhaps you want to regrow the tree.") 
+            console.log("lastSession treeData: ", appSession.tree.data)
+            console.log("document treeData: ", localDocumentTreeData)
+        }
+    } catch {
+        
     }
 }
 
