@@ -49,3 +49,16 @@ export async function deleteHandle(handle) {
         return new Error(`Cannot delete ${handle} in the local filesystem`, err)
     }
 }
+
+export async function listAllFilesAndDirs(dirHandle) {
+    const files = [];
+    for await (let [name, handle] of dirHandle) {
+        const {kind} = handle;
+        if (handle.kind === 'directory') {
+            files.push({name, handle, kind, children: await listAllFilesAndDirs(handle)});
+        } else {
+            files.push({name, handle, kind});
+        }
+    }
+    return files;
+}

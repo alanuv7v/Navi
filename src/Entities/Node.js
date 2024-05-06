@@ -40,7 +40,7 @@ export default class Node  {
     }
 
     DOM = div({class: `node`},
-        textarea({class: "key", onclick: () => this.onclick()}),
+        textarea({class: "key", onclick: () => this.#onclick()}),
         div({class: "value"}),
     )
 
@@ -116,7 +116,7 @@ export default class Node  {
 
     }
 
-    onclick = () => {
+    #onclick = () => {
         if (this.selected ) {
             this.DOM.classList.remove("selected")
         } else {
@@ -177,12 +177,18 @@ export default class Node  {
         this.children = []
     }
 
+    isLink () {
+        if (typeof this.value === "string" && this.value[0] === "@") return true
+        return false
+    }
+
     async stemOut () {
-        debugger
+        if (!this.isLink()) return "This node is not a link, thus cannot stem out. Try open() instead."
         let linkString = this.value.slice(1)
         let query = new Query(linkString)
         let {document, treeData} = await query.parse()
         this.addChild(this.key, treeData)
+        return treeData
     }
 
 }

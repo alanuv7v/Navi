@@ -50,6 +50,8 @@ export async function openTree(queryString) {
 export function saveChange() {
     //saveDocument가 아닌 이유: Tree 안에는 stemOut으로 연결된 타 문서도 있을 수 있음. 
     //Tree를 수정함으로써 타 문서도 수정했다면, 씨앗 문서 뿐만 아니라 타 문서의 변경사항도 저장해야 함.
+    appSession.seed.document.handle
+    appSession.seed.node.value
 }
 
 export function saveSession() {
