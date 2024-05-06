@@ -235,7 +235,7 @@ a:hover {
 }
 
 #Footer {
-    max-height: 50%;
+  max-height: 50%;
   display: flex;
   overflow: auto;
 }
@@ -244,6 +244,24 @@ a:hover {
   box-shadow: inset 0px 0px 0px 4px var(--light) !important;
 }
 
-.Command .function {
+.Command .function { 
   color: var(--executable);
+}
+
+#Main {
+  overflow: auto;
+  width: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+}
+
+#Commands {
+  max-height: 50%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  #Logs {
+    flex-grow: 1;
+  }
 }
