@@ -17,7 +17,7 @@ export default class Node  {
         this.value = value
         this.parent = parent
 
-        this.update()
+        this.render()
 
         console.log(this.pathString(), this)
 
@@ -39,7 +39,7 @@ export default class Node  {
         return this.path().join("/")
     }
 
-    DOM = div({class: "node"},
+    DOM = div({class: `node`},
         textarea({class: "key", onclick: () => this.onclick()}),
         div({class: "value"}),
     )
@@ -79,7 +79,11 @@ export default class Node  {
         return this.parent.value
     }
 
-    update() {
+    filter = null
+
+    render() {
+            
+        this.DOM.querySelector(".value").innerHTML = ""
 
         //show key
         this.DOM.querySelector(".key").value = this.key
@@ -89,16 +93,17 @@ export default class Node  {
         }
 
         const showChildren = () => {
-            
-            this.DOM.querySelector(".value").innerHTML = ""
 
             for (let [key, value] of Object.entries(this.value)) {
-                let childNode = new Node(key, value, this)
-                this.children.push(childNode)
-                this.DOM.querySelector(".value").append(
-                    childNode.DOM
-                )
+                if (key === this.filter || !this.filter) {
+                    let childNode = new Node(key, value, this)
+                    this.children.push(childNode)
+                    this.DOM.querySelector(".value").append(
+                        childNode.DOM
+                    )
+                }
             }
+            
         }
         
         if (typeof this.value === "object" && this.value) {
@@ -144,7 +149,7 @@ export default class Node  {
             }
         }
         this.value[key] = value
-        this.update()
+        this.render()
         return this.value
     }
 
@@ -164,7 +169,7 @@ export default class Node  {
     }
 
     open () {
-        this.update()
+        this.render()
     }
 
     close () {

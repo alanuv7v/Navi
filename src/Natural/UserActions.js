@@ -103,20 +103,25 @@ export const Edit = {
 
 export const Prune = {
 
-    hideNode: () => {
-        appSession.tree.selectedNode.hide()
+    selectedNode: {
+        hideNode: () => {
+            appSession.tree.selectedNode.hide()
+        },
     },
-    filterNodes: () => {
+
+    filterNodes: (key) => {
     }
 
 }
 
 export const Navigate = {
     //search는 openTree와 동일해서 제외.
-    stemOut: () => {
-        appSession.tree.selectedNode.stemOut()
-    },
-    plantNew: (queryString) => {
-        Presenter.renderTree(queryString)
+    selectedNode: {
+        stemOut: () => {
+            appSession.tree.selectedNode.stemOut()
+        },
+        plantNew: (queryString) => {
+            Presenter.renderTree(queryString)
+        }
     }
 }
