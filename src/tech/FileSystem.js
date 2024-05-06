@@ -28,11 +28,12 @@ export async function createFolder(parentDirHandle, name) {
     }
 }
 
-export async function writeToFile(fileHandle, data) {
+export async function writeToFile(fileHandle, toWrite) {
     try {
         const writable = await fileHandle.createWritable();
-        await writable.write(data);
+        await writable.write(toWrite);
         await writable.close();
+        return true
     }
     catch (err) {
         return new Error(`Cannot write to a file(${fileHandle}) in the local filesystem`, err)

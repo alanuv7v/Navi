@@ -16,17 +16,22 @@ export default class Node  {
         this.key = key
         this.value = value
         this.parent = parent
+        this.children = []
+
+        if (typeof this.value === "object" && this.value) {
+            this.children = Object.entries(this.value).map(([key, value]) => {
+                if (key === this.filter || !this.filter) {
+                    return new Node(key, value, this)
+                }
+            })
+        } 
 
         this.render()
 
         console.log(this.pathString(), this)
 
     }
-
-    parent = null
-
-    children = []
-
+    
     selected = false
     
     path () {
@@ -43,41 +48,6 @@ export default class Node  {
         textarea({class: "key", onclick: () => this.#onclick()}),
         div({class: "value"}),
     )
-
-    changeParent (value) {
-        
-        let originalParent = this.parent
-        delete originalParent.value[this.key]
-        originalParent.update()
-
-        this.parent = value
-        this.updateParentValue()
-        this.parent.update()
-
-        this.parent.updateParentValue()
-        
-        console.log(originalParent, this.parent)
-        
-        return true
-    }
-    
-    updateParentValue () {
-        if (!this?.parent) return false
-
-        if (typeof this.parent.value === "object" && this.parent.value) {
-            this.parent.value[this.key] = this.value
-        } 
-        else {
-            let originalValue = this.parent.value
-            let newKey = this.key
-            let newValue = this.value
-            this.parent.value = {
-                0: originalValue,
-                [newKey]: newValue
-            }
-        }
-        return this.parent.value
-    }
 
     filter = null
 
@@ -189,6 +159,44 @@ export default class Node  {
         let {document, treeData} = await query.parse()
         this.addChild(this.key, treeData)
         return treeData
+    }
+
+    changeParent (value) {
+        
+        let originalParent = this.parent
+
+        if (originalParent) {
+            delete originalParent.value[this.key]
+            originalParent.render()
+        }
+
+        this.parent = value
+        this.updateParentValue()
+        this.parent.render()
+
+        this.parent.updateParentValue()
+        
+        console.log(originalParent, this.parent)
+        
+        return true
+    }
+    
+    updateParentValue () {
+        if (!this?.parent) return false
+
+        if (typeof this.parent.value === "object" && this.parent.value) {
+            this.parent.value[this.key] = this.value
+        } 
+        else {
+            let originalValue = this.parent.value
+            let newKey = this.key
+            let newValue = this.value
+            this.parent.value = {
+                0: originalValue,
+                [newKey]: newValue
+            }
+        }
+        return this.parent.value
     }
 
 }
