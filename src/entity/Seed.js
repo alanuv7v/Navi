@@ -1,5 +1,5 @@
-import refs from "../Resources/DOMRefs";
-import Node from "../Entities/Node"
+import refs from "../resource/DOMRefs";
+import Node from "./Node"
 import Tree from "./Tree";
 
 export default class Seed {

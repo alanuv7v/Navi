@@ -1,9 +1,9 @@
-import * as LocalDB from "../Directors/LocalDB"
-import appSession from "../Resources/appSession"
-import Session from "../Entities/Session"
+import * as LocalDB from "../interface/LocalDB"
+import appSession from "../resource/appSession"
+import Session from "../entity/Session"
 
 import deepEqual from "deep-equal"
-import Query from "../Entities/Query"
+import Query from "../entity/Query"
 
 import * as UserActions  from "./UserActions"
 
@@ -23,7 +23,7 @@ async function alertSeedLocalDocumentChange() {
 
 export default async function init () {
 
-    await import("../Resources/DB")
+    await import("../resource/DB")
     console.log("Imported local DB.")
     
     let lastSession = await LocalDB.getLastSession()

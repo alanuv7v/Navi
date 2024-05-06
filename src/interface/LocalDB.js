@@ -1,4 +1,4 @@
-import DB from "../Resources/DB"
+import DB from "../resource/DB"
 import { DateTime } from "luxon"
 
 //"CRUD"

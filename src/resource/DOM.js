@@ -1,5 +1,5 @@
 import van from "vanjs-core";
-import refs from "../Resources/DOMRefs";
+import refs from "./DOMRefs";
 
 const tagsToUse = "div button input".split(" ")
 const tag = {}

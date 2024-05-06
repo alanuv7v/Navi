@@ -3,7 +3,7 @@
 import van from "vanjs-core"
 const t = van.tags
 
-import refs from "../Resources/DOMRefs"
+import refs from "../resource/DOMRefs"
 
 export default class {
 

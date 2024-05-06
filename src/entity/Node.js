@@ -1,7 +1,7 @@
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a} = van.tags
 
-import appSession from "../Resources/appSession"
+import appSession from "../resource/appSession"
 import Query from "./Query"
 
 

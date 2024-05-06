@@ -5,17 +5,17 @@
 
 import van from "vanjs-core"
 
-import * as UserActions from "./Natural/UserActions"
-import init from "./Natural/init"
-import CommandsIO from "./Workers/CommandsIO"
+import * as UserActions from "./natural/UserActions"
+import init from "./natural/init"
+import CommandsIO from "./tech/CommandsIO"
 
 //below is for debugging
 
 
-import DB from "./Resources/DB"
-import DOM from "./Resources/DOM"
-import appSession from "./Resources/appSession"
-import * as LocalDB from "./Directors/LocalDB"
+import DB from "./resource/DB"
+import DOM from "./resource/DOM"
+import appSession from "./resource/appSession"
+import * as LocalDB from "./interface/LocalDB"
 
 window._debug = {
     DOM,

@@ -1,9 +1,10 @@
-import appSession from "../Resources/appSession"
-import * as LocalDB from "../Directors/LocalDB"
-import Root from "../Entities/Root"
-import Seed from "../Entities/Seed"
-import Query from "../Entities/Query"
-import DB from "../Resources/DB"
+import appSession from "../resource/appSession"
+import * as LocalDB from "../interface/LocalDB"
+import Root from "../entity/Root"
+import Seed from "../entity/Seed"
+import Query from "../entity/Query"
+import DB from "../resource/DB"
+import * as FileSystem from "../tech/FileSystem"
 
 export async function openRoot() {
     

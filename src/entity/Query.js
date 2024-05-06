@@ -1,6 +1,6 @@
-import appSession from "../Resources/appSession"
+import appSession from "../resource/appSession"
 import Document from "./Document"
-import nestedObj from "../Workers/nestedObj"
+import nestedObj from "../tech/nestedObj"
 
 export default class Query  {
 

@@ -1,4 +1,4 @@
-import Session from "../Entities/Session"
+import Session from "../entity/Session"
 
 const appSession = new Session()
 
