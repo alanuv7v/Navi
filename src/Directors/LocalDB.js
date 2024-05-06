@@ -1,14 +1,11 @@
 import DB from "../Resources/DB"
 import { DateTime } from "luxon"
-import Session from "../Entities/Session"
 
 //"CRUD"
 
-export async function createSession() {
+export async function saveSession(newSession) {
     
     let now = DateTime.now()
-    let newSession = new Session()
-    console.log(await DB.sessions.toArray())
     await DB.sessions.add(
         {
             dateCreated: now.toISO(),
@@ -16,9 +13,7 @@ export async function createSession() {
             data: newSession
         }
     )
-    console.log(await DB.sessions.toArray())
-
-    return newSession
+    return true
     
 }
 

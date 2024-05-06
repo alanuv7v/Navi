@@ -10,7 +10,7 @@ export default class Seed {
     
     node = new Node(document.name, this.treeData, undefined)
 
-    sprout () {
+    grow () {
         refs("Editor").innerHTML = ""
         refs("Editor").append(seedNode.DOM)
         return new Tree(this.treeData)

@@ -1,35 +1,32 @@
 import appSession from "../Resources/appSession"
-import * as Garner from "../Workers/Garner"
-import * as LocalDBManager from "../Directors/LocalDataManager"
-import * as ImportManager from "../Directors/ImportManager"
+import * as LocalDB from "../Directors/LocalDB"
+import Root from "../Entities/Root"
+import Seed from "../Entities/Seed"
 
 export async function openRoot() {
     
-    const docsHandle = await window.showDirectoryPicker()
+    const rootHandle = await window.showDirectoryPicker()
     
-    if (!(await docsHandle.queryPermission()) === "granted") {
-        await docsHandle.requestPermission()
+    if (!(await rootHandle.queryPermission()) === "granted") {
+        await rootHandle.requestPermission()
     }
     
-    appSession.docs = await ImportManager.listAllFilesAndDirs(docsHandle)
-    appSession.config = await ImportManager.readConfig(appSession.docs)
-    appSession.root = ImportManager.getRoot(appSession.docs)
+    appSession.root = new Root(rootHandle)
 
 }
 
 export async function openTree(queryString) {
 
-    let {treeName, treeData} = await ImportManager.getTreeDataFromQuery(queryString)
-    console.log(treeName, treeData)
+    let adress = queryString
 
-    let seedNode = Garner.createSeed(treeName, treeData)
-    Garner.plantSeedNode(seedNode)
+    let rootQuery = Query(queryString)
 
-    appSession.tree.data = treeData
-    appSession.tree.seed = queryString
-    appSession.tree.seedNode = seedNode
+    let seed = new Seed(rootQuery.document, rootQuery.treeData)
+    let tree = seed.grow()
 
-    return appSession.tree
+    appSession = {...appSession, adress, seed, tree}
+
+    return tree
 
 }
 
@@ -39,7 +36,7 @@ export function saveChange() {
 }
 
 export function saveSession() {
-    LocalDBManager.updateSession(appSession.original)
+    LocalDB.updateSession(appSession.original)
 }
 
 

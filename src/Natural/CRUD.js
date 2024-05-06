@@ -42,7 +42,7 @@ export async function createSeed(queryString) {
 
 export async function createTree(queryString) {
     let seed = createSeed(queryString)
-    return (await seed).sprout()
+    return (await seed).grow()
 }
 
 export async function createNode(keyString) {

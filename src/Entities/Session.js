@@ -11,12 +11,14 @@ export default class Session {
         }
     }
 
+    original = this //no proxy but pure obj
+
     autosave = false
 
+    adress = null
+
     root = null 
-
-    docs = null
-
+    
     seed = null
 
     tree = new Tree(this.data?.treeData)
