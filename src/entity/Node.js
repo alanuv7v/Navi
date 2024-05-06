@@ -147,18 +147,6 @@ export default class Node  {
     }
 
     async stemOut () {
-        // !! 내가 지금 생각하는 것: stemOut할 때는 children에 새 노드가 추가되지만, 이 노드의 value는 변하지 않는다. 또한 새 노드의 parent에 이 노드가 추가되지 않는다.
-        // 따라서 appSession.seed.node.value는 stemOut으로 생긴 노드의 부모에 영향받지 않는다.
-        // UserActions.saveChange() 시에 stemOut node의 변화는... 어떻게 해야 할까.
-        /* 
-        열려있는 모든 다른 document들에 각기 다른 node value를 저장해야 한다.
-        우선 열려있는 모든 document들과 각자의 seed를 기록한다.
-        그들을 순회하며 그 seed의 value를 seed.document.handle에 저장하면 된다.
-        메인으로 열리는건 appSession.seed다.
-        그럼 그 seed에서 열린 다른 seed들은... 어디 저장하지. seed.seeds에 저장해야 하나? seed[접목된 tree의 seed를 지칭하는 어떤 명사]에 저장하면 좋을듯.
-        이름을 짓는게 역시 관건...
-         */
-
         if (!this.isLink()) return "This node is not a link, thus cannot stem out. Try open() instead."
         let linkString = this.value.slice(1)
         let query = new Query(linkString)
