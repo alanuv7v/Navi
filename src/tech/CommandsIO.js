@@ -36,7 +36,8 @@ export default class {
                 refs("CommandPalette").placeholder = "arguments..."
                 
                 let onArgumentsSubmit = (event) => {
-                    value(event.target.value)
+                    let actionResult = value(event.target.value)
+                    console.log(actionResult)
                     refs("CommandPalette").placeholder = ""
                     refs("CommandPalette").removeEventListener("blur", onArgumentsSubmit)
                 }

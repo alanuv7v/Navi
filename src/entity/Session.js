@@ -19,7 +19,7 @@ export default class Session {
     serialize () {
         let result = {}
         for (let [key, value] of Object.entries(this)) {
-            if (value.handle) {
+            if (value?.handle) {
                 result[key] = {
                     handle: value.handle
                 }
@@ -32,8 +32,12 @@ export default class Session {
 
     root = new Root()
 
-    seed = new Seed()
+    seeds = []
 
     tree = new Tree(this.data?.treeData)
+
+    selectedNode = null
+
+    copiedNode = null
     
 }

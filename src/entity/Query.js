@@ -4,12 +4,17 @@ import nestedObj from "../tech/nestedObj"
 
 export default class Query  {
 
-    constructor (string) {
-        this.string = string
+    constructor (input) {
+        this.input = input
     }
 
     get path () {
-        return this.string.split("/")
+        return this.input.split("/")
+    }
+
+    get pathString () {
+        return this.input
+        // Should be more advanced than this
     }
 
     get documentName () {

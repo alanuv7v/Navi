@@ -20,27 +20,23 @@ export async function openRoot() {
 
     console.log(`Opened root: ${appSession.root.name}`)
 
+    return appSession.root
+
 }
 
 export async function openTree(queryString) {
     try {
-            
-        let adress = queryString
 
-        let rootQuery = new Query(queryString)
+        let seed = new Seed(queryString)
+        appSession.seeds.push(seed)
         
-        let {document, treeData} = await rootQuery.parse()
-        let seed = new Seed(document, treeData)
-        console.log(document, treeData, seed)
-        let tree = seed.grow()
-        
-        appSession.adress = adress
-        appSession.seed = seed
-        appSession.tree = tree
+        await seed.parse()
+        appSession.tree = seed.plant()
+        appSession.adress = queryString
 
         saveSession()
 
-        return tree
+        return appSession.tree
 
     }
     catch (err) {
@@ -51,8 +47,11 @@ export async function openTree(queryString) {
 export async function saveChange() {
     //saveDocument가 아닌 이유: Tree 안에는 stemOut으로 연결된 타 문서도 있을 수 있음. 
     //Tree를 수정함으로써 타 문서도 수정했다면, 씨앗 문서 뿐만 아니라 타 문서의 변경사항도 저장해야 함.
-    return await FileSystem.writeToFile(appSession.seed.document.handle, await appSession.seed.stringify())
-
+    let res = []
+    appSession.seeds.forEach(async (seed) => {
+        res.push(await FileSystem.writeToFile(seed.document.handle, await seed.stringify()))
+    })
+    return res
 
     // !! 내가 지금 생각하는 것: stemOut할 때는 children에 새 노드가 추가되지만, 이 노드의 value는 변하지 않는다. 또한 새 노드의 parent에 이 노드가 추가되지 않는다.
     // 따라서 appSession.seed.node.value는 stemOut으로 생긴 노드의 부모에 영향받지 않는다.
@@ -92,27 +91,35 @@ export function createDocument () {
 export const Edit = {
     selectedNode: {
         copyNode: (node) => {
-            appSession.tree.copyNode(appSession.selectedNode)
+            appSession.copiedNode = appSession.selectedNode
+            return appSession.copiedNode
         },
         pasteNode: (parentNodeQueryString) => {
-            appSession.tree.pasteNode(appSession.selectedNode)
+            appSession.copiedNode.changeParent(appSession.selectedNode)
+            return appSession.selectedNode
         },
         addNode: (key, value) => {
             //let parentNode = Tree.selectedNode
             //this.pasteNode(parentNode)
             appSession.selectedNode.addChild(key, value)
+            return appSession.selectedNode
         },
         deleteNode: () => {
+            let originalParent = appSession.selectedNode.parent
             appSession.selectedNode.delete()
+            return originalParent
         },
         changeOrder: (change) => {
-            appSession.tree.selectedNode.changeOrder(change)
+            appSession.selectedNode.changeOrder(change)
+            return appSession.selectedNode
         },
         changeDepth: (change) => {
-            appSession.tree.selectedNode.changeDepth(change)
+            appSession.selectedNode.changeDepth(change)
+            return appSession.selectedNode
         },
         link: (targetQueryString) => {
-            appSession.tree.selectedNode.linkTo(targetQueryString)
+            appSession.selectedNode.linkTo(targetQueryString)
+            return appSession.selectedNode
         }
     }
 }
@@ -121,7 +128,8 @@ export const Prune = {
 
     selectedNode: {
         hideNode: () => {
-            appSession.tree.selectedNode.hide()
+            appSession.selectedNode.hide()
+            return appSession.selectedNode
         },
     },
 
@@ -134,10 +142,12 @@ export const Navigate = {
     //search는 openTree와 동일해서 제외.
     selectedNode: {
         stemOut: () => {
-            appSession.tree.selectedNode.stemOut()
+            appSession.selectedNode.stemOut()
+            return appSession.selectedNode
         },
-        plantNew: (queryString) => {
-            Presenter.renderTree(queryString)
+        plant: (queryString) => {
+            let newSeed = new Seed(appSession.selectedNode.pathString())
+            newSeed.plant()
         }
     }
 }

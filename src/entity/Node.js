@@ -3,6 +3,7 @@ const {div, span, button, textarea, input, a} = van.tags
 
 import appSession from "../resource/appSession"
 import Query from "./Query"
+import Seed from "./Seed"
 
 
 export default class Node  {
@@ -24,7 +25,9 @@ export default class Node  {
                     return new Node(key, value, this)
                 }
             })
-        } 
+        } else if (this.value) {
+            this.children = [new Node(this.value, null, this)]
+        }
 
         this.render()
 
@@ -33,6 +36,7 @@ export default class Node  {
     }
 
     selected = false
+    opened = false
     
     path () {
         let parentPath = this?.parent?.path()
@@ -52,29 +56,12 @@ export default class Node  {
     filter = null
 
     render() {
-            
-        this.DOM.querySelector(".value").innerHTML = ""
-
-        //show key
-        this.DOM.querySelector(".key").value = this.key
-
-        const showValue = () => {
-            this.DOM.querySelector(".value").append(textarea(this.value))
-        }
-
-        const showChildren = () => {
-            for (let childNode of this.children) {
-                this.DOM.querySelector(".value").append(
-                    childNode.DOM
-                )
-            }
-        }
         
-        if (typeof this.value === "object" && this.value) {
-            showChildren()
-        } else {
-            showValue()
-        }
+
+        //update key DOM value
+        this.DOM.querySelector(".key").value = this.key
+        
+        this.open()
 
         return true
 
@@ -83,9 +70,14 @@ export default class Node  {
     #onclick = () => {
         if (this.selected ) {
             this.DOM.classList.remove("selected")
+            appSession.selectedNode = null
         } else {
+            if (appSession.selectedNode) {
+                appSession.selectedNode.selected = false
+                appSession.selectedNode.DOM.classList.remove("selected")
+            }
             this.DOM.classList.add("selected")
-            appSession.tree.selectedNode = this
+            appSession.selectedNode = this
         }
         
         this.selected = !this.selected 
@@ -105,18 +97,6 @@ export default class Node  {
 
     }
 
-    addChild(key, value) {
-        if (typeof this.value != "object") {
-            let originalValue = this.value
-            this.value = {
-                0: originalValue
-            }
-        }
-        this.value[key] = value
-        this.render()
-        return this.value
-    }
-
     delete() {
         delete this.parent.value[this.key]
         this.DOM.remove()
@@ -133,26 +113,50 @@ export default class Node  {
     }
 
     open () {
-        this.render()
+        //reset value DOM
+        this.DOM.querySelector(".value").innerHTML = ""
+
+        for (let childNode of this.children) {
+            this.DOM.querySelector(".value").append(
+                childNode.DOM
+            )
+        }
+
+        this.opened = true
+
     }
 
     close () {
         this.DOM.querySelector(".value").innerHTML = ""
         this.children = []
+
+        this.opened = false
+        
     }
 
     isLink () {
-        if (typeof this.value === "string" && this.value[0] === "@") return true
+        if (typeof this.key === "string" && this.key[0] === "@") return true
         return false
     }
 
     async stemOut () {
-        if (!this.isLink()) return "This node is not a link, thus cannot stem out. Try open() instead."
-        let linkString = this.value.slice(1)
-        let query = new Query(linkString)
-        let {document, treeData} = await query.parse()
-        this.addChild(this.key, treeData)
-        return treeData
+        
+        if (!this.isLink()) return "This node is not a link!"
+        
+        let linkString = this.key.slice(1)
+
+        let newSeed = new Seed(linkString)
+        await newSeed.parse()
+        
+        for (let [key, value] of Object.entries(newSeed.treeData)) {
+            this.children.push(new Node(key, value, null))
+        }
+        
+        this.render()
+
+        appSession.seeds.push(newSeed)
+
+        return newSeed
     }
 
     changeParent (value) {
@@ -161,14 +165,15 @@ export default class Node  {
 
         if (originalParent) {
             delete originalParent.value[this.key]
+            let thisIndex = originalParent.children.indexOf(this)
+            originalParent.children.splice(thisIndex, 1)
             originalParent.render()
         }
 
         this.parent = value
         this.updateParentValue()
-        this.parent.render()
-
-        this.parent.updateParentValue()
+        this.parent.children.push(this)
+        this.parent.render() // 직계 부모만 rerender 하면 됨.
         
         console.log(originalParent, this.parent)
         
@@ -190,7 +195,9 @@ export default class Node  {
                 [newKey]: newValue
             }
         }
+        this.parent.updateParentValue()
         return this.parent.value
     }
+    
 
 }
