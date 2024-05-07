@@ -51,9 +51,7 @@ export default class Node  {
                     return new Node(key, value, this)
                 }
             })
-        } else if (this.value) {
-            this.children = [new Node(this.value, null, this)]
-        }
+        } 
     }
 
     render() {
@@ -113,22 +111,21 @@ export default class Node  {
         return true
     }
 
-    hide () {
-        this.DOM.style.display = "none"
-    }
-
-    show () {
-        this.DOM.style.display = "block"
-    }
-
     open () {
         //reset value DOM
         this.DOM.querySelector(".value").innerHTML = ""
 
-        for (let childNode of this.children) {
-            this.DOM.querySelector(".value").append(
-                childNode.DOM
-            )
+
+        if (typeof this.value === "object" && this.value) {
+            for (let childNode of this.children) {
+                this.DOM.querySelector(".value").append(
+                    childNode.DOM
+                )
+            }
+        } else if (this.value) {
+            this.DOM.querySelector(".value").append(textarea(
+                {value: this.value}
+            ))
         }
 
         this.opened = true
@@ -154,12 +151,12 @@ export default class Node  {
         let linkString = this.key.slice(1)
 
         let newSeed = new Seed(linkString)
+        newSeed.node = this
+        
         await newSeed.parse()
-        
-        for (let [key, value] of Object.entries(newSeed.treeData)) {
-            this.children.push(new Node(key, value, null))
-        }
-        
+
+        this.value = newSeed.treeData
+        this.update()
         this.render()
 
         appSession.seeds.push(newSeed)
@@ -189,6 +186,8 @@ export default class Node  {
     }
     
     updateParentValue (originalKey) {
+
+        if (this.isLink()) return false
         if (!this?.parent) return false
 
         if (typeof this.parent.value === "object" && this.parent.value) {
@@ -208,5 +207,8 @@ export default class Node  {
         return this.parent.value
     }
     
+    mirror () { //create mirror link depending on its value
+        
+    }
 
 }

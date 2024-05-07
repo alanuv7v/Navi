@@ -32,8 +32,8 @@ export default class Seed {
         let originalDocumentTreeData = (await this.document.parse()).parsed
         let seedTreeData = this.node.value
         let fullTreeData = structuredClone(originalDocumentTreeData)
-        nestedObj(fullTreeData, this.query.props, seedTreeData)
-        return yaml.stringify(fullTreeData)
+        let newTreeData = nestedObj(fullTreeData, this.query.props, seedTreeData)
+        return yaml.stringify(newTreeData)
     }
     
 }

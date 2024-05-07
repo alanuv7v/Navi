@@ -14,9 +14,11 @@ export default function nestedObj (obj, props, value, createNesting=false) {
             delete obj[prop]
             return obj
         }
-        if (prop) obj[prop] = value
+        if (prop) {
+          obj[prop] = value
+          return obj
+        }
         else obj = value
-        return obj
     }
     return obj
 }
