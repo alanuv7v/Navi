@@ -40,7 +40,7 @@ export default class Node  {
     }
 
     DOM = div({class: `node`},
-        textarea({class: "key", onclick: (event) => this.#onclick(event), onchange: (event) => {this.#onchange(event)}}),
+        textarea({class: "key", onclick: (event) => this.#onclick(event), onchange: (event) => {this.#onKeyChange(event)}}),
         div({class: "value"}),
     )
 
@@ -84,10 +84,16 @@ export default class Node  {
         return this
     }
 
-    #onchange (event) {
+    #onKeyChange (event) {
         let originalKey = this.key
         this.key = event.target.value
         this.updateParentValue(originalKey) 
+        return this
+    }
+    
+    #onValueChange (event) {
+        this.value = event.target.value
+        this.updateParentValue() 
         return this
     }
 
@@ -124,7 +130,7 @@ export default class Node  {
             }
         } else if (this.value) {
             this.DOM.querySelector(".value").append(textarea(
-                {value: this.value}
+                {value: this.value, onchange: (event) => this.#onValueChange(event)}
             ))
         }
 
@@ -140,7 +146,7 @@ export default class Node  {
     }
 
     isLink () {
-        if (typeof this.key === "string" && this.key[0] === "@") return true
+        if (typeof this.value === "string" && this.value[0] === "@") return true
         return false
     }
 
@@ -148,7 +154,7 @@ export default class Node  {
         
         if (!this.isLink()) return "This node is not a link!"
         
-        let linkString = this.key.slice(1)
+        let linkString = this.value.slice(1)
 
         let newSeed = new Seed(linkString)
         newSeed.node = this
