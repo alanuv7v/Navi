@@ -43,6 +43,16 @@ export default class Node  {
 
     DOM = div({class: `node`},
         textarea({class: "key", onclick: (event) => this.#onclick(event), onchange: (event) => {this.#onKeyChange(event)}}),
+        div({class: "options"},
+            button("O"),
+            button("<"),
+            button(">"),
+            button("⇑"),
+            button("⇓"),
+            button("+"),
+            button("X"),
+            button("🌱"),
+        ),
         div({class: "value"}),
     )
 
@@ -147,7 +157,9 @@ export default class Node  {
 
     }
 
-    linkString = this.isLink() ?  this.value.slice(1) : null
+    get linkString () {
+        return this.isLink() ?  this.value.slice(1) : null
+    }   
 
     isLink () {
         if (typeof this.value === "string" && this.value[0] === "@") return true
@@ -214,6 +226,7 @@ export default class Node  {
         this.parent.updateParentValue()
         return this.parent.value
     }
+
     
     async mirror () { //create mirror link depending on its value
         
@@ -230,7 +243,24 @@ export default class Node  {
         let newRaw = yaml.stringify(newFullTree)
         
         return await document.write(newRaw)
+
+    }
+
+    async deMirror () {
+
+    }
+
+    async reMirror(originalLink) {
         
+        originalLink
+        await this.mirror()
+
+    }
+
+    linkTo (queryString) {
+        let originalLink = this.linkString
+        this.value = "@" + queryString
+        this.reMirror(originalLink)
     }
 
 }

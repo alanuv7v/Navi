@@ -30,7 +30,7 @@ export default async function init () {
     if (lastSession) {
         appSession.copy(lastSession.data)
         console.log("Loaded last session data.")
-        UserActions.openTree("@root.yaml")
+        UserActions.Navigate.openTree("@root.yaml")
         alertSeedLocalDocumentChange()
     } else {
         console.log("Could not copy last session data. The last session data is corrupted or does not exist.")

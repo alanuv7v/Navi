@@ -1,3 +1,5 @@
+import * as FileSystem from "../tech/FileSystem"
+
 export default class Root {
 
     constructor (handle) {
@@ -28,6 +30,10 @@ export default class Root {
         return await FileParser.parseDocumentHandle(configHandle)
     }
     async saveConfig () {
+    }
+
+    async createDocument (name) {
+        return await FileSystem.createFile(this.handle, name, "yaml")
     }
 
 }

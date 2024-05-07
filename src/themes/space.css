@@ -49,8 +49,11 @@ div {
     justify-content: center;
     align-items: center;
 }
+
 textarea {
     width: 100%;
+    resize: none;
+    overflow: auto; /* !! 결국 그게 되야하는데... 자동 리자이징. */
 }
 
 #App {
@@ -88,10 +91,11 @@ button, input, textarea, select {
 
 }
 
-textarea {
-    resize: none;
-    overflow: auto; /* !! 결국 그게 되야하는데... 자동 리자이징. */
+button {
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
+
 
 input:hover, button:hover, textarea:hover, .clickable:hover {
     border-radius: 0px;
@@ -211,7 +215,7 @@ a:hover {
 }
 #Header > * {
     min-width: 3em;
-    min-height: 3em;
+    height: 2em;
 }
 
 #PickRoot {
@@ -222,17 +226,32 @@ a:hover {
 }
 
 .node {
-    
+    padding: 4px;
+    .key {
+        padding: 1em;
+        box-shadow: inset 0px 0px 0px 1px var(--deep);
+        :hover {
+            box-shadow: inset 0px 0px 0px 1px var(--light);
+        }
+    }
+    .value {
+        padding-left: 1em;
+    }
+    .options {
+        display: none;
+        overflow-x: auto;
+        > * {
+            width: 3em;
+            height: 2em;
+        }
+    }
 }
-.node .key { 
-    padding: 1em;
-    box-shadow: inset 0px 0px 0px 1px var(--deep);
-}
-.node .key:hover { 
-    box-shadow: inset 0px 0px 0px 1px var(--light);
-}
-.node .value {
-    padding-left: 1em;
+
+.node.selected {
+    box-shadow: inset 0px 0px 0px 4px var(--light) !important;
+    > .options {
+        display: flex;
+    }
 }
 
 #Footer {
@@ -241,9 +260,6 @@ a:hover {
     overflow: auto;
 }
 
-.node.selected {
-    box-shadow: inset 0px 0px 0px 4px var(--light) !important;
-}
 
 .Command {
     width: fit-content;
@@ -273,3 +289,8 @@ a:hover {
         overflow-y: auto;
     }
 }
+
+/* .node, textarea, input, button {
+    border-radius: 6px !important; 
+    margin: 2px;
+} */

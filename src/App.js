@@ -32,6 +32,7 @@ const App = DOM
 van.add(document.body, App)
 
 new CommandsIO("UserActions", UserActions)
+new CommandsIO("Context", {})
 
 await init()
 
