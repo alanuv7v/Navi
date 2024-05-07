@@ -215,7 +215,7 @@ a:hover {
 }
 #Header > * {
     min-width: 3em;
-    height: 2em;
+    height: 2.5em;
 }
 
 #PickRoot {
@@ -226,7 +226,6 @@ a:hover {
 }
 
 .node {
-    padding: 4px;
     .key {
         padding: 1em;
         box-shadow: inset 0px 0px 0px 1px var(--deep);
@@ -242,12 +241,13 @@ a:hover {
         overflow-x: auto;
         > * {
             width: 3em;
-            height: 2em;
+            height: 2.5em;
         }
     }
 }
 
 .node.selected {
+    padding: 10px;
     box-shadow: inset 0px 0px 0px 4px var(--light) !important;
     > .options {
         display: flex;
