@@ -36,3 +36,15 @@ new CommandsIO("UserActions", UserActions)
 await init()
 
 export default App
+
+import * as yaml from "yaml"
+console.log(yaml.stringify({
+    "8fsa": 0,
+    "2asfd": 0,
+    "1fasf": 0,
+    "3saf": 0,
+    3: 0,
+    2: 0,
+    1: 0
+
+}))

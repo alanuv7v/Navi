@@ -18,17 +18,7 @@ export default class Node  {
         this.value = value
         this.parent = parent
         this.children = []
-
-        if (typeof this.value === "object" && this.value) {
-            this.children = Object.entries(this.value).map(([key, value]) => {
-                if (key === this.filter || !this.filter) {
-                    return new Node(key, value, this)
-                }
-            })
-        } else if (this.value) {
-            this.children = [new Node(this.value, null, this)]
-        }
-
+        this.update()
         this.render()
 
         console.log(this.pathString(), this)
@@ -37,6 +27,7 @@ export default class Node  {
 
     selected = false
     opened = false
+    filter = null
     
     path () {
         let parentPath = this?.parent?.path()
@@ -49,11 +40,21 @@ export default class Node  {
     }
 
     DOM = div({class: `node`},
-        textarea({class: "key", onclick: () => this.#onclick()}),
+        textarea({class: "key", onclick: (event) => this.#onclick(event), onchange: (event) => {this.#onchange(event)}}),
         div({class: "value"}),
     )
 
-    filter = null
+    update () {
+        if (typeof this.value === "object" && this.value) {
+            this.children = Object.entries(this.value).map(([key, value]) => {
+                if (key === this.filter || !this.filter) {
+                    return new Node(key, value, this)
+                }
+            })
+        } else if (this.value) {
+            this.children = [new Node(this.value, null, this)]
+        }
+    }
 
     render() {
         
@@ -67,7 +68,7 @@ export default class Node  {
 
     }
 
-    #onclick = () => {
+    #onclick () {
         if (this.selected ) {
             this.DOM.classList.remove("selected")
             appSession.selectedNode = null
@@ -81,7 +82,15 @@ export default class Node  {
         }
         
         this.selected = !this.selected 
-        
+        console.log(this)
+        return this
+    }
+
+    #onchange (event) {
+        let originalKey = this.key
+        this.key = event.target.value
+        this.updateParentValue(originalKey) 
+        return this
     }
 
     moveUp() {
@@ -127,11 +136,10 @@ export default class Node  {
     }
 
     close () {
-        this.DOM.querySelector(".value").innerHTML = ""
-        this.children = []
 
+        this.DOM.querySelector(".value").innerHTML = ""
         this.opened = false
-        
+
     }
 
     isLink () {
@@ -180,10 +188,11 @@ export default class Node  {
         return true
     }
     
-    updateParentValue () {
+    updateParentValue (originalKey) {
         if (!this?.parent) return false
 
         if (typeof this.parent.value === "object" && this.parent.value) {
+            if (originalKey) delete this.parent.value[originalKey]
             this.parent.value[this.key] = this.value
         } 
         else {

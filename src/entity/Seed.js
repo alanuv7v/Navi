@@ -21,7 +21,7 @@ export default class Seed {
     node = null
 
     plant () {
-        this.node = new Node(this.document.name, this.treeData, undefined)
+        this.node = new Node(this.pathString, this.treeData, undefined)
         refs("Editor").innerHTML = ""
         refs("Editor").append(this.node.DOM)
         return new Tree(this.treeData)

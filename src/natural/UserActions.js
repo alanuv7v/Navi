@@ -6,7 +6,7 @@ import Query from "../entity/Query"
 import DB from "../resource/DB"
 import * as FileSystem from "../tech/FileSystem"
 
-export async function openRoot() {
+export async function openRoot() { 
     
     const rootHandle = await window.showDirectoryPicker()
     
@@ -24,7 +24,7 @@ export async function openRoot() {
 
 }
 
-export async function openTree(queryString) {
+export async function openTree(queryString) { //Navigate.plant로 옮길까.
     try {
 
         let seed = new Seed(queryString)
@@ -127,10 +127,22 @@ export const Edit = {
 export const Prune = {
 
     selectedNode: {
-        hideNode: () => {
-            appSession.selectedNode.hide()
+        toggleOpen: () => {
+            if (appSession.selectedNode.opened) {
+                appSession.selectedNode.close()
+            } else {
+                appSession.selectedNode.open()
+            }
             return appSession.selectedNode
         },
+        open: () => {
+            appSession.selectedNode.open()
+            return appSession.selectedNode
+        },
+        close: () => {
+            appSession.selectedNode.close()
+            return appSession.selectedNode
+        }
     },
 
     filterNodes: (key) => {
@@ -140,14 +152,17 @@ export const Prune = {
 
 export const Navigate = {
     //search는 openTree와 동일해서 제외.
+    
     selectedNode: {
         stemOut: () => {
             appSession.selectedNode.stemOut()
             return appSession.selectedNode
         },
-        plant: (queryString) => {
+        plant: async () => {
             let newSeed = new Seed(appSession.selectedNode.pathString())
+            await newSeed.parse()
             newSeed.plant()
+            return newSeed
         }
     }
 }

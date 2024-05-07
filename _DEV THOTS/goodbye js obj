@@ -1,0 +1,5 @@
+JS Object는 애초에 그 정의부터가 순서 없이 늘어진 key-value set이다.
+
+yaml을 array로 파싱할 수 있는 방법이 필요하다...
+
+https://stackoverflow.com/questions/5525795/does-javascript-guarantee-object-property-order
