@@ -4,6 +4,8 @@ const {div, span, button, textarea, input, a} = van.tags
 import appSession from "../resource/appSession"
 import Query from "./Query"
 import Seed from "./Seed"
+import nestedObj from "../tech/nestedObj"
+import * as yaml from "yaml"
 
 
 export default class Node  {
@@ -145,6 +147,8 @@ export default class Node  {
 
     }
 
+    linkString = this.isLink() ?  this.value.slice(1) : null
+
     isLink () {
         if (typeof this.value === "string" && this.value[0] === "@") return true
         return false
@@ -153,10 +157,8 @@ export default class Node  {
     async stemOut () {
         
         if (!this.isLink()) return "This node is not a link!"
-        
-        let linkString = this.value.slice(1)
 
-        let newSeed = new Seed(linkString)
+        let newSeed = new Seed(this.linkString)
         newSeed.node = this
         
         await newSeed.parse()
@@ -213,7 +215,21 @@ export default class Node  {
         return this.parent.value
     }
     
-    mirror () { //create mirror link depending on its value
+    async mirror () { //create mirror link depending on its value
+        
+        let tie = this.key
+
+        let linkQuery = new Query(this.linkString)
+        let {document, treeData} = await linkQuery.parse()
+
+        treeData = {...treeData, ["%" + tie]: "@" + this.pathString}
+        
+        let originalFullTree = (await document.parse()).parsed
+        let newFullTree = nestedObj(originalFullTree, [...linkQuery.props, tie], treeData, true)
+
+        let newRaw = yaml.stringify(newFullTree)
+        
+        return await document.write(newRaw)
         
     }
 

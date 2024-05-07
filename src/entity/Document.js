@@ -1,4 +1,5 @@
 import * as yaml from "yaml"
+import * as FileSystem from "../tech/FileSystem"
 
 export default class Document {
     constructor (handle) {
@@ -19,5 +20,9 @@ export default class Document {
         Object.assign(this, {file, raw, parsed})
 
         return {file, raw, parsed}
+    }
+
+    async write (toWrite) {
+        return await FileSystem.writeToFile(this.handle, toWrite)
     }
 }
