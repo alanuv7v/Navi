@@ -49,6 +49,7 @@ export async function saveChange() {
     //Tree를 수정함으로써 타 문서도 수정했다면, 씨앗 문서 뿐만 아니라 타 문서의 변경사항도 저장해야 함.
     let res = []
     appSession.seeds.forEach(async (seed) => {
+        console.log(await seed.stringify())
         res.push(await FileSystem.writeToFile(seed.document.handle, await seed.stringify()))
     })
     return res
@@ -152,7 +153,7 @@ export const Prune = {
 
 export const Navigate = {
     //search는 openTree와 동일해서 제외.
-    
+
     selectedNode: {
         stemOut: () => {
             appSession.selectedNode.stemOut()
