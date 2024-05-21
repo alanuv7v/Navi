@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import ViteYaml from '@modyfi/vite-plugin-yaml';
+import wasm from "vite-plugin-wasm";
 
 export default defineConfig({
     //root: 'src',
@@ -11,6 +12,7 @@ export default defineConfig({
     },
     plugins: [
         ViteYaml(), 
+        wasm(),
     ],
 });
 
