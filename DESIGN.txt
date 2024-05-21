@@ -180,40 +180,64 @@ src
                 key: String
                 value: String?
                 parent: Node
-                relations: Array: {tie: String, node: Node}
+                relations: Array of {tie: String, node: Node}
             SessionData
-                name
-                root: Node
-                seed: Node
+                name: String
+                srcRootData: RootData
+                modifiedNodes: Array of NodeData that are changed by NodeView instances
+                nodeViews: Array of NodeView
+                rootNode: Node
+                seedNode: Node
                 copiedNode: Node
-        visual
-            Node
-                DOM
-                depth: Int
-                selected: Bool
-                grown: Bool
-                filter: String
-                render()
-                grow()
-                shrink()
-        actor
-            Node
-                constructor(nodeData, nodeVisual)
+                adress: Array of path, from rootNode to thisNode
+                history: Array of path, every nodes visited in order
+            RootData: sql.js DB
+                root: NodeData or NodeData.id
+                nodes: NodeData
+            TreeData: Array of NodeView(serialized)
+        model
+            NodeModel extends NodeData
+                constructor(data, visual)
                 mirrorLink()
                 isLink()
                 getPath()
                 getPathString()
-            Session
+        view
+            NodeView extends NodeModel
+                constructor(data, visual)
+                data
+                DOM
+                selected: Bool
+                grown: Bool
+                filter: String //filter relations to show by their ties
+                render()
+                    render its DOM by its key, value, parent, relations, selected, grown, and filter
+                grow()
+                    this.grown = false
+                    this.render()
+                shrink()
+                    this.grown = true
+                    this.render()
+                copy()
+                paste()
     tech
         fileSystem
         nestedObj XXX  object-path(npm) OOO
     resource
         appSession: SessionData
-        DB
-            nodes: NodeData
+        browserDB
+            initData
+                lastRootDB
+                lastSeed
+                lastTree: TreeData
         DOM
         DOMRefs
     natural
         userActions
+            saveChanges()
+                appSession.editor.modifiedNodes foreach {
+                    appSession.srcRootData 에 저장
+                    fileSystem 활용하여 유저의 스토리지에 영구 저장
+                }
         init
     App
