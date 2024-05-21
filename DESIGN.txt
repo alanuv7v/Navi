@@ -241,3 +241,9 @@ src
                 }
         init
     App
+
+
+할일
+1. sql.js 이용해보기
+2. nestedObj 퇴역
+3. 모듈 재정의
