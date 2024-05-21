@@ -1,0 +1,219 @@
+1.
+
+src
+    entities
+        data
+            Node
+            Session
+        interface
+            Node
+            Session
+        userInterface
+            Node
+            Session
+    interfaces
+        sessionManager XXX
+    tech
+        fileSystem
+        nestedObj XXX object-path(npm) OOO
+    resource
+        appSession
+        DB
+        DOM
+        DOMRefs
+    App
+
+
+
+2.
+
+src
+    entities
+        static
+            NodeData
+                id: uuid
+                key: String
+                value: String?
+                parent: Node
+                relations: Array: {tie: String, node: Node}
+            SessionData
+                name
+                root: Node
+                seed: Node
+                lastCopiedNode: Node
+        visual
+            Node
+                DOM
+                depth: Int
+                selected: Bool
+                grown: Bool
+                filter: String
+                render()
+                grow()
+                shrink()
+                plant()
+                
+            Session
+        final
+            Node
+            
+                mirrorLink()
+                isLink()
+                getPath()
+                getPathString()
+
+                
+                /*이건 그냥 UserAction에 떠넘기는게 맞는것같다.
+                Node 객체는 이 정도 추상적인 인터페이스까진 제공 안해도 될것 같다.
+                
+                이건 UI 만들면서 하나씩 추가해도 된다.
+                moveUp()
+                moveDown()
+                depthUp()
+                depthDown()
+                copy()
+                paste()
+                toggleGrow()
+                setFilter()
+                setKey()
+                setValue()
+                addTie()
+                deleteTie()
+                
+                */
+            Session
+                
+    interfaces
+        sessionManager XXX
+    tech
+        fileSystem
+        nestedObj XXX object-path(npm) OOO
+    resource
+        appSession
+        DB
+        DOM
+        DOMRefs
+    App
+
+
+
+3.
+src
+    entity
+        static
+            NodeData
+                id: uuid
+                key: String
+                value: String?
+                parent: Node
+                relations: Array: {tie: String, node: Node}
+            SessionData
+                name
+                root: Node
+                seed: Node
+                copiedNode: Node
+        visual
+            Node
+                DOM
+                depth: Int
+                selected: Bool
+                grown: Bool
+                filter: String
+                render()
+                grow()
+                shrink()
+        auto
+            Node
+                constructor(nodeData, nodeVisual)
+                mirrorLink()
+                isLink()
+                getPath()
+                getPathString()
+            Session
+    tech
+        fileSystem
+        nestedObj XXX  object-path(npm) OOO
+    resource
+        appSession: SessionData
+        DB
+        DOM
+        DOMRefs
+    natural
+        userActions
+        init
+    App
+
+
+
+
+...
+entity
+    data
+    logic
+    facade
+
+Node
+    data
+        id
+        key
+        value
+        parent
+    logic
+        isLink()
+        render()
+            this.data.key 어쩌구
+            
+    visual
+        if (this.logic.isLink()) this.visual.DOM.querySelector("#key").style.color = "skyblue"
+
+userActions
+    db.update(node.data.id, node.data)
+
+
+
+4.
+src
+    entity
+        static
+            NodeData
+                id: uuid
+                key: String
+                value: String?
+                parent: Node
+                relations: Array: {tie: String, node: Node}
+            SessionData
+                name
+                root: Node
+                seed: Node
+                copiedNode: Node
+        visual
+            Node
+                DOM
+                depth: Int
+                selected: Bool
+                grown: Bool
+                filter: String
+                render()
+                grow()
+                shrink()
+        actor
+            Node
+                constructor(nodeData, nodeVisual)
+                mirrorLink()
+                isLink()
+                getPath()
+                getPathString()
+            Session
+    tech
+        fileSystem
+        nestedObj XXX  object-path(npm) OOO
+    resource
+        appSession: SessionData
+        DB
+            nodes: NodeData
+        DOM
+        DOMRefs
+    natural
+        userActions
+        init
+    App
