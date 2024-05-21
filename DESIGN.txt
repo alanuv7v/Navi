@@ -179,8 +179,8 @@ src
                 id: uuid
                 key: String
                 value: String?
-                parent: Node
-                relations: Array of {tie: String, node: Node}
+                parent: NodeData.id(외래키)
+                relations: Array of {tie: String, node: NodeData.id(외래키)}
             SessionData
                 name: String
                 srcRootData: RootData

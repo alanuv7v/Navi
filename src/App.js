@@ -24,6 +24,25 @@ const db = new SQL.Database();
 window.SQL = SQL
 window.db = db
 
+// Execute a single SQL string that contains multiple statements
+let sqlstr = "CREATE TABLE hello (a int, b char); \
+INSERT INTO hello VALUES (0, 'hello'); \
+INSERT INTO hello VALUES (1, 'world');";
+db.run(sqlstr); // Run the query without returning anything
+
+// Prepare an sql statement
+const statement = db.prepare("SELECT * FROM hello WHERE a=:aval AND b=:bval");
+
+// Bind values to the parameters and fetch the results of the query
+const result = statement.getAsObject({':aval' : 1, ':bval' : 'world'});
+console.log(result); // Will print {a:1, b:'world'}
+
+
+db.exec("CREATE TABLE nodes (id int, key char, value char)");
+db.exec("INSERT INTO nodes VALUES (0, 'Alan', 'This is me');");
+db.exec("SELECT * FROM nodes");
+
+
 /* 
 
 window.initSqlJs({
