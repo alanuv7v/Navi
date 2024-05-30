@@ -223,6 +223,14 @@ src
     tech
         fileSystem
         nestedObj XXX  object-path(npm) OOO
+        sql.js
+        dbSystem (sql.js 추상화 인터페이스)
+				    class DB
+						class Table
+	              where()
+		            equals()
+								
+            function validate(db, sql, options)
     resource
         appSession: SessionData
         browserDB
@@ -240,7 +248,21 @@ src
                     fileSystem 활용하여 유저의 스토리지에 영구 저장
                 }
         init
-    App
+		App
+
+
+
+    SQL로 노드액션, 유저액션 구현해보기. 
+
+Node.grow() 
+let relations = SELECT relations FROM allNodes WHERE id EQUALS ${this.id}
+relations.forEach(r => 
+
+let relatedNodeData = SELECT * FROM allNodes WHERE r.id
+
+)
+
+
 
 
 할일
