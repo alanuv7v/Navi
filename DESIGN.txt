@@ -175,11 +175,11 @@ userActions
 src
     entity
         static
-            NodeData
+            NodeData: class? interface? class with type validator???
                 id: uuid
                 key: String
                 value: String?
-                parent: NodeData.id(외래키)
+                origin: NodeData.id(외래키)
                 relations: Array of {tie: String, node: NodeData.id(외래키)}
             SessionData
                 name: String
@@ -195,13 +195,15 @@ src
                 root: NodeData or NodeData.id
                 nodes: NodeData
             TreeData: Array of NodeView(serialized)
+            DocumentData
         model
             NodeModel extends NodeData
-                constructor(data, visual)
+                constructor(data)
                 mirrorLink()
                 isLink()
                 getPath()
                 getPathString()
+            DocumentModel
         view
             NodeView extends NodeModel
                 constructor(data, visual)
@@ -261,6 +263,14 @@ relations.forEach(r =>
 let relatedNodeData = SELECT * FROM allNodes WHERE r.id
 
 )
+
+MVC 패턴에 대한 나의 생각:
+컨트롤러가 굳이 필요할까.
+간단한 엔티티라면 모델 수준의 추상화는 클래스의 메소드명으로 충분하다.
+그 안에 들어있는 로직이 컨트롤러나 다름없다.
+만약 static 데이터에 대해 매우 복잡한 조작이 이루어진다면 컨트롤러가 따로 필요할 것이다.
+그러나 그 정도로 복잡한 조작을 해야한다면, 애초에 tech를 잘못 선택했다고 봐야할듯.
+그리고 그런 복잡한 조작은 interface 계층에서 진작 추상화하는걸로.
 
 
 
