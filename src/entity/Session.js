@@ -5,7 +5,12 @@ import Tree from "./Tree"
 export default class Session {
     
     constructor (data) {
-        if (data) this.copy(data)
+        if (!data) return false
+        this.copy(data)
+    }
+
+    data = {
+        handle: null
     }
 
     copy (data) {

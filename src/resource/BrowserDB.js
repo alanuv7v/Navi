@@ -1,8 +1,8 @@
 import Dexie from "dexie";
 
-const DB = new Dexie("Root");
+const BrowserDB = new Dexie("Root");
 
-DB.version(1).stores({
+BrowserDB.version(1).stores({
   sessions: `
     ++id,
     key,
@@ -11,4 +11,4 @@ DB.version(1).stores({
     data`,
 });
 
-export default DB
+export default BrowserDB

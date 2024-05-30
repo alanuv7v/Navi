@@ -248,11 +248,11 @@ src
                     fileSystem 활용하여 유저의 스토리지에 영구 저장
                 }
         init
-		App
+    App
 
 
 
-    SQL로 노드액션, 유저액션 구현해보기. 
+SQL로 노드액션, 유저액션 구현해보기. 
 
 Node.grow() 
 let relations = SELECT relations FROM allNodes WHERE id EQUALS ${this.id}

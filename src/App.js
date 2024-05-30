@@ -8,14 +8,7 @@
 //test
 
 // Dynamically import the WebAssembly module
-
-/* import sql from "./tech/sqlite/sqlite3"
-console.log(sql)
-window.sql = await sql()
-//const { default: initSqlJs } = await import("./tech/sqlite/sqlite3.wasm?init"); */
-
-import sqlJs from "sql.js"
-window.sqlJs = sqlJs
+import initSqlJs from "sql.js/dist/sql-wasm"
 
 const SQL = await initSqlJs(
     {locateFile: file => `https://sql.js.org/dist/${file}`}
@@ -83,17 +76,17 @@ import CommandsIO from "./tech/CommandsIO"
 //below is for debugging
 
 
-import DB from "./resource/DB"
+import BrowserDB from "./resource/BrowserDB"
 import DOM from "./resource/DOM"
 import appSession from "./resource/appSession"
-import * as LocalDB from "./interface/LocalDB"
+import * as SessionManager from "./interface/SessionManager"
 
 window._debug = {
     DOM,
     UserActions,
     appSession,
-    DB,
-    LocalDB
+    BrowserDB,
+    SessionManager
 }
 
 //

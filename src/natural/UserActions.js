@@ -1,9 +1,9 @@
 import appSession from "../resource/appSession"
-import * as LocalDB from "../interface/LocalDB"
+import * as LocalDB from "../interface/SessionManager"
 import Root from "../entity/Root"
 import Seed from "../entity/Seed"
 import Query from "../entity/Query"
-import DB from "../resource/DB"
+import BrowserDB from "../resource/BrowserDB"
 import * as FileSystem from "../tech/FileSystem"
 
 export async function openRoot() { 
@@ -44,7 +44,7 @@ export function loadSession () {
 }
 
 export async function clearDB () {
-    return await DB.delete()
+    return await BrowserDB.delete()
 }
 
 
