@@ -1,10 +1,11 @@
 import initSqlJs from "sql.js/dist/sql-wasm"
 
-const SQL = await initSqlJs(
-    {locateFile: file => `https://sql.js.org/dist/${file}`}
-)
+export async function create() {
+        
+    const SQL = await initSqlJs(
+        {locateFile: file => `https://sql.js.org/dist/${file}`}
+    )
 
-export function create() {
     const DB = new SQL.Database();
 
     //create "nodes" table 

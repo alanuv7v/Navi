@@ -7,7 +7,7 @@
 
 //test
 
-import LocalDB from "./resource/LocalDB"
+import * as LocalDB from "./interface/LocalDBManager"
 
 window.LocalDB = LocalDB
 

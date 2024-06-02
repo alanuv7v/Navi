@@ -4,13 +4,27 @@ export default class Root {
 
     constructor (handle) {
         this.handle = handle
+        this.initDB()
     }
+
+    async initDB () {
+        /* const reader = new FileReader()
+        reader.onload = () => {
+            this.DB = new SQL.Database(new Uint8Array(reader.result))
+        }
+        reader.readAsArrayBuffer(handle) */
+        const file = await this.handle.getFile();
+        const blob = new Blob([file], { type: file.type })
+        this.DB = await blob.arrayBuffer()
+        return this.DB
+    }
+
     
     get name () {
         return this.handle.name
     }
 
-    async docs () {
+    /* async docs () {
         let list = []
         for await (let handle of this.handle.values()) {
             list.push(handle)
@@ -34,7 +48,7 @@ export default class Root {
 
     async createDocument (name) {
         return await FileSystem.createFile(this.handle, name, "yaml")
-    }
+    } */
 
 }
 

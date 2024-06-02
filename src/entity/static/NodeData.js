@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import LocalDB from "../../resource/LocalDB"
+import appSession from '../../resource/appSession';
 
 export default class NodeData  {
     
@@ -19,14 +19,6 @@ export default class NodeData  {
             author: null,
             editors: []
         }
-
-        let relationsStringfied = JSON.stringify(relations)
-
-        LocalDB.exec(`INSERT INTO nodes VALUES (${
-            [id, key, value, origin, relationsStringfied].map(s => `'${s}'`).join(", ")
-        })`)
-        //LocalDB.exec(`INSERT INTO nodes_metadata VALUES ${Object.values(this.metadata).join(" ")}`)
-
     }
 
 }

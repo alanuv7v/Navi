@@ -6,12 +6,15 @@ import Query from "../entity/Query"
 import BrowserDB from "../resource/BrowserDB"
 import * as FileSystem from "../interface/FileSystem"
 
-import LocalDB from "../interface/LocalDB"
+import * as LocalDBManager from "../interface/LocalDBManager"
 
 export async function createRoot(name="root") { 
     
+    //create the DB
+    let localDB = await LocalDBManager.create()
+    
     // Export the database to an Uint8Array
-    const data = LocalDB.export();
+    const data = localDB.export();
     const blob = new Blob([data], { type: "application/octet-stream" });
     const url = window.URL.createObjectURL(blob);
 
@@ -21,30 +24,13 @@ export async function createRoot(name="root") {
     a.download = name
     a.click();
     window.URL.revokeObjectURL(url);
-    
+
 }
-
-
-
-// Create a file input to load the database
-const input = document.createElement("input");
-input.type = "file";
-input.onchange = function(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function() {
-        const uInt8Array = new Uint8Array(reader.result);
-        db = new SQL.Database(uInt8Array);
-        console.log(contents);
-    };
-    reader.readAsArrayBuffer(file);
-};
-input.click();
 
 export async function openRoot() { 
     
-    const rootHandle = await window.showDirectoryPicker()
-    
+    const rootHandle = (await window.showOpenFilePicker({multiple: false}))[0]
+    console.log(rootHandle)
     if (!(await rootHandle.queryPermission()) === "granted") {
         await rootHandle.requestPermission()
     }

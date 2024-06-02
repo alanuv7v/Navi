@@ -1,4 +1,5 @@
 import NodeData from "../static/NodeData"
+import appSession from '../../resource/appSession';
 
 export default class NodeModel extends NodeData {
 
@@ -18,19 +19,21 @@ export default class NodeModel extends NodeData {
     }
     
     localData = {
+        create() {
+            let relationsStringfied = JSON.stringify(relations)
+            appSession.root.DB.exec(`INSERT INTO nodes VALUES (${
+                [id, key, value, origin, relationsStringfied].map(s => `'${s}'`).join(", ")
+            })`)
+        },
         update () {
-
+            appSession.root.DB.exec(
+                `UPDATE nodes SET ${[this.id, this.key, this.value, this.origin, this.relations]}
+                id=${this.id},  key=${this.id}, value=${this.id}, origin=${this.id}, relations=${this.relations}}, WHERE id=${this.id};`
+            )
         },
         delete() {
             return true
         }
-    }
-
-    changeOrigin (value) {
-        //change this.origin
-        //change previous origin's children
-        
-        return true
     }
 
 }
