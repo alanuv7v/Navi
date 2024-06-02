@@ -21,19 +21,27 @@ export default class NodeModel extends NodeData {
     localData = {
         create() {
             let relationsStringfied = JSON.stringify(relations)
-            appSession.root.DB.exec(`INSERT INTO nodes VALUES (${
+            return appSession.root.DB.exec(`INSERT INTO nodes VALUES (${
                 [id, key, value, origin, relationsStringfied].map(s => `'${s}'`).join(", ")
             })`)
         },
+        read() {
+            return appSession.root.DB.exec(
+                `SELECT * FROM nodes WHERE id=${this.id};`
+            )
+        },
         update () {
-            appSession.root.DB.exec(
-                `UPDATE nodes SET ${[this.id, this.key, this.value, this.origin, this.relations]}
-                id=${this.id},  key=${this.id}, value=${this.id}, origin=${this.id}, relations=${this.relations}}, WHERE id=${this.id};`
+            return appSession.root.DB.exec(
+                `UPDATE nodes SET ${
+                    "key,value,origin,relations"
+                    .split(",")
+                    .map(s => s + "=" + this[s] + ", ")
+                } WHERE id=${this.id};`
             )
         },
         delete() {
-            return true
-        }
+            return appSession.root.DB.exec(`DELETE FROM nodes WHERE id=${this.id}`)
+        },
     }
 
 }

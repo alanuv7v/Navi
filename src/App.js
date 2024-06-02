@@ -9,7 +9,7 @@
 
 import * as LocalDB from "./interface/LocalDBManager"
 
-window.LocalDB = LocalDB
+window.LocalDB = await LocalDB.create()
 
 
 //test end
