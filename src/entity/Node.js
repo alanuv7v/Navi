@@ -11,7 +11,7 @@ import * as yaml from "yaml"
 export default class Node  {
     
 
-    constructor (key, value, parent) {
+    constructor (data) {
         
         //value = can be children
         //parent reference is needed to override modified data to the parent value

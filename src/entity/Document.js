@@ -1,5 +1,5 @@
 import * as yaml from "yaml"
-import * as FileSystem from "../tech/FileSystem"
+import * as FileSystem from "../interface/FileSystem"
 
 export default class Document {
     constructor (handle) {

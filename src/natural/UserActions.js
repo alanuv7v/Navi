@@ -1,10 +1,45 @@
 import appSession from "../resource/appSession"
-import * as LocalDB from "../interface/SessionManager"
+import * as SessionManager from "../interface/SessionManager"
 import Root from "../entity/Root"
 import Seed from "../entity/Seed"
 import Query from "../entity/Query"
 import BrowserDB from "../resource/BrowserDB"
-import * as FileSystem from "../tech/FileSystem"
+import * as FileSystem from "../interface/FileSystem"
+
+import LocalDB from "../interface/LocalDB"
+
+export async function createRoot(name="root") { 
+    
+    // Export the database to an Uint8Array
+    const data = LocalDB.export();
+    const blob = new Blob([data], { type: "application/octet-stream" });
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link to download it
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name
+    a.click();
+    window.URL.revokeObjectURL(url);
+    
+}
+
+
+
+// Create a file input to load the database
+const input = document.createElement("input");
+input.type = "file";
+input.onchange = function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function() {
+        const uInt8Array = new Uint8Array(reader.result);
+        db = new SQL.Database(uInt8Array);
+        console.log(contents);
+    };
+    reader.readAsArrayBuffer(file);
+};
+input.click();
 
 export async function openRoot() { 
     
@@ -36,7 +71,7 @@ export async function saveChange() {
 }
 
 export async function saveSession() {
-    return await LocalDB.saveSession(appSession)
+    return await SessionManager.saveSession(appSession)
 }
 
 export function loadSession () {

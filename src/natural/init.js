@@ -1,4 +1,4 @@
-import * as LocalDB from "../interface/SessionManager"
+import * as SessionManager from "../interface/SessionManager"
 import appSession from "../resource/appSession"
 import Session from "../entity/Session"
 
@@ -26,7 +26,7 @@ export default async function init () {
     await import("../resource/BrowserDB")
     console.log("Imported local DB.")
     
-    let lastSession = await LocalDB.getLastSession()
+    let lastSession = await SessionManager.getLastSession()
     if (lastSession) {
         appSession.copy(lastSession.data)
         console.log("Loaded last session data.")
@@ -34,8 +34,8 @@ export default async function init () {
         alertSeedLocalDocumentChange()
     } else {
         console.log("Could not copy last session data. The last session data is corrupted or does not exist.")
-        appSession.copy(new Session({}))
-        await LocalDB.saveSession(appSession)
+        appSession.copy({handle: null})
+        await SessionManager.saveSession(appSession)
         console.log("Created new app session with empty data.")
     }
 

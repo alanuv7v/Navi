@@ -1,4 +1,4 @@
-import * as FileSystem from "../tech/FileSystem"
+import * as FileSystem from "../interface/FileSystem"
 
 export default class Root {
 

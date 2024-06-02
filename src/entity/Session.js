@@ -13,6 +13,9 @@ export default class Session {
         handle: null
     }
 
+    localDB = null
+
+
     copy (data) {
         for (let [key, value] of Object.entries(data)) {
             if (value.handle) {

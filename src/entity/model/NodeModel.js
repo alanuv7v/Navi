@@ -17,8 +17,13 @@ export default class NodeModel extends NodeData {
         return this.path().join("/")
     }
     
-    delete() {
-        return true
+    localData = {
+        update () {
+
+        },
+        delete() {
+            return true
+        }
     }
 
     changeOrigin (value) {
@@ -27,7 +32,5 @@ export default class NodeModel extends NodeData {
         
         return true
     }
-
-    
 
 }
