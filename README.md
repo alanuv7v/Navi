@@ -1,120 +1,43 @@
-# WebContainer API Starter
+# Root
+**Root** allows you to create and navigate a private network of data easily.
+you can view and save data to a **tree**, which originates from the **root**, which is you.
+Every data you store revolves around nothing else but YOU.
 
-WebContainer API is a browser-based runtime for executing Node.js applications and operating system commands. It enables you to build applications that previously required a server running.
+# Features
+* Cross-platform PWA(Progressive Web App).
+* Simple and clean features and GUI. Nothing to add or subtract.
+* Highly customizable visual. A single CSS file can set up the entire theme and layout.
 
-WebContainer API is perfect for building interactive coding experiences. Among its most common use cases are production-grade IDEs, programming tutorials, or employee onboarding platforms.
+# What is it?
+You can think it as a 
+* filesystem
+* that stores each pieces of data to link themselves to each other
+* where you can navigate the data by those links
+* as if you were browsing a website, 
+* exploring further by clinking to links
+* and those data you save is local
+* but you can sync it by involving third-party cloud service, such as Dropbox, Google Drive, or OneDrive.
+There is no self-made backend service that syncs data to a server for this app. So users can adopt reliable cloud services they already purchased.
 
-## How To
+# What's unique?
+Root is intended to differ from other apps.
+* I compare Root and pre-existing note apps, blog services, and filesystems.
+* They supports only limited methods of creating network of data. Creating and exploring a network has never been the primary objective.
+* You can link pieces of data via hypertext, but you cannot view the network itself comprehensively. What you see is the each nodes, not the wires.
+* And since the atomic unit of stored data is a page, it is hard or feels misfitting to link a word, a sentence, an image or a file to one another.
+* Root allows you to create and navigate a private network of data easily.
 
-For an up-to-date documentation, please refer to [our documentation](https://webcontainers.io).
+# The Experience 
+**Root** is designed to give you an experience that is
+* **clean** (minimal GUI, concealed details),
+* **fast** (very simple data transaction),
+* and **trustworthy** (things barely go wrong when what you do is simple).
 
-## Cross-Origin Isolation
-
-WebContainer _requires_ [SharedArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer) to function. In turn, this requires your website to be [cross-origin isolated](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements). Among other things, the root document must be served with:
-
-```
-Cross-Origin-Embedder-Policy: require-corp
-Cross-Origin-Opener-Policy: same-origin
-```
-
-You can check [our article](https://blog.stackblitz.com/posts/cross-browser-with-coop-coep/) on the subject and our [docs on browser support](https://developer.stackblitz.com/docs/platform/browser-support) for more details.
-
-## Serve over HTTPS
-
-Please note that your deployed page must be served over HTTPS. This is not necessary when developing locally, as `localhost` is exempt from some browser restrictions, but there is no way around it once you deploy to production.
-
-## Demo
-
-Check [the WebContainer API demo app](https://webcontainer.new).
-
-Here's an example `main.ts` file:
-
-```ts
-import { WebContainer } from "@webcontainer/api";
-
-const files: FileSystemTree = {
-  "index.js": {
-    file: {
-      contents: "",
-    },
-  },
-};
-
-let webcontainer: WebContainer;
-
-// add a textarea (the editor) and an iframe (a preview window) to the document
-document.querySelector("#app").innerHTML = `
-  <div class="container">
-    <div class="editor">
-      <textarea>I am a textarea</textarea>
-    </div>
-    <div class="preview">
-      <iframe></iframe>
-    </div>
-  </div>
-`;
-
-// the editor
-const textarea = document.querySelector("textarea");
-
-// the preview window
-const iframe = document.querySelector("iframe");
-
-window.addEventListener("load", async () => {
-  textarea.value = files["index.js"].file.contents;
-
-  textarea.addEventListener("input", (event) => {
-    const content = event.currentTarget.value;
-    webcontainer.fs.writeFile("/index.js", content);
-  });
-
-  // call only once
-  webcontainer = await WebContainer.boot();
-
-  await webcontainer.mount(files);
-
-  const exitCode = await installDependencies();
-
-  if (exitCode !== 0) {
-    throw new Error("Installation failed");
-  }
-
-  startDevServer();
-});
-
-async function installDependencies() {
-  // install dependencies
-  const installProcess = await webcontainer.spawn("npm", ["install"]);
-
-  installProcess.output.pipeTo(
-    new WritableStream({
-      write(data) {
-        console.log(data);
-      },
-    })
-  );
-
-  // wait for install command to exit
-  return installProcess.exit;
-}
-
-async function startDevServer() {
-  // run `npm run start` to start the express app
-  await webcontainer.spawn("npm", ["run", "start"]);
-
-  // wait for `server-ready` event
-  webcontainer.on("server-ready", (port, url) => {
-    iframe.src = url;
-  });
-}
-```
-
-## Troubleshooting
-
-Cookie blockers, either from third-party addons or built-in into the browser, can prevent WebContainer from running correctly. Check the `on('error')` event and our [docs](https://developer.stackblitz.com/docs/platform/third-party-blocker).
-
-To troubleshoot other problems, check the [Troubleshooting page](https://webcontainers.io/guides/troubleshooting) in our docs.
+# Roadmap
 
 # License
 
-Copyright 2023 StackBlitz, Inc.
+# Contact
+
+# Built With
+no other frontend frameworks but [van-js](https://github.com/vanjs-org/van).
