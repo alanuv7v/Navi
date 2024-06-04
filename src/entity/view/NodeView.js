@@ -15,28 +15,35 @@ export default class Node extends NodeModel {
     opened = false
     filter = null
 
+    linkedNodeViews = []
+
     DOM = (
         div({class: `node`},
-            textarea({class: "key", onclick: (event) => this.#onclick(event), onchange: (event) => {this.#onKeyChange(event)}}),
+            textarea({
+                class: "value", 
+                onclick: (event) => this.#onclick(event), 
+                onchange: (event) => {this.#onValueChange(event)}
+            }),
             div({class: "options"},
-                button("O"),
-                button("<"),
-                button(">"),
-                button("⇑"),
-                button("⇓"),
-                button("+"),
-                button("X"),
-                button("🌱"),
+                div({class: "data"},
+                    button("add link"),
+                    button("delete node"),
+                    button("set origin"),
+                ),
+                div({class: "view"},
+                    button("filter"),
+                    button("plant"),
+                )
             ),
-            div({class: "value"}),
+            div({class: "links"}),
         )
     )
 
     render () {
         
-        let filteredRelations = this.relations.filter(r => r[0] === filter)
+        let filteredLinks = this.links.filter(r => r[0] === filter)
         
-        for (let relation of filteredRelations) {
+        for (let relation of filteredLinks) {
             let relatedNodeData = appSession.root.DB.exec(
                 `SELECT * FROM nodes WHERE id=${relation.nodeID};`
             )
@@ -49,30 +56,24 @@ export default class Node extends NodeModel {
 
     open () {
 
-        //reset value DOM
-        this.DOM.querySelector(".value").innerHTML = ""
+        if (!this.links || this.links.length < 1) return
 
-        //set this.children as an array of NodeView
-        if (typeof this.value === "object" && this.value) {
-            this.children = Object.entries(this.value).map(([key, value]) => {
-                if (key === this.filter || !this.filter) {
-                    return new NodeView(key, value, this)
-                }
+        //reset links DOM
+        this.DOM.querySelector(".links").innerHTML = ""
+
+        //append linkedNodeViews to links DOM
+        this.linkedNodeViews = this.links
+            .filter(link => link.value === this.filter || !this.filter)
+            .map(link => {
+                let res = query(link)
+                new NodeView(res.value, res.origin, res.links)
             })
-        } 
 
-        //append this.children DOM
-        if (typeof this.value === "object" && this.value) {
-            for (let childNode of this.children) {
-                this.DOM.querySelector(".value").append(
-                    childNode.DOM
-                )
-            }
-        } else if (this.value) {
-            this.DOM.querySelector(".value").append(textarea(
-                {value: this.value, onchange: (event) => this.#onValueChange(event)}
-            ))
-        }
+        this.linkedNodeViews.forEach(v => 
+            this.DOM.querySelector(".links").append(
+                v.DOM
+            )
+        )
         
         //set state
         this.opened = true
@@ -82,7 +83,7 @@ export default class Node extends NodeModel {
     close () {
 
         //empty DOM
-        this.DOM.querySelector(".value").innerHTML = ""
+        this.DOM.querySelector(".links").innerHTML = ""
         
         //set state
         this.opened = false
@@ -111,11 +112,6 @@ export default class Node extends NodeModel {
             this.deselect()
         }
         return this
-    }
-
-    #onKeyChange (event) {
-        this.key = event.target.value
-        this.localDBActions.update()
     }
     
     #onValueChange (event) {

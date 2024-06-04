@@ -10,8 +10,8 @@ export default class NodeModel extends NodeData {
     
     path () {
         let originPath = this?.originNode?.path()
-        if (originPath) return [...originPath, this.key]
-        else return [this.key]
+        if (originPath) return [...originPath, this.value]
+        else return [this.value]
     }
     
     pathString () {
@@ -45,7 +45,7 @@ export default class NodeModel extends NodeData {
     }
 
     linkTo (tieID, endIndex, nodeID) {
-        this.relations.push([tieID, endIndex, nodeID])
+        this.links.push([tieID, endIndex, nodeID])
         this.localDBActions.update()
     }
 

@@ -1,13 +1,24 @@
 import appSession from "../resource/appSession"
-import * as SessionManager from "../interface/SessionManager"
 import Root from "../entity/Root"
 import Seed from "../entity/Seed"
-import * as FileSystem from "../interface/FileSystem"
-
+import * as SessionManager from "../interface/SessionManager"
 import * as LocalDBManager from "../interface/LocalDBManager"
 import Query from "../entity/Query"
+import NodeData from "../entity/static/NodeData"
 
-export async function createRoot(name="root") { 
+export async function saveSession() {
+    return await SessionManager.saveSession(appSession)
+}
+
+export function loadSession() {
+    
+}
+
+export async function clearSessions () {
+    SessionManager.clearSessions()
+}
+
+export async function createRoot(name) { 
     
     //create the DB
     let localDB = await LocalDBManager.create()
@@ -20,7 +31,7 @@ export async function createRoot(name="root") {
     // Create a link to download it
     const a = document.createElement("a");
     a.href = url;
-    a.download = name
+    a.download = name || "root"
     a.click();
     window.URL.revokeObjectURL(url);
 
@@ -44,132 +55,75 @@ export async function openRoot() {
 
 }
 
-export async function saveSession() {
-    return await SessionManager.saveSession(appSession)
-}
-
-export function loadSession() {
-    
-}
-
-export async function clearSessions () {
-    SessionManager.clearSessions()
-}
-
 export const Edit = {
-    selectedNode: {
-        copyNode: (node) => {
-            appSession.copiedNode = appSession.selectedNode
-            return appSession.copiedNode
-        },
-        pasteNode: (parentNodeQueryString) => {
-            appSession.copiedNode.changeParent(appSession.selectedNode)
-            return appSession.selectedNode
-        },
-        addNode: (key, value) => {
-            //let parentNode = Tree.selectedNode
-            //this.pasteNode(parentNode)
-            appSession.selectedNode.addChild(key, value)
-            return appSession.selectedNode
-        },
-        deleteNode: () => {
-            return appSession.selectedNode.delete()
-        },
-        changeOrder: (change) => {
-            appSession.selectedNode.changeOrder(change)
-            return appSession.selectedNode
-        },
-        changeDepth: (change) => {
-            appSession.selectedNode.changeDepth(change)
-            return appSession.selectedNode
-        },
-        link: (queryString) => {
-            new Query(queryString)
-            return appSession.selectedNode.linkTo(tieID, endIndex, nodeID)
-        }
+    copyNode: (node) => {
+        appSession.copiedNode = appSession.selectedNode
+        return appSession.copiedNode
+    },
+    pasteNode: (parentNodeQueryString) => {
+        appSession.copiedNode.changeParent(appSession.selectedNode)
+        return appSession.selectedNode
+    },
+    addLinkedNode: (key, value) => {
+        //let parentNode = Tree.selectedNode
+        //this.pasteNode(parentNode)
+        appSession.selectedNode.addChild(key, value)
+        return appSession.selectedNode
+    },
+    deleteNode: () => {
+        return appSession.selectedNode.delete()
+    },
+    changeOrder: (change) => {
+        appSession.selectedNode.changeOrder(change)
+        return appSession.selectedNode
+    },
+    link: (queryString) => {
+        new Query(queryString)
+        return appSession.selectedNode.linkTo(tieID, endIndex, nodeID)
     }
 }
 
 export const Prune = {
 
-    selectedNode: {
-        toggleOpen: () => {
-            if (appSession.selectedNode.opened) {
-                appSession.selectedNode.close()
-            } else {
-                appSession.selectedNode.open()
-            }
-            return appSession.selectedNode
-        },
-        open: () => {
-            appSession.selectedNode.open()
-            return appSession.selectedNode
-        },
-        close: () => {
+    toggleOpen: () => {
+        if (appSession.selectedNode.opened) {
             appSession.selectedNode.close()
-            return appSession.selectedNode
+        } else {
+            appSession.selectedNode.open()
         }
+        return appSession.selectedNode
     },
 
-    filterNodes: (key) => {
+    globalFilterNodes: (key) => {
     }
 
 }
 
 export const Navigate = {
     //search는 openTree와 동일해서 제외.
-    async openTree (queryString) { //Navigate.plant로 옮길까.
+    async showNode (queryString) { //Navigate.plant로 옮길까.
+        
         try {
     
-            let seed = new Seed(queryString)
-            appSession.seeds.push(seed)
-            
-            await seed.parse()
-            appSession.tree = seed.plant()
-            appSession.adress = queryString
-    
+            let nodeData = Query(queryString)
+            let nodeView = new NodeView(...nodeData)
+            refs("Editor").innerHTML = ""
+            refs("Editor").append(nodeView.DOM)
             saveSession()
     
-            return appSession.tree
-    
         }
+        
         catch (err) {
-            console.error(err, `Failed to open tree by the given query: ${queryString}. the query is formatted wrongly or matching doucment and prop does not exist in the root.`)
+            console.error(err, `Failed to show node by the given query: "${queryString}". the query is formatted wrongly or matching node not exist in the root.`)
         }
+
     },
+
     history: {
         pastAdress: () => {
         },
         nextAdress: () => {
         },
     },
-    refresh: () => {
 
-    },
-    tree: {
-        pastSibling() {
-
-        },
-        nextSibling() {
-
-        },
-        parent() {
-
-        },
-        children() {
-
-        }
-    },
-    selectedNode: {
-        stemOut: () => {
-            appSession.selectedNode.stemOut()
-            return appSession.selectedNode
-        },
-        plant: async () => {
-            let newSeed = new Seed(appSession.selectedNode.pathString())
-            await newSeed.parse()
-            newSeed.plant()
-            return newSeed
-        }
-    }
 }

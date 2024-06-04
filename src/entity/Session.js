@@ -16,7 +16,7 @@ export default class Session {
 
     copy (data) {
         for (let [key, value] of Object.entries(data)) {
-            if (value.handle) {
+            if (value?.handle) {
                 this[key].handle = value.handle
             }
         }
@@ -36,14 +36,18 @@ export default class Session {
 
     adress = ""
 
-    root = new Root()
+    root = null
 
-    seeds = []
+    seed = null
 
     tree = new Tree(this.data?.treeData)
 
     selectedNode = null
 
     copiedNode = null
+
+    viewOptions = {
+        globalFilter: "All"
+    }
     
 }

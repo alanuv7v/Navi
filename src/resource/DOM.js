@@ -1,5 +1,5 @@
+import appSession from "./appSession";
 import van from "vanjs-core";
-import refs from "./DOMRefs";
 
 const tagsToUse = "div button input".split(" ")
 const tag = {}
@@ -12,12 +12,13 @@ const {div, button, input} = tag
 
 export default div("App", {},
     div("Header", {}, 
-        button("PickRoot", {}, "Root: "),
+        button("PickRoot", {}, "木 "),
+        button("History", {}, "H"),
         button("GoBack", {}, "◁"),
         button("GoForth", {}, "▷"),
-        button("VisitParent", {}, "⇑"),
-        button("VisitChildren", {}, "⇓"),
-        button("RegrowTree", {}, "⟳"),
+        button("ToFrom", {}, "⇑"),
+        button("ToLinks", {}, "⇓"),
+        //button("RegrowTree", {}, "⟳"),
         input("GoTo"),
         button("Filter", {}, "Filter: "),
     ),
