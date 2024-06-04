@@ -2,7 +2,7 @@ import van from "vanjs-core"
 const {div, span, button, textarea, input, a} = van.tags
 
 import appSession from "../resource/appSession"
-import Query from "./Query"
+import Query from "../tech/parseQuery"
 import Seed from "./Seed"
 import nestedObj from "../tech/nestedObj"
 import * as yaml from "yaml"

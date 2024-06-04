@@ -4,9 +4,13 @@ import * as UserActions  from "./UserActions"
 
 export default async function init () {
 
+    //show root node
+    UserActions.Navigate.showNode("root")
+
     await import("../resource/BrowserDB")
     console.log("Imported BrowserDB.")
     
+    //init appSession
     let lastSession = await SessionManager.getLastSession()
     if (lastSession) {
         appSession.copy(lastSession.data)

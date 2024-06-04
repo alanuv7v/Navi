@@ -1,7 +1,7 @@
 import refs from "../resource/DOMRefs";
 import nestedObj from "../tech/nestedObj";
 import Node from "./Node"
-import Query from "./Query";
+import Query from "../tech/parseQuery";
 import Tree from "./Tree";
 import * as yaml from "yaml"
 

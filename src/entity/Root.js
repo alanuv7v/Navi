@@ -1,5 +1,4 @@
-import * as FileSystem from "../interface/FileSystem"
-
+import initSqlJs from "sql.js/dist/sql-wasm"
 export default class Root {
 
     constructor (handle) {
@@ -8,10 +7,17 @@ export default class Root {
     }
 
     async initDB () {
+
+        const SQL = await initSqlJs(
+            {locateFile: file => `https://sql.js.org/dist/${file}`}
+        )
+    
         const file = await this.handle.getFile();
         const blob = new Blob([file], { type: file.type })
-        this.DB = await blob.arrayBuffer()
+        let dbArrayBuffer = await blob.arrayBuffer()
+        this.DB = new SQL.Database(dbArrayBuffer)
         return this.DB
+        
     }
 
     

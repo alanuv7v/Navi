@@ -1,4 +1,5 @@
 import initSqlJs from "sql.js/dist/sql-wasm"
+import { v4 as uuidv4 } from 'uuid';
 
 export async function create() {
         
@@ -17,6 +18,16 @@ export async function create() {
         links TEXT
     );
     `); //id와 origin은 나중에 CHAR()로 바꾸고 길이제한 걸고 uuid로 변경
+    
+    //save root NodeData to the db
+    DB.run(`
+    INSERT INTO nodes VALUES (
+        '${uuidv4()}',
+        '${"root"}',
+        '${""}',
+        '${JSON.stringify([])}'
+    );
+    `); 
 
     return DB
 }

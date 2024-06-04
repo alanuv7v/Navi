@@ -3,7 +3,7 @@ import Root from "../entity/Root"
 import Seed from "../entity/Seed"
 import * as SessionManager from "../interface/SessionManager"
 import * as LocalDBManager from "../interface/LocalDBManager"
-import Query from "../entity/Query"
+import Query from "../tech/parseQuery"
 import NodeData from "../entity/static/NodeData"
 
 export async function saveSession() {
@@ -105,7 +105,7 @@ export const Navigate = {
         
         try {
     
-            let nodeData = Query(queryString)
+            let nodeData = parseQuery(queryString)
             let nodeView = new NodeView(...nodeData)
             refs("Editor").innerHTML = ""
             refs("Editor").append(nodeView.DOM)
