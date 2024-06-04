@@ -2,11 +2,10 @@ import appSession from "../resource/appSession"
 import * as SessionManager from "../interface/SessionManager"
 import Root from "../entity/Root"
 import Seed from "../entity/Seed"
-import Query from "../entity/Query"
-import BrowserDB from "../resource/BrowserDB"
 import * as FileSystem from "../interface/FileSystem"
 
 import * as LocalDBManager from "../interface/LocalDBManager"
+import Query from "../entity/Query"
 
 export async function createRoot(name="root") { 
     
@@ -45,32 +44,16 @@ export async function openRoot() {
 
 }
 
-export async function saveChange() {
-
-    let res = []
-    appSession.seeds.forEach(async (seed) => {
-        console.log(await seed.stringify())
-        res.push(await FileSystem.writeToFile(seed.document.handle, await seed.stringify()))
-    })
-    return res
-
-}
-
 export async function saveSession() {
     return await SessionManager.saveSession(appSession)
 }
 
-export function loadSession () {
+export function loadSession() {
     
 }
 
-export async function clearDB () {
-    return await BrowserDB.delete()
-}
-
-
-export function createDocument (name) {
-    appSession.root.createDocument(name)
+export async function clearSessions () {
+    SessionManager.clearSessions()
 }
 
 export const Edit = {
@@ -90,9 +73,7 @@ export const Edit = {
             return appSession.selectedNode
         },
         deleteNode: () => {
-            let originalParent = appSession.selectedNode.parent
-            appSession.selectedNode.delete()
-            return originalParent
+            return appSession.selectedNode.delete()
         },
         changeOrder: (change) => {
             appSession.selectedNode.changeOrder(change)
@@ -103,8 +84,8 @@ export const Edit = {
             return appSession.selectedNode
         },
         link: (queryString) => {
-            appSession.selectedNode.linkTo(queryString)
-            return appSession.selectedNode
+            new Query(queryString)
+            return appSession.selectedNode.linkTo(tieID, endIndex, nodeID)
         }
     }
 }

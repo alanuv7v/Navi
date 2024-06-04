@@ -8,6 +8,7 @@ export default class Node extends NodeModel {
     
     constructor (data) {
         super(...data)
+        this.render()
     }
 
     selected = false
@@ -30,6 +31,21 @@ export default class Node extends NodeModel {
             div({class: "value"}),
         )
     )
+
+    render () {
+        
+        let filteredRelations = this.relations.filter(r => r[0] === filter)
+        
+        for (let relation of filteredRelations) {
+            let relatedNodeData = appSession.root.DB.exec(
+                `SELECT * FROM nodes WHERE id=${relation.nodeID};`
+            )
+            let relatedNodeView = new NodeView(relatedNodeData)
+            this.DOM.querySelector(".value").append(relatedNodeView)            
+        }
+        
+    }
+
 
     open () {
 
@@ -98,16 +114,13 @@ export default class Node extends NodeModel {
     }
 
     #onKeyChange (event) {
-        let originalKey = this.key
         this.key = event.target.value
-        this.updateParentValue(originalKey) 
-        return this
+        this.localDBActions.update()
     }
     
     #onValueChange (event) {
         this.value = event.target.value
-        this.updateParentValue() 
-        return this
+        this.localDBActions.update()
     }
     
 }

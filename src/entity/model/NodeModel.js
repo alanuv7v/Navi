@@ -9,7 +9,7 @@ export default class NodeModel extends NodeData {
     }
     
     path () {
-        let originPath = this?.origin?.path()
+        let originPath = this?.originNode?.path()
         if (originPath) return [...originPath, this.key]
         else return [this.key]
     }
@@ -18,7 +18,7 @@ export default class NodeModel extends NodeData {
         return this.path().join("/")
     }
     
-    localData = {
+    localDBActions = {
         create() {
             let relationsStringfied = JSON.stringify(relations)
             return appSession.root.DB.exec(`INSERT INTO nodes VALUES (${
@@ -42,6 +42,11 @@ export default class NodeModel extends NodeData {
         delete() {
             return appSession.root.DB.exec(`DELETE FROM nodes WHERE id=${this.id}`)
         },
+    }
+
+    linkTo (tieID, endIndex, nodeID) {
+        this.relations.push([tieID, endIndex, nodeID])
+        this.localDBActions.update()
     }
 
 }

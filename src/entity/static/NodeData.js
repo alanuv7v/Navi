@@ -12,6 +12,9 @@ export default class NodeData  {
         this.relations = relations //[[tie.id, endIndex, node id ref], ...]
         //JSON.stringify([[tie.id, endIndex, node id ref], ...])
         //`'[["1231",0,"01234"],["4221",1,"01234"]]'`
+        //`'[["근거/결론",0,"어쩌구/1.1/1.1.2"],...]'`
+
+        //{tie: ... , end: ... , node: ...}
 
         this.metadata = {
             createdDatetime: null,
