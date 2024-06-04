@@ -26,8 +26,9 @@ export async function create() {
         '${"root"}',
         '${""}',
         '${JSON.stringify([])}'
-    );
-    `); 
+    );`)
+
+    console.log(DB.exec("SELECT * FROM nodes"))
 
     return DB
 }

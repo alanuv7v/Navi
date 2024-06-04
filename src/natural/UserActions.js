@@ -3,8 +3,11 @@ import Root from "../entity/Root"
 import Seed from "../entity/Seed"
 import * as SessionManager from "../interface/SessionManager"
 import * as LocalDBManager from "../interface/LocalDBManager"
-import Query from "../tech/parseQuery"
+import parseQuery from "../tech/parseQuery"
 import NodeData from "../entity/static/NodeData"
+import NodeView from "../entity/view/NodeView"
+
+import refs from "../resource/DOMRefs"
 
 export async function saveSession() {
     return await SessionManager.saveSession(appSession)
@@ -55,6 +58,7 @@ export async function openRoot() {
 
 }
 
+
 export const Edit = {
     copyNode: (node) => {
         appSession.copiedNode = appSession.selectedNode
@@ -104,11 +108,12 @@ export const Navigate = {
     async showNode (queryString) { //Navigate.plant로 옮길까.
         
         try {
-    
-            let nodeData = parseQuery(queryString)
+            let nodeData = (await parseQuery(queryString))[0]
+            console.log(nodeData)
+            console.log(new NodeView(...nodeData))
             let nodeView = new NodeView(...nodeData)
-            refs("Editor").innerHTML = ""
-            refs("Editor").append(nodeView.DOM)
+            nodeView.plant()
+            
             saveSession()
     
         }

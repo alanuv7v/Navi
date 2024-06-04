@@ -15,7 +15,7 @@ export default class Root {
         const file = await this.handle.getFile();
         const blob = new Blob([file], { type: file.type })
         let dbArrayBuffer = await blob.arrayBuffer()
-        this.DB = new SQL.Database(dbArrayBuffer)
+        this.DB = new SQL.Database(new Uint8Array(dbArrayBuffer))
         return this.DB
         
     }

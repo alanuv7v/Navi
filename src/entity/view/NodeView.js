@@ -1,10 +1,11 @@
-import appSession from "../resource/appSession"
+import appSession from "../../resource/appSession"
 import NodeModel from "../model/NodeModel"
+import refs from "../../resource/DOMRefs"
 
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a} = van.tags
 
-export default class Node extends NodeModel {
+export default class NodeView extends NodeModel {
     
     constructor (data) {
         super(...data)
@@ -103,6 +104,11 @@ export default class Node extends NodeModel {
         this.DOM.classList.remove("selected")
         appSession.selectedNode = null
         this.selected = false
+    }
+
+    plant () {
+        refs("Editor").innerHTML = ""
+        refs("Editor").append(this.DOM)
     }
 
     #onclick () {
