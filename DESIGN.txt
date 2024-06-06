@@ -425,7 +425,10 @@ App
                 logAll()
                 deleteAll()
         temp
-            NodeDOM
+            node
+							  DOM
+								opened
+							  filter
         tempActions
             node
                 open()
