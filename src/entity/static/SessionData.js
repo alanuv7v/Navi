@@ -10,12 +10,13 @@ export default class SessionData {
             this[key] = value
         }
     }
-
-    handle = null //fileHandle
     
-    root = null // Root
+    temp = {
+        handle: null,
+        root: null,
+        adress: ""
+    }
 
-    adress = ""
 
     seedNodeID = ""
 

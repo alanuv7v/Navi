@@ -312,23 +312,24 @@ App
 	input = userActions
     prototype
         records = entity/static
-            NodeRecord
-            SessionRecord
-            NodeViewRecord
-            NodeMetadataRecord
+            NodeRecord //file
+            SessionRecord //file
+            NodeViewRecord //file
+            NodeMetadataRecord //file
         recordActions
-            node
-            sessions
+            node //file
+            sessions //file
                 create()
                 save()
                 load()
                 delete()
                 logAll()
                 deleteAll()
-        session
-            NodeView
-        sessionActions
-            node
+        volatile
+            NodeView //file
+            DOM
+        volatileActions
+            node //file
                 open()
                 close()
                 filter()
@@ -336,12 +337,13 @@ App
             parseQuery
     realisation = 실제 유저에게 주어진 앱
         appSession = sessionOutput = visual, audio = static DOM = 최종 아웃풋의 장. 레퍼런스용.
-            records
+            recordReady
                 root: prototype/records/root
-            actions
-                rootActions
+                actions
+                    root
+                    seed
+            volatile
                 seed
-            session
                 DOM
                 DOMRefs
 	
@@ -383,3 +385,70 @@ Record
 모든걸 용도에 따라 분리할 수는 없단거다.
 꼭 분리해야 할 것만 분리하자.
 예를 들어 NodeRecordData와 나머지(NodeSessionData, NodeRecordActions, NodeViewActions...)를 묶은것으로.
+
+
+
+
+...
+
+과연 세션 데이터를 조작하는 모델(RootModel.js)은 어디 저장해야 하는가?
+appSession 안?
+
+씨발.
+
+순수함수로 만들어서 prototype에 넣어야 하나?
+세션 데이터를 상속받는 또 다른 객체로 만들어서 appSession에 인스턴스를 저장해야 하나?
+
+씨발!
+
+
+6.
+
+App
+	auto = init
+	input = userActions
+    prototype
+        records = entity/static
+            NodeRecord //file
+            SessionRecord //file
+            NodeViewRecord //file
+            NodeMetadataRecord //file
+        recordActions
+            node //file
+            sessions //file
+                create()
+                save()
+                load()
+                delete()
+                logAll()
+                deleteAll()
+        volatile
+            NodeDOM
+        volatileActions
+            node
+                open()
+                close()
+                filter()
+            session
+                copy()
+        utils = 타 프로세서들 중간에서 사용되는 것, 레코드나 뷰 아웃풋을 그 자체로는 내지않고.
+            parseQuery
+    realisation = 실제 유저에게 주어진 앱
+        appSession
+            data
+                root
+                seed
+            DOM
+            actions
+                root
+                seed
+                getDomRef //만들어진 DOM에 의존하므로 realisation에 넣자
+
+saveSession() {
+    BrowserDB.sessions.put(
+        {
+            id: "asfdsaf",
+            data: appSession.data
+        }
+    )
+}

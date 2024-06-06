@@ -6,6 +6,7 @@ import parseQuery from "../tech/parseQuery"
 import NodeView from "../entity/view/NodeView"
 
 import refs from "../resource/DOMRefs"
+import RootData from "../entity/static/RootData"
 
 
 export const sessions = {
@@ -56,7 +57,7 @@ export async function openRoot() {
     let name = rootHandle.name
     let DB = await LocalDBManager.load(rootHandle)
     
-    appSession.root = new RootModel(name, DB)
+    appSession.data.root = new RootData(name, DB)
 
     SessionManager.saveSession()
     console.log(`Opened root: ${appSession.root.name}`)
