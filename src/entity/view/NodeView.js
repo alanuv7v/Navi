@@ -11,7 +11,6 @@ export default class NodeView extends NodeModel {
     
     constructor (...data) {
         super(...data)
-        this.render()
     }
 
     selected = false
@@ -48,17 +47,10 @@ export default class NodeView extends NodeModel {
     )
 
     render () {
-        
-        let filteredLinks = this.links.filter(r => r[0] === this.filter)
-        
-        for (let relation of filteredLinks) {
-            let relatedNodeData = appSession.root.DB.exec(
-                `SELECT * FROM nodes WHERE id=${relation.nodeID};`
-            )
-            let relatedNodeView = new NodeView(relatedNodeData)
-            this.DOM.querySelector(".value").append(relatedNodeView)            
-        }
-        
+        this.refreshData()
+        this.DOM.querySelector(".value").value = this.value
+        this.close()
+        this.open()
     }
 
 

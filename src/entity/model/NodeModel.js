@@ -46,6 +46,19 @@ export default class NodeModel extends NodeData {
         return appSession.root.DB.exec(`DELETE FROM nodes WHERE id=${this.id}`)
     }
 
+    refreshData() {
+        let newData = this.readRecord()[0].values[0]
+        for (let i=0; i < newData.length; i++) {
+            let prop = ["id", "value", "origin", "links"][i] 
+            if (prop != "links") {
+                this[prop] = newData[i] 
+            } else {
+                this[prop] = JSON.parse(newData[i])
+            }
+        }
+        return this
+    }
+
     addLink (tie, nodeID) {
         this.links.push([tie, nodeID])
         this.updateRecord()
