@@ -1,5 +1,4 @@
-import initSqlJs from "sql.js/dist/sql-wasm"
-export default class Root {
+export default class RootData {
 
     constructor (name, DB) {
         this.name = name

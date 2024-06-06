@@ -1,5 +1,5 @@
 import appSession from "../resource/appSession"
-import Root from "../entity/Root"
+import RootModel from "../entity/model/RootModel"
 import * as SessionManager from "../interface/SessionManager"
 import * as LocalDBManager from "../interface/LocalDBManager"
 import parseQuery from "../tech/parseQuery"
@@ -56,7 +56,7 @@ export async function openRoot() {
     let name = rootHandle.name
     let DB = await LocalDBManager.load(rootHandle)
     
-    appSession.root = new Root(name, DB)
+    appSession.root = new RootModel(name, DB)
 
     SessionManager.saveSession()
     console.log(`Opened root: ${appSession.root.name}`)
@@ -115,6 +115,7 @@ export const Navigate = {
     async showNode (queryString) { //Navigate.plant로 옮길까.
         
         try {
+            debugger
             let nodeData = (await parseQuery(queryString))[0]
             console.log(nodeData)
             console.log(new NodeView(...nodeData))
