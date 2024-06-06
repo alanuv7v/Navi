@@ -24,6 +24,7 @@ export default class NodeView extends NodeModel {
         div({class: `node`},
             textarea({
                 class: "value", 
+                value: this.value, 
                 onclick: (event) => this.#onclick(event), 
                 onchange: (event) => {this.#onValueChange(event)}
             }),
@@ -48,7 +49,7 @@ export default class NodeView extends NodeModel {
 
     render () {
         
-        let filteredLinks = this.links.filter(r => r[0] === filter)
+        let filteredLinks = this.links.filter(r => r[0] === this.filter)
         
         for (let relation of filteredLinks) {
             let relatedNodeData = appSession.root.DB.exec(
@@ -70,16 +71,16 @@ export default class NodeView extends NodeModel {
 
         //append linkedNodeViews to links DOM
         this.linkedNodeViews = this.links
-            .filter(link => link.value === this.filter || !this.filter)
-            .map(async (link) => {
-                let res = await parseQuery(link)
-                new NodeView(res.value, res.origin, res.links)
+            .map((link) => {
+                let res = appSession.root.DB.exec(`SELECT * FROM nodes WHERE id='${link[1]/* node id */}'`)[0].values
+                let matchingData = res[0]
+                return matchingData
             })
+            .filter(data => {console.log(data); return data[1] === this.filter || !this.filter})
+            .map(data => new NodeView(...data))
 
         this.linkedNodeViews.forEach(v => 
-            this.DOM.querySelector(".links").append(
-                v.DOM
-            )
+                this.DOM.querySelector(".links").append(v.DOM)
         )
         
         //set state

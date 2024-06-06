@@ -1,5 +1,7 @@
 import initSqlJs from "sql.js/dist/sql-wasm"
 import { v4 as uuidv4 } from 'uuid';
+import * as FileSystem from "./FileSystem"
+import appSession from "../resource/appSession";
 
 export async function create() {
         
@@ -46,4 +48,10 @@ export async function load(handle) {
     let DB = new SQL.Database(new Uint8Array(dbArrayBuffer))
     return DB
     
+}
+
+export async function update () {
+    const data = appSession.root.DB.export(); // Get Uint8Array of database contents
+    const blob = new Blob([data], { type: 'application/octet-stream' });
+    return await FileSystem.writeToFile(appSession.temp.rootHandle, blob)
 }

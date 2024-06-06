@@ -226,6 +226,7 @@ a:hover {
 }
 
 .node {
+    transition: all 1s ease;
     .key {
         padding: 1em;
         box-shadow: inset 0px 0px 0px 1px var(--deep);
@@ -234,7 +235,12 @@ a:hover {
         }
     }
     .value {
-        padding-left: 1em;
+        border: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0);
+        box-shadow: none;
+    }
+    .value:hover {
+        border-bottom: 1px solid var(--light);
     }
     .options {
         display: none;
@@ -243,6 +249,9 @@ a:hover {
             min-width: 3em;
             min-height: 2.5em;
         }
+    }
+    .links {
+        padding-left: 1em;
     }
 }
 

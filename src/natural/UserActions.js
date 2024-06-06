@@ -64,8 +64,12 @@ export async function openRoot() {
     
     SessionManager.saveSession()
 
-    return appSession
+    return appSession.root
 
+}
+
+export async function updateRoot() {
+    return await LocalDBManager.update()
 }
 
 
