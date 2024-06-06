@@ -14,16 +14,11 @@ window.LocalDB = await LocalDB.create()
 
 //test end
 
-
-
-
-
-
 import van from "vanjs-core"
 
 import * as UserActions from "./natural/UserActions"
 import init from "./natural/init"
-import CommandsIO from "./tech/CommandsIO"
+import CommandsIO from "./entity/view/CommandButton"
 
 //below is for debugging
 
@@ -53,15 +48,3 @@ new CommandsIO("Context", {})
 await init()
 
 export default App
-
-import * as yaml from "yaml"
-console.log(yaml.stringify({
-    "8fsa": 0,
-    "2asfd": 0,
-    "1fasf": 0,
-    "3saf": 0,
-    3: 0,
-    2: 0,
-    1: 0
-
-}))

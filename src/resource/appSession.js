@@ -1,5 +1,5 @@
-import Session from "../entity/Session"
+import SessionData from "../entity/static/SessionData"
 
-const appSession = new Session()
+const appSession = new SessionData()
 
 export default appSession

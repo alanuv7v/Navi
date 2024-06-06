@@ -3,15 +3,15 @@
 import van from "vanjs-core"
 const t = van.tags
 
-import refs from "../resource/DOMRefs"
+import refs from "../../resource/DOMRefs"
 
-export default class {
+export default class CommandButton {
 
     constructor (name="", obj) {
         this.log(name, obj)
     }
 
-    CommandButton = (key, value) => {
+    DOM = (key, value) => {
         
         let button = t.button()
         let children = t.div({style: "margin-left: 2em;"})
@@ -35,16 +35,15 @@ export default class {
                 refs("CommandPalette").focus()
                 refs("CommandPalette").placeholder = "arguments..."
                 
-                let onArgumentsSubmit = (event) => {
-                    let actionResult = value(event.target.value)
+                let onArgumentsSubmit = async (event) => {
+                    let actionResult = await value(event.target.value)
                     console.log(actionResult)
                     refs("CommandPalette").placeholder = ""
                     refs("CommandPalette").removeEventListener("blur", onArgumentsSubmit)
                 }
 
                 refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
-
-                return 
+                
             }
             
             //or show/hide children
@@ -55,7 +54,7 @@ export default class {
             }
 
             for (let e of Object.entries(value)) {
-                children.append(this.CommandButton(e[0], e[1]))
+                children.append(this.DOM(e[0], e[1]))
             }
             opened = !opened
             
@@ -69,7 +68,7 @@ export default class {
     }
 
     log = (name, obj) => {
-        refs("Logs").append(this.CommandButton(name, obj))
+        refs("Logs").append(this.DOM(name, obj))
     }
     
 }

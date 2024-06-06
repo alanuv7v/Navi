@@ -32,3 +32,18 @@ export async function create() {
 
     return DB
 }
+
+
+export async function load(handle) {
+
+    const SQL = await initSqlJs(
+        {locateFile: file => `https://sql.js.org/dist/${file}`}
+    )
+
+    const file = await handle.getFile();
+    const blob = new Blob([file], { type: file.type })
+    let dbArrayBuffer = await blob.arrayBuffer()
+    let DB = new SQL.Database(new Uint8Array(dbArrayBuffer))
+    return DB
+    
+}

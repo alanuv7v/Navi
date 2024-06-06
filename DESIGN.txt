@@ -282,3 +282,40 @@ MVC 패턴에 대한 나의 생각:
 
 
 sql.js 안되면 브라우저 업데이트 해볼것
+
+
+
+5.
+결국 의존성 순서로 모듈들을 분류해야 함을 깨달음.
+엔티티(사실상 MVC의 View와 같은듯) <- 유즈케이스(UserActions) <- 기술(저레벨 함수와 객체) <- 리소스(DB 그 자체, 파일 등).
+
+그러나 엔티티와 기술의 구분이 과연 가능할것인가.
+엔티티는 실제 코드로 존재할 수가 있는가. 개념으로만 있어야 하는게 아닌가. 그럼 기술과 다를게 있나.
+
+
+actions
+tech
+resources
+
+
+input = userActions, init
+processors = NodeModel, NodeView
+resource = DB, cache, localFiles
+output = DOM, DOM refs
+static = NodeData, SessionData...?
+
+
+
+추상성 관계
+App
+	auto = init
+	input = userActions
+	processors = Model, View, GUI 컴포넌트(결국 출력, DOM을 제외하면 GUI 컴포넌트는 추상화된 일처리꾼임)
+		record
+			NodeModel
+		view
+			NodeView
+	resources = DB, cache, localFiles
+	appSession = sessionOutput = visual, audio = static DOM = 최종 아웃풋의 장. 레퍼런스용.
+	records = recordOutput = NodeData
+	

@@ -1,25 +1,30 @@
 import appSession from "../resource/appSession"
 import Root from "../entity/Root"
-import Seed from "../entity/Seed"
 import * as SessionManager from "../interface/SessionManager"
 import * as LocalDBManager from "../interface/LocalDBManager"
 import parseQuery from "../tech/parseQuery"
-import NodeData from "../entity/static/NodeData"
 import NodeView from "../entity/view/NodeView"
 
 import refs from "../resource/DOMRefs"
 
-export async function saveSession() {
-    return await SessionManager.saveSession(appSession)
+
+export const sessions = {
+    async getAllSessions() {
+        return await SessionManager.getAllSessions()
+    },
+    async saveSession(id) {
+        return await SessionManager.saveSession(id, appSession)
+    },
+    async loadSession(id) {
+        return await SessionManager.loadSession(id)
+    },
+    async clearSessions () {
+        return await SessionManager.clearAllSessions()
+    }
 }
 
-export function loadSession() {
-    
-}
 
-export async function clearSessions () {
-    SessionManager.clearSessions()
-}
+
 
 export async function createRoot(name) { 
     
@@ -47,11 +52,13 @@ export async function openRoot() {
     if (!(await rootHandle.queryPermission()) === "granted") {
         await rootHandle.requestPermission()
     }
+
+    let name = rootHandle.name
+    let DB = await LocalDBManager.load(rootHandle)
     
-    appSession.root = new Root(rootHandle)
+    appSession.root = new Root(name, DB)
 
-    saveSession()
-
+    SessionManager.saveSession()
     console.log(`Opened root: ${appSession.root.name}`)
 
     return appSession.root
@@ -114,7 +121,7 @@ export const Navigate = {
             let nodeView = new NodeView(...nodeData)
             nodeView.plant()
             
-            saveSession()
+            SessionManager.saveSession()
     
         }
         

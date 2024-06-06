@@ -1,10 +1,15 @@
 import BrowserDB from "../resource/BrowserDB"
 import { DateTime } from "luxon"
+import appSession from "../resource/appSession"
 
 //"CRUD"
 
-export async function getSessions() {
+export async function getAllSessions() {
     return await BrowserDB.sessions.toArray()
+}
+
+export async function clearAllSessions() {
+    return await BrowserDB.sessions.clear()
 }
 
 export async function getSession(id) {
@@ -12,25 +17,19 @@ export async function getSession(id) {
 }
 
 export async function getLastSession() {
-    // let sessionsNewToOld = await DB.sessions.orderBy("id").reverse().toArray()
-    // if (!sessionsNewToOld.length > 0) return undefined
-    // const lastSession = sessionsNewToOld[0]
-    return await BrowserDB.sessions.get(1)
+    return await BrowserDB.sessions.get("lastUsed")
 }
 
-export async function saveSession(session) {
+export async function saveSession(id, session) {
+    let _id = id || "lastUsed"
+    let _session = session || appSession
     return await BrowserDB.sessions.put(
         {   
-            id: 1,
-            key: "lastOpened",
-            dateCreated: session?.dateCreated,
+            id: _id,
+            dateCreated: _session?.dateCreated,
             dateModified: DateTime.now().toISO(),
-            data: session.serialize()
+            data: _session
         }
     )
 }
 
-
-export async function clearSessions() {
-    return await BrowserDB.sessions.clear()
-}
