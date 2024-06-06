@@ -28,7 +28,7 @@ export async function saveSession(id, session) {
             id: _id,
             dateCreated: _session?.dateCreated,
             dateModified: DateTime.now().toISO(),
-            data: _session
+            data: _session.temp
         }
     )
 }

@@ -239,9 +239,9 @@ a:hover {
     .options {
         display: none;
         overflow-x: auto;
-        > * {
-            width: 3em;
-            height: 2.5em;
+        button {
+            min-width: 3em;
+            min-height: 2.5em;
         }
     }
 }
@@ -250,7 +250,7 @@ a:hover {
     padding: 10px;
     box-shadow: inset 0px 0px 0px 4px var(--light) !important;
     > .options {
-        display: flex;
+        display: block;
     }
 }
 

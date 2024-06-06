@@ -5,9 +5,11 @@ import refs from "../../resource/DOMRefs"
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a} = van.tags
 
+import parseQuery from "../../tech/parseQuery"
+
 export default class NodeView extends NodeModel {
     
-    constructor (data) {
+    constructor (...data) {
         super(...data)
         this.render()
     }
@@ -32,6 +34,10 @@ export default class NodeView extends NodeModel {
                     button("set origin"),
                 ),
                 div({class: "view"},
+                    button({onclick: () => {
+                        if (this.opened) this.close() 
+                        else this.open()
+                    }}, "open/close"),
                     button("filter"),
                     button("plant"),
                 )
@@ -65,8 +71,8 @@ export default class NodeView extends NodeModel {
         //append linkedNodeViews to links DOM
         this.linkedNodeViews = this.links
             .filter(link => link.value === this.filter || !this.filter)
-            .map(link => {
-                let res = query(link)
+            .map(async (link) => {
+                let res = await parseQuery(link)
                 new NodeView(res.value, res.origin, res.links)
             })
 
@@ -92,6 +98,7 @@ export default class NodeView extends NodeModel {
     }
 
     select() {
+        console.log(this)
         if (appSession.selectedNode) {
             appSession.selectedNode.deselect()
         }

@@ -8,6 +8,7 @@ import NodeView from "../entity/view/NodeView"
 import refs from "../resource/DOMRefs"
 import RootData from "../entity/static/RootData"
 
+import { initRootDB } from "./init"
 
 export const sessions = {
     async getAllSessions() {
@@ -23,6 +24,8 @@ export const sessions = {
         return await SessionManager.clearAllSessions()
     }
 }
+
+export const initRootDB_ = async () => await initRootDB(appSession.temp.rootHandle)
 
 
 
@@ -53,14 +56,13 @@ export async function openRoot() {
     if (!(await rootHandle.queryPermission()) === "granted") {
         await rootHandle.requestPermission()
     }
-
-    let name = rootHandle.name
-    let DB = await LocalDBManager.load(rootHandle)
     
-    appSession.temp.root = new RootData(name, DB)
-
+    appSession.temp.rootHandle = rootHandle
+    appSession.root = new RootData(rootHandle.name, await LocalDBManager.load(rootHandle))
+    
+    console.log(`Opened root: ${appSession.temp.rootHandle.name}`)
+    
     SessionManager.saveSession()
-    console.log(`Opened root: ${appSession.temp.root.name}`)
 
     return appSession
 
@@ -116,11 +118,8 @@ export const Navigate = {
     async showNode (queryString) { //Navigate.plant로 옮길까.
         
         try {
-            debugger
-            let nodeData = (await parseQuery(queryString))[0]
-            console.log(nodeData)
-            console.log(new NodeView(...nodeData))
-            let nodeView = new NodeView(...nodeData)
+            let res = (await parseQuery(queryString))
+            let nodeView = new NodeView(...res[0])
             nodeView.plant()
             
             SessionManager.saveSession()

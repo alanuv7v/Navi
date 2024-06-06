@@ -3,50 +3,66 @@ import appSession from '../../resource/appSession';
 
 export default class NodeModel extends NodeData {
 
-    constructor (data) {
+    constructor (...data) {
         super(...data)
         //should sync all these with the LocalDB automatically
     }
     
-    path () {
+    getAdress () {
         let originPath = this?.originNode?.path()
         if (originPath) return [...originPath, this.value]
         else return [this.value]
     }
     
-    pathString () {
-        return this.path().join("/")
+    getAdressString () {
+        return this.getAdress().join("/")
     }
     
-    localDBActions = {
-        create() {
-            let relationsStringfied = JSON.stringify(relations)
-            return appSession.root.DB.exec(`INSERT INTO nodes VALUES (${
-                [id, key, value, origin, relationsStringfied].map(s => `'${s}'`).join(", ")
-            })`)
-        },
-        read() {
-            return appSession.root.DB.exec(
-                `SELECT * FROM nodes WHERE id=${this.id};`
-            )
-        },
-        update () {
-            return appSession.root.DB.exec(
-                `UPDATE nodes SET ${
-                    "key,value,origin,relations"
-                    .split(",")
-                    .map(s => s + "=" + this[s] + ", ")
-                } WHERE id=${this.id};`
-            )
-        },
-        delete() {
-            return appSession.root.DB.exec(`DELETE FROM nodes WHERE id=${this.id}`)
-        },
+    createRecord () {
+        return appSession.root.DB.exec(`INSERT INTO nodes VALUES (${
+            ["id", "value", "origin", "links"].map(s => `'${typeof this[s] === "string" ? this[s] : JSON.stringify(this[s])}'`).join(", ")
+        })`)
     }
 
-    linkTo (tieID, endIndex, nodeID) {
-        this.links.push([tieID, endIndex, nodeID])
-        this.localDBActions.update()
+    readRecord () {
+        return appSession.root.DB.exec(
+            `SELECT * FROM nodes WHERE id='${this.id}';`
+        )
+    }
+
+    updateRecord () {
+        return appSession.root.DB.exec(
+            `UPDATE nodes SET ${
+                ["value", "origin", "links"]
+                    .map(s => {
+                        return `${s} = '${typeof this[s] === "string" ? this[s] : JSON.stringify(this[s])}'`
+                    })
+                    .join(", ")
+            } WHERE id='${this.id}';`
+        )
+    }
+
+    deleteRecord () {
+        return appSession.root.DB.exec(`DELETE FROM nodes WHERE id=${this.id}`)
+    }
+
+    addLink (tie, nodeID) {
+        this.links.push([tie, nodeID])
+        this.updateRecord()
+    }
+
+    addNewLinkedNode (tie) {
+        let _tie = tie || "_:_"
+        
+        let newNodeModel = new NodeModel(null, "", this.id, [])
+        
+        newNodeModel.createRecord()
+        
+        this.addLink(_tie, newNodeModel.id)
+        newNodeModel.addLink(_tie, this.id)
+
+        this.updateRecord()
+        newNodeModel.updateRecord()
     }
 
 }

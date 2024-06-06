@@ -7,19 +7,21 @@ export default class SessionData {
 
     copy (data) {
         for (let [key, value] of Object.entries(data)) {
-            this[key] = value
+            this.temp[key] = value
         }
     }
     
     temp = {
         handle: null,
-        root: null,
+        rootHandle: null,
         adress: "",
         seedNodeID: "",
         viewOptions: {
             globalFilter: "All"
         }    
     }
+
+    root = null
     
     selectedNode = null // nodeID
     copiedNode = null // nodeID
