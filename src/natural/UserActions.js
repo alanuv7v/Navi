@@ -14,7 +14,7 @@ export const sessions = {
         return await SessionManager.getAllSessions()
     },
     async saveSession(id) {
-        return await SessionManager.saveSession(id, appSession)
+        return await SessionManager.saveSession(id, appSession.temp)
     },
     async loadSession(id) {
         return await SessionManager.loadSession(id)
@@ -57,12 +57,12 @@ export async function openRoot() {
     let name = rootHandle.name
     let DB = await LocalDBManager.load(rootHandle)
     
-    appSession.data.root = new RootData(name, DB)
+    appSession.temp.root = new RootData(name, DB)
 
     SessionManager.saveSession()
-    console.log(`Opened root: ${appSession.root.name}`)
+    console.log(`Opened root: ${appSession.temp.root.name}`)
 
-    return appSession.root
+    return appSession
 
 }
 

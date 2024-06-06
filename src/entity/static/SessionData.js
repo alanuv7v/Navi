@@ -14,18 +14,14 @@ export default class SessionData {
     temp = {
         handle: null,
         root: null,
-        adress: ""
-    }
-
-
-    seedNodeID = ""
-
-    selectedNodeID = null // nodeID
-
-    copiedNodeID = null // nodeID
-
-    viewOptions = {
-        globalFilter: "All"
+        adress: "",
+        seedNodeID: "",
+        viewOptions: {
+            globalFilter: "All"
+        }    
     }
     
+    selectedNode = null // nodeID
+    copiedNode = null // nodeID
+
 }
