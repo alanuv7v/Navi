@@ -29,21 +29,17 @@ export default class NodeView extends NodeModel {
             }),
             div({class: "options"},
                 div({class: "data"},
-                    button({onclick: () => {}}, "add link"),
+                    button({onclick: () => {
+                        this.createLinkedNode("")
+                        this.open()
+                    }}, "new link"),
                     input({onblur: (event) => {
-                        debugger
-                        let newNode = event.target.value === "" || event.target.value[0] === "_"
-                        if (newNode) {
-                            this.createLinkedNode(event.target.value.slice(1))
-                            this.open()
-                        } else {
-                            let queryString = event.target.value
-                            let res = parseQuery(queryString)
-                            let targetNodeData = res[0]
-                            this.linkTo(targetNodeData[0])
-                            this.open()
-                        }
-                    }, placeholder: "add link"}),
+                        let queryString = event.target.value
+                        let res = parseQuery(queryString)
+                        let targetNodeData = res[0]
+                        this.linkTo(targetNodeData[0])
+                        this.open()
+                    }, placeholder: "linkTo"}),
                     button("delete"),
                     //button("save metadata"),
                 ),
@@ -82,7 +78,7 @@ export default class NodeView extends NodeModel {
         //append linkedNodeViews to links DOM
         this.linkedNodeViews = this.links
             .map((link) => {
-                let res = appSession.root.DB.getNodeById(link[1])
+                let res = appSession.root.getNodeById(link[1])
                 return res[0]
             })
             .filter(nodeData => {

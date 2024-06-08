@@ -65,8 +65,8 @@ export default class NodeModel extends NodeData {
         this.updateRecord()
     }
 
-    createLinkedNode (tie=["_", "_"], value) {
-        console.log(tie)
+    createLinkedNode (tie, value) {
+        tie = tie || ["_", "_"]
         let mirrorTie = tie.reverse()
         
         let newNodeModel = new NodeModel(null, value, [this.id])

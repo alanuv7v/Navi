@@ -33,10 +33,9 @@ export async function initRootDB (rootHandle) {
     if (!(await rootHandle.queryPermission()) === "granted") {
         await rootHandle.requestPermission()
     } 
-    appSession.root = {
-        name: rootHandle.name, 
-        DB: await LocalDBManager.load(rootHandle)
-    }
+    appSession.root.name = rootHandle.name, 
+    appSession.root.DB = await LocalDBManager.load(rootHandle)
+    
     //show root node
     UserActions.Navigate.showNode("root")
 }
