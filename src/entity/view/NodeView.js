@@ -22,7 +22,11 @@ export default class NodeView extends NodeModel {
     DOM = (
         div({class: `node`},
             div({class: "h-flex"},
-                button({class: "linksOpener", onclick: () => this.open()}),
+                button({
+                    class: "linksOpener", 
+                    onclick: () => this.toggleOpen(),
+                    innerText: this.links.length
+                }),
                 textarea({
                     class: "value", 
                     value: this.value, 
@@ -130,13 +134,20 @@ export default class NodeView extends NodeModel {
         refs("Editor").append(this.DOM)
     }
 
+    toggleOpen () {
+        if (!this.opened) {
+            this.open()
+        } else {
+            this.close()
+        }
+    }
+
     #onclick () {
         if (!this.selected ) {
             this.select()
         } else {
             this.deselect()
         }
-        return this
     }
     
     #onValueChange (event) {

@@ -76,44 +76,82 @@ textarea {
 
 
 button, button:not(:hover), input, textarea, select {
+    padding-top: 4px;
+    padding-bottom: 4px;
     
     font-size: 14px;
     padding: 0.5em 0.5em 0.5em 0.5em;
 
-    background-color: transparent;
+    background-color: var(--dark);
     color: var(--light);    
     
-    border: 0px solid transparent;
-    border-radius: 0.5em;
+    border: none;
+    outline: none;
 
-    box-shadow: inset 0px 0px 0px 1px var(--deep), 
-    inset 0px -2px 1px 1px var(--light);
+    border-radius: 4px;
 
+    margin: 0.2em;
+    
     flex-shrink: 0;
 
 }
 
-button {
-    padding-top: 4px;
-    padding-bottom: 4px;
+input, textarea, select {
+    
+    box-shadow: 
+    inset 0px 0px 0px 2px var(--mild);
+
+}
+
+button, button:not(:hover) {
+    
+    box-shadow: 
+    inset 0px 1px 0px 0px var(--slight), 
+    inset 0px -2px 1px 0px var(--slight),
+    inset 0px 0px 1px 1px var(--mild),
+    0px 1px 0px 0px var(--slight);
+
+}
+
+textarea {
+    border-radius: 0px;
 }
 
 
-input:hover, button:hover, textarea:hover, .clickable:hover {
-    box-shadow: inset 0px 0px 0px 1px var(--deep), 
-    inset 0px -2px 1px 1px var(--light),
-    0px 0px 8px 1px var(--light);
+button:hover {
+    
+    color: var(--light); 
+    box-shadow: 
+    inset 0px 1px 0px 0px var(--light), 
+    inset 0px -2px 1px 0px var(--light),
+    inset 0px 0px 1px 1px var(--mild),
+    0px 1px 8px 0px var(--light);
+
+}
+
+button:active {
+    box-shadow: 
+    inset 0px 2px 0px 0px var(--light), 
+    inset 0px -1px 0px 0px var(--light),
+    inset 0px 0px 1px 1px var(--mild),
+    0px 1px 8px 0px var(--light);
+}
+
+input:hover, textarea:hover, .clickable:hover {
+    
+    color: var(--light); 
+    box-shadow: 
+    inset 0px 0px 0px 2px var(--light);
+
 }
 
 
 
-input:focus, button:active, .clickable:focus {
-    /* background-color: var(--light); */
-    box-shadow: inset 0px 1px 1px 1px var(--light);
+input:focus, .clickable:focus {
+    background-color: var(--light); 
+    color: var(--dark);
 }
 
-textarea:focus {
-}
 ::-webkit-scrollbar {
     width: 4px;
 	height: 14px;
@@ -229,6 +267,9 @@ a:hover {
     transition: all 0.5s ease;
     padding: 0px 10px 0px 10px;
 
+    > *:has(.value) > *:not(:last-child) {
+        margin-right: 1em;
+    }
     .value {
         width: auto;
         flex-grow: 1;
@@ -254,8 +295,11 @@ a:hover {
     }
     .linksOpener {
         background-color: var(--light);
-        width: 1em;
-        height: 1em;
+        color: var(--dark);
+        padding: 0px;
+        font-size: 0.7em;
+        width: 2em;
+        height: 2em;
     }
 }
 
