@@ -7,11 +7,14 @@ export default function (props) {
         spellcheck: false,
         ...props
     })
+    inputTextarea.classList.add("input")
     let visibleTextarea = textarea({
+        class: "visible",
         placeholder: " ",
         spellcheck: false,
         ...props
     })
+    visibleTextarea.classList.add("visible")
     let res = div(
         {class: "autoResize"},
         inputTextarea,
@@ -32,6 +35,7 @@ export default function (props) {
     visibleTextarea.style.position = "relative"
     inputTextarea.style.color = "rgba(0,0,0,0)"
     visibleTextarea.style.pointerEvents = "none"
+    visibleTextarea.style.backgroundColor = "transparent"
     
 
     return res

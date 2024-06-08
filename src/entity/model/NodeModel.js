@@ -46,7 +46,24 @@ export default class NodeModel extends NodeData {
     }
 
     deleteRecord () {
-        return appSession.root.DB.exec(`DELETE FROM nodes WHERE id=${this.id}`)
+        
+        for (let link of this.links) {
+            let prevLinks = JSON.parse(appSession.root.DB.exec(
+                `SELECT links FROM nodes WHERE id='${link[1]}'`
+            )[0].values)
+            debugger
+
+            for (let i=0; i<prevLinks.length; i++) {
+                if (prevLinks[i][1]===this.id) prevLinks.splice(i, 1)
+            }
+            
+            appSession.root.DB.exec(
+                `UPDATE nodes SET links='${
+                    escape(JSON.stringify(prevLinks))
+                }' WHERE id='${this.id}'`
+            )
+        }
+        return appSession.root.DB.exec(`DELETE FROM nodes WHERE id='${this.id}'`)
     }
 
     refreshData() {

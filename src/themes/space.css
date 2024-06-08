@@ -267,8 +267,9 @@ a:hover {
         margin-right: 1em;
     }
     .value {
+        margin: 0px;
+        width: 30em;
         padding-left: 1em;
-        width: auto;
         flex-grow: 1;
         transition: all 0.3s ease;
         box-shadow: inset 0px 0px 0px 0px var(--deep) !important;

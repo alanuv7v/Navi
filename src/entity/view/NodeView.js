@@ -24,6 +24,7 @@ export default class NodeView extends NodeModel {
     origin = null //id of a node that opened this node
 
     linkedNodeViews = []
+    deleteReady = false
 
     DOM = (
         div({class: `node`},
@@ -54,7 +55,18 @@ export default class NodeView extends NodeModel {
                         this.linkTo(targetNodeData[0])
                         this.open()
                     }, placeholder: "linkTo"}),
-                    button("delete"),
+                    button({onclick: (e) => {
+                        console.log(this)
+                        if (this.deleteReady) {
+                            this.deleteRecord()
+                        } else {
+                            e.target.innerText = "confirm to delete!"
+                            this.deleteReady = true
+                        }
+                    }, onblur: (e) => {
+                        if (this.deleteReady) e.target.value = "delete"
+                    }
+                    }, "delete"),
                     //button("save metadata"),
                 ),
                 div({class: "view"},
@@ -76,6 +88,11 @@ export default class NodeView extends NodeModel {
         this.DOM.querySelector(".value").value = this.value
         this.close()
         this.open()
+    }
+
+    delete () {
+        this.deleteRecord()
+        this.DOM.remove()
     }
 
 

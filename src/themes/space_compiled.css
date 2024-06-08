@@ -1,0 +1,321 @@
+:root {
+  --light: #e1f5e7;
+  --slight: #c5dacb;
+  --mild: #e1f5e7;
+  --deep: #474747;
+  --dark: #000;
+  --vivid: #97c880;
+  --link: #99f7e1;
+  --hilight: rgba(99,99,253,0.3);
+  --alert: rgba(255,0,0,0.3);
+  --executable: #e2ff93;
+}
+html {
+  background-color: var(--dark);
+}
+* {
+  font-size: 16px;
+  box-sizing: border-box;
+  color: var(--light);
+  text-overflow: ellipsis;
+}
+*:focus {
+  outline: 1px solid var(--light);
+  outline: none;
+  box-shadow: inset 0px 0px 0px 1px var(--light);
+}
+body {
+  margin: 0px;
+}
+div {
+  text-align: left;
+}
+.h-flex {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  align-items: stretch;
+}
+.v-flex {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  justify-content: center;
+  align-items: center;
+}
+textarea {
+  width: 100%;
+  resize: none;
+  overflow: auto; /* !! 결국 그게 되야하는데... 자동 리자이징. */
+}
+#App {
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--dark);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+}
+#App > * {
+  flex-shrink: 0;
+}
+button,
+button:not(:hover),
+input,
+textarea,
+select {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  background-color: var(--dark);
+  color: var(--light);
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  margin: 0.2em;
+  flex-shrink: 0;
+}
+button,
+button:not(:hover) {
+  box-shadow: inset 0px 2px 0px 0px var(--slight), inset 0px -4px 0px 0px var(--slight), inset 0px 0px 0px 1px var(--mild);
+}
+textarea {
+  border-radius: 0px;
+}
+button:hover {
+  color: var(--light);
+  box-shadow: inset 0px 1px 0px 0px var(--light), inset 0px -3px 0px 0px var(--light), inset 0px 0px 0px 1px var(--mild), 0px 1px 8px 0px var(--light);
+}
+button:active {
+  box-shadow: inset 0px 2px 0px 0px var(--light), inset 0px -1px 0px 0px var(--light), inset 0px 0px 1px 1px var(--mild), 0px 1px 8px 0px var(--light);
+}
+input,
+textarea,
+select {
+  box-shadow: inset 0px 0px 0px 2px var(--slight);
+}
+input:hover,
+textarea:hover,
+.clickable:hover {
+  color: var(--light);
+  box-shadow: inset 0px 0px 0px 2px var(--light), 0px 0px 8px 0px var(--light);
+}
+input:focus,
+.clickable:focus {
+  background-color: var(--light);
+  color: var(--dark);
+}
+::-webkit-scrollbar {
+  width: 4px;
+  height: 14px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--light);
+  min-height: 50px;
+}
+.group {
+  box-shadow: inset 0px 0px 0px 1px var(--deep);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.title {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+.window {
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 1px solid var(--deep);
+  flex-basis: 0;
+  flex-grow: 1;
+  box-shadow: none;
+}
+a,
+.link {
+  text-decoration: none;
+  color: var(--link);
+}
+a:hover {
+  text-decoration: solid underline var(--link) 1px;
+}
+#RawEditor {
+  line-height: 2;
+  white-space: pre-wrap;
+  padding: 10px;
+  overflow: auto;
+}
+#LogPreview {
+  overflow: hidden;
+  padding: 0.5em;
+  width: 100%;
+  max-height: 50%;
+  background-color: var(--dark);
+  border: 1px solid var(--deep);
+  animation-name: logAppear;
+  animation-duration: 2s;
+  animation-iteration-count: 2;
+  animation-timing-function: ease-out;
+  overflow-y: auto;
+}
+.tabs {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#View {
+  overflow: auto;
+  width: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: column;
+}
+#Editor {
+  box-shadow: inset 0px 0px 0px 1px var(--deep);
+  flex-grow: 1;
+  padding: 1em;
+}
+#Header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#Header > * {
+  min-width: 3em;
+  height: 2.5em;
+}
+#GoTo {
+  flex-grow: 1;
+}
+.node {
+  transition: all 0.3s ease;
+  padding: 0px 10px 0px 10px;
+}
+.node > *:has(.value) > *:not(:last-child) {
+  margin-right: 1em;
+}
+.node .value {
+  margin: 0px;
+  padding-left: 1em;
+  width: 30em;
+  flex-grow: 1;
+  transition: all 0.3s ease;
+  box-shadow: inset 0px 0px 0px 0px var(--deep) !important;
+}
+.node .value:hover {
+  box-shadow: inset 2px 0px 0px 0px var(--deep) !important;
+}
+.node .value:focus {
+  box-shadow: inset 4px 0px 0px 0px var(--light) !important;
+}
+.node .options {
+  display: none;
+  overflow-x: auto;
+}
+.node .options button {
+  min-width: 3em;
+  min-height: 2.5em;
+}
+.node .links {
+  margin-left: 1em;
+}
+.node .linksOpener {
+  align-self: flex-end;
+  width: 2em;
+  height: 2em;
+  background-color: var(--light);
+  color: var(--dark);
+  padding: 0px;
+  font-size: 1em;
+  box-shadow: none;
+}
+.node .linksOpener:hover {
+  font-size: 1em;
+}
+.node.selected > .options {
+  display: flex;
+}
+.node .autoResize {
+    display: flex;
+    flex-direction: column;
+}
+#Footer {
+  max-height: 50%;
+  display: flex;
+  overflow: auto;
+}
+.Command {
+  width: fit-content;
+}
+.Command .function {
+  color: var(--executable);
+}
+#Main {
+  overflow: auto;
+  width: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+}
+#Commands {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+#Commands #Logs {
+  width: 100%;
+  flex-grow: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+/* .node, textarea, input, button {
+    border-radius: 6px !important; 
+    margin: 2px;
+} */
+@-moz-keyframes logAppear {
+  0% {
+    background-color: inherit;
+  }
+  50% {
+    background-color: var(--hilight);
+  }
+  100% {
+    background-color: inherit;
+  }
+}
+@-webkit-keyframes logAppear {
+  0% {
+    background-color: inherit;
+  }
+  50% {
+    background-color: var(--hilight);
+  }
+  100% {
+    background-color: inherit;
+  }
+}
+@-o-keyframes logAppear {
+  0% {
+    background-color: inherit;
+  }
+  50% {
+    background-color: var(--hilight);
+  }
+  100% {
+    background-color: inherit;
+  }
+}
+@keyframes logAppear {
+  0% {
+    background-color: inherit;
+  }
+  50% {
+    background-color: var(--hilight);
+  }
+  100% {
+    background-color: inherit;
+  }
+}
