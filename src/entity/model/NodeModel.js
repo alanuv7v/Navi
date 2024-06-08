@@ -1,5 +1,6 @@
 import NodeData from "../static/NodeData"
 import appSession from '../../resource/appSession';
+import { escape } from "../../tech/escapeSqlQuery"
 
 export default class NodeModel extends NodeData {
 
@@ -35,7 +36,9 @@ export default class NodeModel extends NodeData {
             `UPDATE nodes SET ${
                 ["value", "links"]
                     .map(s => {
-                        return `${s} = '${typeof this[s] === "string" ? this[s] : JSON.stringify(this[s])}'`
+                        return `${s} = '${typeof this[s] === "string" ? 
+                        escape(this[s])
+                        : escape(JSON.stringify(this[s]))}'`
                     })
                     .join(", ")
             } WHERE id='${this.id}';`

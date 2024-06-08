@@ -4,10 +4,12 @@ const {textarea, div} = van.tags
 export default function (props) {
     let inputTextarea = textarea({
         placeholder: " ",
+        spellcheck: false,
         ...props
     })
     let visibleTextarea = textarea({
         placeholder: " ",
+        spellcheck: false,
         ...props
     })
     let res = div(
@@ -22,29 +24,15 @@ export default function (props) {
         visibleTextarea.style.height = inputTextarea.style.height
         visibleTextarea.value = inputTextarea.value //높이 먼저 변한 후 value 변경됨
     }
-    inputTextarea.style.transition = "none" //!!!!!!
-    inputTextarea.addEventListener('input', res.autoResize, false);    
+    inputTextarea.addEventListener('input', res.autoResize, false); 
     
-    let observer = new MutationObserver(callback);
-    observer.observe(res, {
-        childList: true,
-        attributes: true
-    });
-    window.ooooo = observer
-    function callback(mutationList) {
-        console.log(mutationList)
-        mutationList.forEach((mutation) => {
-            switch (mutation.type) {
-            case "childList":
-                switch (mutation.attributeName) {
-                case "parentElement":
-                    console.log('appended!!')
-                    break;
-                }
-                break;
-            }
-        });
-    }
+    inputTextarea.style.transition = "none" //!!!!!!
+    res.style.position = "relative"
+    inputTextarea.style.position = "absolute"
+    visibleTextarea.style.position = "relative"
+    inputTextarea.style.color = "rgba(0,0,0,0)"
+    visibleTextarea.style.pointerEvents = "none"
+    
 
     return res
 }

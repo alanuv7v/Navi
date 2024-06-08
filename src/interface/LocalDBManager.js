@@ -23,7 +23,7 @@ export async function create() {
     //save root NodeData to the db
     DB.run(`
     INSERT INTO nodes VALUES (
-        '${uuidv4()}',
+        '${uuidv4().replaceAll("-", "")}',
         '${"root"}',
         '${JSON.stringify([])}'
     );`)
