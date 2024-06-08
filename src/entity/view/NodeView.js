@@ -21,21 +21,25 @@ export default class NodeView extends NodeModel {
 
     DOM = (
         div({class: `node`},
-            textarea({
-                class: "value", 
-                value: this.value, 
-                onclick: (event) => this.#onclick(event), 
-                onchange: (event) => {this.#onValueChange(event)}
-            }),
+            div({class: "h-flex"},
+                button({class: "linksOpener", onclick: () => this.open()}),
+                textarea({
+                    class: "value", 
+                    value: this.value, 
+                    onclick: (event) => this.#onclick(event), 
+                    onchange: (event) => {this.#onValueChange(event)}
+                }),
+            ),
             div({class: "options"},
                 div({class: "data"},
                     button({onclick: () => {
                         this.createLinkedNode("")
                         this.open()
                     }}, "new link"),
-                    input({onblur: (event) => {
+                    input({onblur: async (event) => {
                         let queryString = event.target.value
-                        let res = parseQuery(queryString)
+                        let res = await parseQuery(queryString)
+                        if (!res) return false
                         let targetNodeData = res[0]
                         this.linkTo(targetNodeData[0])
                         this.open()
@@ -137,7 +141,7 @@ export default class NodeView extends NodeModel {
     
     #onValueChange (event) {
         this.value = event.target.value
-        this.localDBActions.update()
+        this.updateRecord()
     }
     
 }

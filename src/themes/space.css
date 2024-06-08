@@ -1,10 +1,11 @@
 :root {
     --light: rgba(225, 245, 231, 1);
-    --vivid: rgba(151, 200, 128, 1);
-    --link: rgb(153, 247, 225);
+    --slight: rgb(225, 245, 231, 0.8);
     --mild: rgb(225, 245, 231, 0.5);
     --deep: rgba(71, 71, 71, 1);
     --dark: rgba(0, 0, 0, 1);
+    --vivid: rgba(151, 200, 128, 1);
+    --link: rgb(153, 247, 225);
     --hilight: rgba(99, 99, 253, 0.3);
     --alert: rgba(255, 0, 0, 0.3);
     --executable: rgb(226, 255, 147);
@@ -74,18 +75,19 @@ textarea {
 }
 
 
-button, input, textarea, select {
+button, button:not(:hover), input, textarea, select {
     
     font-size: 14px;
     padding: 0.5em 0.5em 0.5em 0.5em;
 
     background-color: transparent;
-    color: var(--light);
+    color: var(--light);    
     
     border: 0px solid transparent;
-    border-radius: 0px;
+    border-radius: 0.5em;
 
-    box-shadow: inset 0px 0px 0px 1px var(--deep);
+    box-shadow: inset 0px 0px 0px 1px var(--deep), 
+    inset 0px -2px 1px 1px var(--light);
 
     flex-shrink: 0;
 
@@ -98,22 +100,19 @@ button {
 
 
 input:hover, button:hover, textarea:hover, .clickable:hover {
-    border-radius: 0px;
-    box-shadow: inset 0px 0px 0px 1px var(--light),
-    0px 0px 10px 0px var(--light);
-    /*text-decoration: solid underline var(--light) 4px;
-    box-shadow: inset 0px 0px 0px 1px var(--light);*/
-    
+    box-shadow: inset 0px 0px 0px 1px var(--deep), 
+    inset 0px -2px 1px 1px var(--light),
+    0px 0px 8px 1px var(--light);
 }
+
+
+
 input:focus, button:active, .clickable:focus {
-
-    border-radius: 0px;
-
-    background-color: var(--light);
-    color: var(--dark);
+    /* background-color: var(--light); */
+    box-shadow: inset 0px 1px 1px 1px var(--light);
 }
+
 textarea:focus {
-    border-radius: 0px;
 }
 ::-webkit-scrollbar {
     width: 4px;
@@ -226,21 +225,21 @@ a:hover {
 }
 
 .node {
-    transition: all 1s ease;
-    .key {
-        padding: 1em;
-        box-shadow: inset 0px 0px 0px 1px var(--deep);
-        :hover {
-            box-shadow: inset 0px 0px 0px 1px var(--light);
-        }
-    }
+    
+    transition: all 0.5s ease;
+    padding: 0px 10px 0px 10px;
+
     .value {
-        border: none;
-        border-bottom: 1px solid rgba(0, 0, 0, 0);
-        box-shadow: none;
+        width: auto;
+        flex-grow: 1;
+        transition: all 0.5s ease;
+        box-shadow: inset 0px 0px 0px 0px var(--deep) !important;
     }
     .value:hover {
-        border-bottom: 1px solid var(--light);
+        box-shadow: inset 4px 0px 0px -2px var(--deep) !important;
+    }
+    .value:focus {
+        box-shadow: inset 4px 0px 0px -2px var(--light) !important;
     }
     .options {
         display: none;
@@ -251,13 +250,17 @@ a:hover {
         }
     }
     .links {
-        padding-left: 1em;
+        margin-left: 1em;
+    }
+    .linksOpener {
+        background-color: var(--light);
+        width: 1em;
+        height: 1em;
     }
 }
 
 .node.selected {
-    padding: 10px;
-    box-shadow: inset 0px 0px 0px 4px var(--light) !important;
+    box-shadow: inset 4px 0px 0px -2px var(--light) !important;
     > .options {
         display: block;
     }
