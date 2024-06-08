@@ -20,7 +20,7 @@ export default class NodeModel extends NodeData {
     
     createRecord () {
         return appSession.root.DB.exec(`INSERT INTO nodes VALUES (${
-            ["id", "value", "origin", "links"].map(s => `'${typeof this[s] === "string" ? this[s] : JSON.stringify(this[s])}'`).join(", ")
+            ["id", "value", "links"].map(s => `'${typeof this[s] === "string" ? this[s] : JSON.stringify(this[s])}'`).join(", ")
         })`)
     }
 
@@ -33,7 +33,7 @@ export default class NodeModel extends NodeData {
     updateRecord () {
         return appSession.root.DB.exec(
             `UPDATE nodes SET ${
-                ["value", "origin", "links"]
+                ["value", "links"]
                     .map(s => {
                         return `${s} = '${typeof this[s] === "string" ? this[s] : JSON.stringify(this[s])}'`
                     })
@@ -50,32 +50,34 @@ export default class NodeModel extends NodeData {
         let newData = this.readRecord()[0].values[0]
         for (let i=0; i < newData.length; i++) {
             let prop = ["id", "value", "origin", "links"][i] 
-            if (prop != "links") {
-                this[prop] = newData[i] 
-            } else {
+            if (prop === "links") {
                 this[prop] = JSON.parse(newData[i])
+            } else {
+                this[prop] = newData[i] 
             }
         }
         return this
     }
 
-    addLink (tie, nodeID) {
-        this.links.push([tie, nodeID])
+    linkTo (tie, nodeID) {
+        let _tie = tie.join("/") || "_/_"
+        this.links.push([_tie, nodeID])
         this.updateRecord()
     }
 
-    addNewLinkedNode (tie) {
-        let _tie = tie || "_:_"
+    createLinkedNode (tie=["_", "_"], value) {
+        console.log(tie)
+        let mirrorTie = tie.reverse()
         
-        let newNodeModel = new NodeModel(null, "", this.id, [])
-        
+        let newNodeModel = new NodeModel(null, value, [this.id])
         newNodeModel.createRecord()
         
-        this.addLink(_tie, newNodeModel.id)
-        newNodeModel.addLink(_tie, this.id)
-
+        this.linkTo(tie, newNodeModel.id)
         this.updateRecord()
+
+        newNodeModel.linkTo(mirrorTie, this.id)
         newNodeModel.updateRecord()
+        
     }
 
 }
