@@ -16,7 +16,6 @@ export async function create() {
     CREATE TABLE nodes (
         id CHAR(32),
         value TEXT NOT NULL,
-        origin CHAR(32),
         links TEXT
     );
     `); //id와 origin은 나중에 CHAR()로 바꾸고 길이제한 걸고 uuid로 변경
@@ -26,7 +25,6 @@ export async function create() {
     INSERT INTO nodes VALUES (
         '${uuidv4()}',
         '${"root"}',
-        '${""}',
         '${JSON.stringify([])}'
     );`)
 
