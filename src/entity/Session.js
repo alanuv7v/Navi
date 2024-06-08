@@ -36,7 +36,11 @@ export default class Session {
 
     adress = ""
 
-    root = null
+    root = {
+        DB: null,
+        getNodeById: (id) => this.DB.exec(`SELECT * FROM nodes WHERE id=${id}`)[0].values,
+        getNodeByValue: (value) => this.DB.exec(`SELECT * FROM nodes WHERE value=${value}`)[0].values
+    }
 
     seed = null
 
