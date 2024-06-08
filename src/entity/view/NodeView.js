@@ -14,6 +14,10 @@ export default class NodeView extends NodeModel {
         super(...data)
     }
 
+    init = () => {
+        Array.from(this.DOM.querySelectorAll(".autoResize"))?.forEach(d => d.autoResize())
+    }
+
     selected = false
     opened = false
     filter = null
@@ -101,6 +105,7 @@ export default class NodeView extends NodeModel {
         this.linkedNodeViews.forEach(v => {
                 v.origin = this.id
                 this.DOM.querySelector(".links").append(v.DOM)
+                v.init()
             }
         )
         
@@ -138,6 +143,7 @@ export default class NodeView extends NodeModel {
     plant () {
         refs("Editor").innerHTML = ""
         refs("Editor").append(this.DOM)
+        this.init()
     }
 
     toggleOpen () {
