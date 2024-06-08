@@ -1,11 +1,11 @@
 import appSession from "../../resource/appSession"
 import NodeModel from "../model/NodeModel"
 import refs from "../../resource/DOMRefs"
+import parseQuery from "../../tech/parseQuery"
 
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a} = van.tags
-
-import parseQuery from "../../tech/parseQuery"
+import NodeData from "../static/NodeData"
 
 export default class NodeView extends NodeModel {
     
@@ -29,9 +29,23 @@ export default class NodeView extends NodeModel {
             }),
             div({class: "options"},
                 div({class: "data"},
-                    button("add link"),
-                    button("delete node"),
-                    button("set origin"),
+                    button({onclick: () => {}}, "add link"),
+                    input({onblur: (event) => {
+                        debugger
+                        let newNode = event.target.value === "" || event.target.value[0] === "_"
+                        if (newNode) {
+                            this.createLinkedNode(event.target.value.slice(1))
+                            this.open()
+                        } else {
+                            let queryString = event.target.value
+                            let res = parseQuery(queryString)
+                            let targetNodeData = res[0]
+                            this.linkTo(targetNodeData[0])
+                            this.open()
+                        }
+                    }, placeholder: "add link"}),
+                    button("delete"),
+                    //button("save metadata"),
                 ),
                 div({class: "view"},
                     button({onclick: () => {
@@ -56,6 +70,10 @@ export default class NodeView extends NodeModel {
 
     open () {
 
+        //clear DOM
+        if (this.opened) this.close()
+
+        // return if no links
         if (!this.links || this.links.length < 1) return
 
         //reset links DOM
@@ -64,11 +82,12 @@ export default class NodeView extends NodeModel {
         //append linkedNodeViews to links DOM
         this.linkedNodeViews = this.links
             .map((link) => {
-                let res = appSession.root.DB.exec(`SELECT * FROM nodes WHERE id='${link[1]/* node id */}'`)[0].values
-                let matchingData = res[0]
-                return matchingData
+                let res = appSession.root.DB.getNodeById(link[1])
+                return res[0]
             })
-            .filter(data => {console.log(data); return data[1] === this.filter || !this.filter})
+            .filter(nodeData => {
+                return nodeData[1] === this.filter || !this.filter
+            })
             .map(data => new NodeView(...data))
 
         this.linkedNodeViews.forEach(v => 
