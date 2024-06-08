@@ -74,7 +74,6 @@ textarea {
     flex-shrink: 0;
 }
 
-
 button, button:not(:hover), input, textarea, select {
     padding-top: 4px;
     padding-bottom: 4px;
@@ -83,7 +82,6 @@ button, button:not(:hover), input, textarea, select {
 
     background-color: var(--dark);
     color: var(--light);    
-    
     border: none;
     outline: none;
 
@@ -269,6 +267,7 @@ a:hover {
         margin-right: 1em;
     }
     .value {
+        padding-left: 1em;
         width: auto;
         flex-grow: 1;
         transition: all 0.3s ease;
@@ -293,11 +292,13 @@ a:hover {
         margin-left: 1em;
     }
     .linksOpener {
+        align-self: flex-end;
+        width: 2em;
+        height: 2em;
         background-color: var(--light);
         color: var(--dark);
         padding: 0px;
         font-size: 1em;
-        width: 2em;
         box-shadow: none;
     }
     .linksOpener:hover {

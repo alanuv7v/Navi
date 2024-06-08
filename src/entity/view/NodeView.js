@@ -5,7 +5,8 @@ import parseQuery from "../../tech/parseQuery"
 
 import van from "vanjs-core"
 const {div, span, button, textarea, input, a} = van.tags
-import NodeData from "../static/NodeData"
+
+import autoResizedTextarea from "../../tech/gui/autoResizedTextarea"
 
 export default class NodeView extends NodeModel {
     
@@ -16,6 +17,7 @@ export default class NodeView extends NodeModel {
     selected = false
     opened = false
     filter = null
+    origin = null //id of a node that opened this node
 
     linkedNodeViews = []
 
@@ -27,7 +29,7 @@ export default class NodeView extends NodeModel {
                     onclick: () => this.toggleOpen(),
                     innerText: this.links.length
                 }),
-                textarea({
+                autoResizedTextarea({
                     class: "value", 
                     value: this.value, 
                     onclick: (event) => this.#onclick(event), 
@@ -64,6 +66,7 @@ export default class NodeView extends NodeModel {
         )
     )
 
+
     render () {
         this.refreshData()
         this.DOM.querySelector(".value").value = this.value
@@ -89,13 +92,16 @@ export default class NodeView extends NodeModel {
                 let res = appSession.root.getNodeById(link[1])
                 return res[0]
             })
+            .filter(nodeData => nodeData[0] != this.origin)
             .filter(nodeData => {
                 return nodeData[1] === this.filter || !this.filter
             })
             .map(data => new NodeView(...data))
 
-        this.linkedNodeViews.forEach(v => 
+        this.linkedNodeViews.forEach(v => {
+                v.origin = this.id
                 this.DOM.querySelector(".links").append(v.DOM)
+            }
         )
         
         //set state

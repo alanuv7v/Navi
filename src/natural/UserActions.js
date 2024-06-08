@@ -64,8 +64,10 @@ export async function openRoot() {
     }
     
     appSession.temp.rootHandle = rootHandle
-    appSession.root = new RootData(rootHandle.name, await LocalDBManager.load(rootHandle))
     
+    appSession.root.name = rootHandle.name, 
+    appSession.root.DB = await LocalDBManager.load(rootHandle)
+
     console.log(`Opened root: ${appSession.temp.rootHandle.name}`)
     
     SessionManager.saveSession()
