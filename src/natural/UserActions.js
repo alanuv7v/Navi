@@ -8,7 +8,7 @@ import NodeView from "../entity/view/NodeView"
 import refs from "../resource/DOMRefs"
 import RootData from "../entity/static/RootData"
 
-import { initRootDB } from "./init"
+import { default as init, initRootDB } from "./init"
 
 export const sessions = {
     async getAllSessions() {
@@ -25,10 +25,16 @@ export const sessions = {
     }
 }
 
-export const initRootDB_ = async () => await initRootDB(appSession.temp.rootHandle)
+export const _initRootDB = async () => await initRootDB(appSession.temp.rootHandle)
 
 
+export async function _init() { 
+    init()
+}
 
+export async function accessRoot() {
+    return await appSession.temp.rootHandle.requestPermission()
+}
 
 export async function createRoot(name) { 
     
@@ -64,6 +70,10 @@ export async function openRoot() {
     
     SessionManager.saveSession()
 
+    Navigate.showNode("root")
+
+    SessionManager.saveSession()
+    
     return appSession.root
 
 }
