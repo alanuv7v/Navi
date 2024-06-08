@@ -1,6 +1,6 @@
 :root {
     --light: rgba(225, 245, 231, 1);
-    --slight: rgb(225, 245, 231, 0.8);
+    --slight: rgba(197, 218, 203, 1);
     --mild: rgb(225, 245, 231, 0.5);
     --deep: rgba(71, 71, 71, 1);
     --dark: rgba(0, 0, 0, 1);
@@ -16,7 +16,7 @@ html {
 }
     
 * {
-    font-size: 14px;
+    font-size: 16px;
     box-sizing: border-box;
     color: var(--light);
     text-overflow: ellipsis;
@@ -40,7 +40,7 @@ div {
     display: flex;
     flex-direction: row;
     overflow-x: auto;
-    align-items: center;
+    align-items: stretch;
 }
 
 .v-flex {
@@ -79,7 +79,6 @@ button, button:not(:hover), input, textarea, select {
     padding-top: 4px;
     padding-bottom: 4px;
     
-    font-size: 14px;
     padding: 0.5em 0.5em 0.5em 0.5em;
 
     background-color: var(--dark);
@@ -95,21 +94,12 @@ button, button:not(:hover), input, textarea, select {
     flex-shrink: 0;
 
 }
-
-input, textarea, select {
-    
-    box-shadow: 
-    inset 0px 0px 0px 2px var(--mild);
-
-}
-
 button, button:not(:hover) {
     
     box-shadow: 
-    inset 0px 1px 0px 0px var(--slight), 
-    inset 0px -2px 1px 0px var(--slight),
-    inset 0px 0px 1px 1px var(--mild),
-    0px 1px 0px 0px var(--slight);
+    inset 0px 2px 0px 0px var(--slight), 
+    inset 0px -4px 0px 0px var(--slight),
+    inset 0px 0px 0px 1px var(--mild);
 
 }
 
@@ -123,8 +113,8 @@ button:hover {
     color: var(--light); 
     box-shadow: 
     inset 0px 1px 0px 0px var(--light), 
-    inset 0px -2px 1px 0px var(--light),
-    inset 0px 0px 1px 1px var(--mild),
+    inset 0px -3px 0px 0px var(--light),
+    inset 0px 0px 0px 1px var(--mild),
     0px 1px 8px 0px var(--light);
 
 }
@@ -137,11 +127,19 @@ button:active {
     0px 1px 8px 0px var(--light);
 }
 
+
+input, textarea, select {
+    
+    box-shadow: 
+    inset 0px 0px 0px 2px var(--slight);
+
+}
+
 input:hover, textarea:hover, .clickable:hover {
     
     color: var(--light); 
     box-shadow: 
-    inset 0px 0px 0px 2px var(--light);
+    inset 0px 0px 0px 2px var(--light), 0px 0px 8px 0px var(--light);
 
 }
 
@@ -264,7 +262,7 @@ a:hover {
 
 .node {
     
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
     padding: 0px 10px 0px 10px;
 
     > *:has(.value) > *:not(:last-child) {
@@ -273,14 +271,15 @@ a:hover {
     .value {
         width: auto;
         flex-grow: 1;
-        transition: all 0.5s ease;
+        transition: all 0.3s ease;
         box-shadow: inset 0px 0px 0px 0px var(--deep) !important;
     }
     .value:hover {
-        box-shadow: inset 4px 0px 0px -2px var(--deep) !important;
+        box-shadow: inset 2px 0px 0px 0px var(--deep) !important;
     }
     .value:focus {
-        box-shadow: inset 4px 0px 0px -2px var(--light) !important;
+        box-shadow: 
+        inset 4px 0px 0px 0px var(--light) !important;
     }
     .options {
         display: none;
@@ -297,16 +296,19 @@ a:hover {
         background-color: var(--light);
         color: var(--dark);
         padding: 0px;
-        font-size: 0.7em;
+        font-size: 1em;
         width: 2em;
-        height: 2em;
+        box-shadow: none;
+    }
+    .linksOpener:hover {
+        font-size: 1em;
     }
 }
 
 .node.selected {
-    box-shadow: inset 4px 0px 0px -2px var(--light) !important;
+    /* box-shadow: inset 4px 0px 0px -2px var(--light) !important; */
     > .options {
-        display: block;
+        display: flex;
     }
 }
 

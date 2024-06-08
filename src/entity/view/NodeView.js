@@ -56,7 +56,7 @@ export default class NodeView extends NodeModel {
                         if (this.opened) this.close() 
                         else this.open()
                     }}, "open/close"),
-                    button("filter"),
+                    input({placeholder: "filter"}),
                     button("plant"),
                 )
             ),
