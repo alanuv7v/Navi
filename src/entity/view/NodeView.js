@@ -112,7 +112,6 @@ export default class NodeView extends NodeModel {
                 )
             ),
             div({class: "links"}),
-            div({class: "overlay"}),
         )
     )
 
@@ -141,16 +140,6 @@ export default class NodeView extends NodeModel {
         //reset links DOM
         this.DOM.querySelector(".links").innerHTML = ""
 
-        //define linkWrapper
-        function linkWrapper(nodeView) {
-            return div({class: "link"},
-                div({class: "tie"},
-                    div({class: "tieInfo"})
-                ),
-                nodeView.DOM
-            )
-        }
-
         //append linkedNodeViews to links DOM
         let linkedNodeViews = this.links
             .map((link) => {
@@ -171,9 +160,7 @@ export default class NodeView extends NodeModel {
 
         linkedNodeViews.forEach(v => {
                 v.openedFrom = this.id
-                this.DOM.querySelector(".links").append(
-                    linkWrapper(v)
-                )
+                this.DOM.querySelector(".links").append(v.DOM)
                 v.onDomMount()
             }
         )
