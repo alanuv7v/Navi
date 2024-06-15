@@ -9,8 +9,9 @@
     --hilight: rgba(99, 99, 253, 0.3);
     --alert: rgba(255, 0, 0, 0.3);
     --executable: rgb(226, 255, 147);
-    --authName: rgb(162, 216, 252);
+    --authName: rgb(162, 252, 189);
     --back: rgb(252, 198, 162);
+    --error: rgb(248, 16, 47);
 }
 
 html {
@@ -277,6 +278,9 @@ a:hover {
         flex-grow: 1;
         transition: all 0.3s ease;
         box-shadow: inset 0px 0px 0px 0px var(--deep) !important;
+
+        line-height: 1.8em;
+
     }
     .value:hover {
         box-shadow: inset 2px 0px 0px 0px var(--deep) !important;
@@ -297,6 +301,9 @@ a:hover {
         margin-left: 1em;
     }
     .linksOpener {
+        
+        margin: 0.5em 0.5em 0.5em 1em;
+
         align-self: flex-end;
         width: 2em;
         height: 2em;
@@ -319,12 +326,16 @@ a:hover {
 }
 
 .node.authName {
-    .value {
+    > * > .autoResize > .value {
         color: var(--authName)
     }
-    .linksOpener {
+    > * > .linksOpener {
         background-color: var(--authName)
     }
+}
+
+.node.error .value {
+    color: var(--error) !important;
 }
 
 #Footer {
