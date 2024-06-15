@@ -26,6 +26,12 @@ export default class NodeView extends NodeModel {
     filter = null
     openedFrom = null //id of a node that opened this node
 
+    get origin() {
+        let originLink = this.links.find(link => link[0].split("/")[1] === "_origin")
+        if (originLink) return originLink[1]
+        else return null
+    }
+
     linkedNodeViews = []
     deleteReady = false
 
@@ -47,17 +53,21 @@ export default class NodeView extends NodeModel {
             div({class: "options"},
                 div({class: "data"},
                     button({onclick: () => {
+                        this.createBranch("")
+                        this.open()
+                    }}, "new branch"),
+                    button({onclick: () => {
                         this.createLinkedNode("")
                         this.open()
                     }}, "new link"),
-                    input({onblur: async (event) => {
+                    /* input({onblur: async (event) => {
                         let queryString = event.target.value
                         let res = await parseQuery(queryString)
                         if (!res) return false
                         let targetNodeData = res[0]
                         this.linkTo(targetNodeData[0])
                         this.open()
-                    }, placeholder: "linkTo"}),
+                    }, placeholder: "linkTo"}), */
                     button({onclick: (e) => {
                         console.log(this)
                         if (this.deleteReady) {
@@ -117,13 +127,14 @@ export default class NodeView extends NodeModel {
                 return res[0]
             })
             .filter(nodeData => nodeData[0] != this.openedFrom)
+            .filter(nodeData => nodeData[0] != this.origin)
             .filter(nodeData => {
                 return nodeData[1] === this.filter || !this.filter
             })
             .map(data => new NodeView(...data))
 
         this.linkedNodeViews.forEach(v => {
-                v.origin = this.id
+                v.openedFrom = this.id
                 this.DOM.querySelector(".links").append(v.DOM)
                 v.init()
             }

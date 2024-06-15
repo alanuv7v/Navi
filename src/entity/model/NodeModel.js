@@ -88,8 +88,8 @@ export default class NodeModel extends NodeData {
     }
 
     createLinkedNode (tie, value) {
-        tie = tie || ["_origin", "_"] // [this, that]
-        let mirrorTie = tie.reverse()
+        tie = tie || ["_", "_"] // [this, that]
+        let mirrorTie = structuredClone(tie).reverse()
         
         let newNodeModel = new NodeModel(null, value, [this.id])
         newNodeModel.createRecord()
@@ -99,6 +99,12 @@ export default class NodeModel extends NodeData {
 
         newNodeModel.linkTo(mirrorTie, this.id)
         newNodeModel.updateRecord()
+        
+    }
+
+    createBranch (value) {
+
+        return this.createLinkedNode (["_origin", "_value"], value)
         
     }
 

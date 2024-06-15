@@ -18,7 +18,7 @@ import van from "vanjs-core"
 
 import * as UserActions from "./natural/UserActions"
 import init from "./natural/init"
-import CommandsIO from "./entity/view/CommandButton"
+import CommandsTree from "./entity/view/CommandTree"
 
 //below is for debugging
 
@@ -42,8 +42,7 @@ const App = DOM
 
 van.add(document.body, App)
 
-new CommandsIO("UserActions", UserActions)
-new CommandsIO("Context", {})
+new CommandsTree({UserActions})
 
 await init()
 
