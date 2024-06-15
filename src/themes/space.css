@@ -230,6 +230,7 @@ a:hover {
     box-shadow: inset 0px 0px 0px 1px var(--deep);
     flex-grow: 1;
     padding: 1em;
+    overflow: auto;
 }
 
 #Header {
@@ -256,17 +257,25 @@ a:hover {
     animation-timing-function: ease-in;
 }
 
+
+.link {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    /* .tie {
+        display: none;
+        white-space: pre;
+        flex-shrink: 0;
+    }
+    > .node > * :first-child :hover ~ .tie, .tie:hover {
+        display: block;
+    } */
+}
+
 .node {
     
     transition: all 0.3s ease;
     padding: 0px 10px 0px 10px;
-    overflow-y: hidden !important;
-    overflow-x: hidden !important;
-
-    * {
-        overflow-y: hidden !important;
-        overflow-x: hidden !important;
-    }
 
     > *:has(.value) > *:not(:last-child) {
         margin-right: 1em;
@@ -326,6 +335,10 @@ a:hover {
     > .options {
         display: flex;
     }
+}
+
+.node.selected ~ .tie {
+    display: block !important;
 }
 
 .node.authName {
