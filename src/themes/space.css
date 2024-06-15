@@ -25,8 +25,6 @@ html {
     text-overflow: ellipsis;
 }
 *:focus {
-    outline: 1px solid var(--light);
-    outline: none;
     box-shadow: inset 0px 0px 0px 1px var(--light);
 }
 
@@ -109,7 +107,6 @@ textarea {
 
 
 button:hover {
-    
     color: var(--light); 
     box-shadow: 
     inset 0px 1px 0px 0px var(--light), 
@@ -257,32 +254,18 @@ a:hover {
     animation-timing-function: ease-in;
 }
 
-
-.link {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-    /* .tie {
-        display: none;
-        white-space: pre;
-        flex-shrink: 0;
-    }
-    > .node > * :first-child :hover ~ .tie, .tie:hover {
-        display: block;
-    } */
-}
-
 .node {
     
     transition: all 0.3s ease;
     padding: 0px 10px 0px 10px;
+    
 
     > *:has(.value) > *:not(:last-child) {
         margin-right: 1em;
     }
     .value {
         margin: 0px;
-        width: 30em;
+        min-width: 30em;
         padding-left: 1em;
         flex-grow: 1;
         transition: all 0.3s ease;
@@ -301,6 +284,7 @@ a:hover {
     .options {
         display: none;
         overflow-x: auto;
+        align-items: flex-start;
         button {
             min-width: 3em;
             min-height: 2.5em;
@@ -334,11 +318,8 @@ a:hover {
     /* box-shadow: inset 4px 0px 0px -2px var(--light) !important; */
     > .options {
         display: flex;
+        flex-flow: wrap;
     }
-}
-
-.node.selected ~ .tie {
-    display: block !important;
 }
 
 .node.authName {

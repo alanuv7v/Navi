@@ -29,94 +29,88 @@ export default class NodeView extends NodeModel {
 
     deleteReady = false
 
-    DOM = (
-        div({class: "link"},
-            div({class: "node"},
-                div({class: "h-flex"},
-                    button({
-                        class: "linksOpener", 
-                        onclick: () => this.toggleOpen(),
-                        innerText: this.links.filter(link => link[0].split("/")[1] != "_origin").length
-                    }),
-                    autoResizedTextarea({
-                        class: "value", 
-                        value: this.value, 
-                        onclick: (event) => this.#onclick(event), 
-                        onchange: (event) => {this.#onValueChange(event)},
-                    }),
-                    ),
-                    div({class: "options"},
-                    button({onclick: () => {
-                        this.deselect()
-                    }, tooltip: "deselect node"}, "*"/* "hide options */),
-                    div({class: "data"},
-                        button({onclick: async () => {
-                            this.showAuthOrigin(0)
-                        }, tooltip: "find authentic origin"}, "^^"/* "show authName origin" */),
-                        button({onclick: async () => {
-                            this.showOrigin()
-                        }, tooltip: "find origin"}, "^"/* "show origin" */),
-                        button({onclick: () => {
-                            this.createBranch("")
-                            this.open()
-                        }, tooltip: "create new branch"}, "+" /* "new branch" */),
-                        button({onclick: () => {
-                            this.createLinkedNode("")
-                            this.open()
-                        }, tooltip: "create new link"}, "~"/* "new link" */),
-                        /* input({onblur: async (event) => {
-                            let queryString = event.target.value
-                            let res = await parseQuery(queryString)
-                            if (!res) return false
-                            let targetNodeData = res[0]
-                            this.linkTo(targetNodeData[0])
-                            this.open()
-                        }, placeholder: "linkTo"}), */
-                        button({onclick: (e) => {
-                            console.log(this)
-                            if (this.deleteReady) {
-                                this.deleteRecord()
-                                this.DOM.remove()
-                            } else {
-                                e.target.innerText = "confirm to delete!"
-                                this.deleteReady = true
-                            }
-                        }, onblur: (e) => {
-                            if (this.deleteReady) e.target.value = "delete"
-                        }, tooltip: "delete node"
-                        }, "X"/* "delete" */),
-                        //button("save metadata"),
-                    ),
-                    div({class: "view"},
-                        button({onclick: () => {
-                            if (this.opened) this.close() 
-                            else this.open()
-                        }, tooltip: "open/close"}, "<>"/* "open/close" */),
-                        button({onclick: () => {
+    DOM = div({class: "node"},
+        div({class: "h-flex"},
+            button({
+                class: "linksOpener", 
+                onclick: () => this.toggleOpen(),
+                innerText: this.links.filter(link => link[0].split("/")[1] != "_origin").length
+            }),
+            autoResizedTextarea({
+                class: "value", 
+                value: this.value, 
+                onclick: (event) => this.#onclick(event), 
+                onchange: (event) => {this.#onValueChange(event)},
+            }),
+        ),
+        div({class: "options"},
+            input({class: "tie", placeholder: "tie(this/that)"}),
+            button({onclick: () => {
+                this.deselect()
+            }, tooltip: "deselect node"}, "*"/* "hide options */),
+            button({onclick: async () => {
+                this.showAuthOrigin(0)
+            }, tooltip: "find authentic origin"}, "^^"/* "show authName origin" */),
+            button({onclick: async () => {
+                this.showOrigin()
+            }, tooltip: "find origin"}, "^"/* "show origin" */),
+            button({onclick: () => {
+                this.createBranch("")
+                this.open()
+            }, tooltip: "create new branch"}, "+" /* "new branch" */),
+            button({onclick: () => {
+                this.createLinkedNode("")
+                this.open()
+            }, tooltip: "create new link"}, "~"/* "new link" */),
+            /* input({onblur: async (event) => {
+                let queryString = event.target.value
+                let res = await parseQuery(queryString)
+                if (!res) return false
+                let targetNodeData = res[0]
+                this.linkTo(targetNodeData[0])
+                this.open()
+            }, placeholder: "linkTo"}), */
+            button({onclick: (e) => {
+                console.log(this)
+                if (this.deleteReady) {
+                    this.deleteRecord()
+                    this.DOM.remove()
+                } else {
+                    e.target.innerText = "confirm to delete!"
+                    this.deleteReady = true
+                }
+            }, onblur: (e) => {
+                if (this.deleteReady) e.target.value = "delete"
+            }, tooltip: "delete node"
+            }, "X"/* "delete" */),
+            //button("save metadata"),
+            button({onclick: () => {
+                if (this.opened) this.close() 
+                else this.open()
+            }, tooltip: "open/close"}, "<>"/* "open/close" */),
+            button({onclick: () => {
 
-                            refs("CommandPalette").focus()
-                            refs("CommandPalette").placeholder = "filter..."
-                            
-                            let onArgumentsSubmit = async (event) => {
-                                let actionResult = this.filter = event.target.value
-                                console.log(actionResult)
-                                refs("CommandPalette").placeholder = ""
-                                refs("CommandPalette").removeEventListener("blur", onArgumentsSubmit)
-                                this.close()
-                                this.open()
-                            }
+                refs("CommandPalette").focus()
+                refs("CommandPalette").placeholder = "filter..."
+                
+                let onArgumentsSubmit = async (event) => {
+                    let actionResult = this.filter = event.target.value
+                    console.log(actionResult)
+                    refs("CommandPalette").placeholder = ""
+                    refs("CommandPalette").removeEventListener("blur", onArgumentsSubmit)
+                    this.close()
+                    this.open()
+                }
 
-                            refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
+                refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
 
-                        }, tooltip: "filter links"}, "()"/* "filter" */),
-                        button({onclick: () => {userActions.Navigate.showNode(`#${this.id}`)}, tooltip: "plant this node"}, "."/* "plant" */),
-                    )
-                ),
-                div({class: "links"}),
-            ),
-            div({class: "tie"})
-        )
+            }, tooltip: "filter links"}, "()"/* "filter" */),
+            button({onclick: () => {userActions.Navigate.showNode(`#${this.id}`)}, tooltip: "plant this node"}, "."/* "plant" */),
+
+        ),
+        div({class: "links"})
     )
+    
 
 
     render () {
@@ -147,7 +141,7 @@ export default class NodeView extends NodeModel {
         this.links
             .map((link) => {
                 try {
-                    let tie = link[0].split("/").join("\n")
+                    let tie = link[0]
                     let res = appSession.root.getNodeById(link[1])
                     return {tie, data: res[0]}
                 } catch {
@@ -168,7 +162,7 @@ export default class NodeView extends NodeModel {
             })
             .forEach(({tie, view}) => {
                 view.openedFrom = this.id
-                this.DOM.querySelector(".tie").innerText = tie
+                view.DOM.querySelector(".tie").value = tie
                 this.DOM.querySelector(".links").append(view.DOM)
                 view.onDomMount()
             }
@@ -237,8 +231,8 @@ export default class NodeView extends NodeModel {
         }
 
         let lastOrigin = await this.showOrigin()
-                
-        if (!lastOrigin.authName) {
+        
+        if (!lastOrigin.isAuthname) {
             i++
             lastOrigin.showAuthOrigin(i)
         } else {
