@@ -42,5 +42,7 @@ export default function (props) {
 
     visibleTextarea.style.transition = "none"
 
+    inputTextarea.style.caretColor = "var(--light)"
+
     return res
 }

@@ -36,6 +36,7 @@ class CommandButton {
         
         this.name = name
         this.value = value
+        this.backToDefault = this.name === "..."
         
         let button = this.DOM.querySelector("button")
         
@@ -45,8 +46,11 @@ class CommandButton {
             let childrenCount = Object.keys(value).length
             button.innerText += `[${childrenCount}] `
         }
-
-        if (typeof value === "function") {
+        else if (this.backToDefault) {
+            console.log(this.name)
+            button.style.color = "var(--back)"
+        }
+        else if (typeof value === "function") {
             button.innerText += "()"
             button.classList.add("function")
         }
@@ -58,7 +62,12 @@ class CommandButton {
     onclick = () => {
         //execute function
         console.log(this)
-        if (typeof this.value === "function") {
+
+        if (this.backToDefault) {
+
+            this.value()
+
+        } else if (typeof this.value === "function") {
             
             console.log("executing: ", this.value) 
 

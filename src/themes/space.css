@@ -10,6 +10,7 @@
     --alert: rgba(255, 0, 0, 0.3);
     --executable: rgb(226, 255, 147);
     --authName: rgb(162, 216, 252);
+    --back: rgb(252, 198, 162);
 }
 
 html {
@@ -246,12 +247,15 @@ a:hover {
 #GoTo {
     flex-grow: 1;
 }
-.node {
 
+.appear {
     animation-name: appear;
     animation-duration: 0.3s;
     animation-iteration-count: 1;
     animation-timing-function: ease-in;
+}
+
+.node {
     
     transition: all 0.3s ease;
     padding: 0px 10px 0px 10px;

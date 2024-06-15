@@ -53,17 +53,25 @@ export default class NodeView extends NodeModel {
                     onclick: (event) => this.#onclick(event), 
                     onchange: (event) => {this.#onValueChange(event)}
                 }),
-            ),
-            div({class: "options"},
+                ),
+                div({class: "options"},
                 div({class: "data"},
+                    button({onclick: async () => {
+                        if (!this.origin) return false
+                        let res = (await parseQuery(`#${this.origin}`))
+                        let originNodeView = new NodeView(...res[0])
+                        originNodeView.plant()
+                        originNodeView.open([this])
+                        originNodeView.select()
+                    }}, "^"/* "show origin" */),
                     button({onclick: () => {
                         this.createBranch("")
                         this.open()
-                    }}, "new branch"),
+                    }}, "+" /* "new branch" */),
                     button({onclick: () => {
                         this.createLinkedNode("")
                         this.open()
-                    }}, "new link"),
+                    }}, "~"/* "new link" */),
                     /* input({onblur: async (event) => {
                         let queryString = event.target.value
                         let res = await parseQuery(queryString)
@@ -83,16 +91,16 @@ export default class NodeView extends NodeModel {
                     }, onblur: (e) => {
                         if (this.deleteReady) e.target.value = "delete"
                     }
-                    }, "delete"),
+                    }, "X"/* "delete" */),
                     //button("save metadata"),
                 ),
                 div({class: "view"},
                     button({onclick: () => {
                         if (this.opened) this.close() 
                         else this.open()
-                    }}, "open/close"),
+                    }}, "<>"/* "open/close" */),
                     input({placeholder: "filter"}),
-                    button({onclick: () => {userActions.Navigate.showNode(`#${this.id}`)}}, "plant"),
+                    button({onclick: () => {userActions.Navigate.showNode(`#${this.id}`)}}, "."/* "plant" */),
                 )
             ),
             div({class: "links"}),
@@ -118,7 +126,7 @@ export default class NodeView extends NodeModel {
     }
 
 
-    open () {
+    open (replacers=[]) {
 
         //clear DOM
         if (this.opened) this.close()
@@ -140,7 +148,7 @@ export default class NodeView extends NodeModel {
             .filter(nodeData => {
                 return nodeData[1] === this.filter || !this.filter
             })
-            .map(data => new NodeView(...data))
+            .map(data => replacers.find(r => r.id === data[0]) || new NodeView(...data))
 
         this.linkedNodeViews.forEach(v => {
                 v.openedFrom = this.id
@@ -171,6 +179,7 @@ export default class NodeView extends NodeModel {
         }
         this.DOM.classList.add("selected")
         appSession.selectedNode = this
+        this.DOM.querySelector("textarea.value.input").focus()
         this.selected = true
     }
 

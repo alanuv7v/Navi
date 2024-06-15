@@ -10,7 +10,15 @@ import RootData from "../entity/static/RootData"
 
 import { default as init, initRootDB } from "./init"
 
-export const sessions = {
+
+export const _initRootDB = async () => await initRootDB(appSession.temp.rootHandle)
+
+
+export async function _init() { 
+    init()
+}
+
+export const Sessions = {
     async getAllSessions() {
         return await SessionManager.getAllSessions()
     },
@@ -23,13 +31,6 @@ export const sessions = {
     async clearSessions () {
         return await SessionManager.clearAllSessions()
     }
-}
-
-export const _initRootDB = async () => await initRootDB(appSession.temp.rootHandle)
-
-
-export async function _init() { 
-    init()
 }
 
 export const Root = {
@@ -80,59 +81,6 @@ export const Root = {
         return await LocalDBManager.update()
     },
 }
-
-export async function accessRoot() {
-    return await appSession.temp.rootHandle.requestPermission()
-}
-
-export async function createRoot(name) { 
-    
-    //create the DB
-    let localDB = await LocalDBManager.create()
-    
-    // Export the database to an Uint8Array
-    const data = localDB.export();
-    const blob = new Blob([data], { type: "application/octet-stream" });
-    const url = window.URL.createObjectURL(blob);
-
-    // Create a link to download it
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = name || "root"
-    a.click();
-    window.URL.revokeObjectURL(url);
-
-}
-
-export async function openRoot() { 
-    
-    const rootHandle = (await window.showOpenFilePicker({multiple: false}))[0]
-    console.log(rootHandle)
-    if (!(await rootHandle.queryPermission()) === "granted") {
-        await rootHandle.requestPermission()
-    }
-    
-    appSession.temp.rootHandle = rootHandle
-    
-    appSession.root.name = rootHandle.name, 
-    appSession.root.DB = await LocalDBManager.load(rootHandle)
-
-    console.log(`Opened root: ${appSession.temp.rootHandle.name}`)
-    
-    SessionManager.saveSession()
-
-    Navigate.showNode("root")
-
-    SessionManager.saveSession()
-    
-    return appSession.root
-
-}
-
-export async function updateRoot() {
-    return await LocalDBManager.update()
-}
-
 
 export const Edit = {
     copyNode: (node) => {
