@@ -71,7 +71,7 @@ export default class NodeModel extends NodeData {
     refreshData() {
         let newData = this.readRecord()[0].values[0]
         for (let i=0; i < newData.length; i++) {
-            let prop = ["id", "value", "origin", "links"][i] 
+            let prop = ["id", "value", "links"][i] 
             if (prop === "links") {
                 this[prop] = JSON.parse(newData[i])
             } else {

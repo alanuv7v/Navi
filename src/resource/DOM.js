@@ -1,7 +1,9 @@
 import appSession from "./appSession";
 import van from "vanjs-core";
 
-import * as userActions from "../natural/UserActions"
+import * as userActions from "../natural/userActions"
+import refs from "./DOMRefs";
+import CommandsTree from "../entity/view/CommandTree";
 
 const tagsToUse = "div button input".split(" ")
 const tag = {}
@@ -14,8 +16,10 @@ const {div, button, input} = tag
 
 export default div("App", {},
     div("Header", {}, 
-        button("PickRoot", {}, "木 "),
-        button("History", {}, "H"),
+        button("PickRoot", {onclick: () => {
+            new CommandsTree(userActions.Root, false)
+        }}, "木 "),
+        button("History", {}, "↹"),
         button("GoBack", {}, "◁"),
         button("GoForth", {}, "▷"),
         button("ToFrom", {}, "⇑"),

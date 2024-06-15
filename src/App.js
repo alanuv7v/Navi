@@ -16,7 +16,7 @@ window.LocalDB = await LocalDB.create()
 
 import van from "vanjs-core"
 
-import * as UserActions from "./natural/UserActions"
+import * as userActions from "./natural/userActions"
 import init from "./natural/init"
 import CommandsTree from "./entity/view/CommandTree"
 
@@ -30,7 +30,7 @@ import * as SessionManager from "./interface/SessionManager"
 
 window._debug = {
     DOM,
-    UserActions,
+    userActions,
     appSession,
     BrowserDB,
     SessionManager
@@ -42,7 +42,7 @@ const App = DOM
 
 van.add(document.body, App)
 
-new CommandsTree({UserActions})
+new CommandsTree({...userActions})
 
 await init()
 

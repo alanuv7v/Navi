@@ -8,7 +8,7 @@ const {div, span, button, textarea, input, a} = van.tags
 
 import autoResizedTextarea from "../../tech/gui/autoResizedTextarea"
 
-import * as userActions from "../../natural/UserActions"
+import * as userActions from "../../natural/userActions"
 
 
 export default class NodeView extends NodeModel {
@@ -32,6 +32,10 @@ export default class NodeView extends NodeModel {
         else return null
     }
 
+    get authName () {
+        return this.value[0] === "@"
+    }
+
     linkedNodeViews = []
     deleteReady = false
 
@@ -41,7 +45,7 @@ export default class NodeView extends NodeModel {
                 button({
                     class: "linksOpener", 
                     onclick: () => this.toggleOpen(),
-                    innerText: this.links.length
+                    innerText: this.links.filter(link => link[0].split("/")[1] != "_origin").length
                 }),
                 autoResizedTextarea({
                     class: "value", 
@@ -101,6 +105,11 @@ export default class NodeView extends NodeModel {
         this.DOM.querySelector(".value").value = this.value
         this.close()
         this.open()
+        if (this.authName) {
+            this.DOM.classList.add("authName")
+        } else {
+            this.DOM.classList.remove("authName")
+        }
     }
 
     delete () {

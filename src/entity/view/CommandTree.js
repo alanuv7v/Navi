@@ -4,11 +4,24 @@ import van from "vanjs-core"
 const t = van.tags
 
 import refs from "../../resource/DOMRefs"
+import * as userActions from "../../natural/userActions"
 
 export default class CommandsTree {
 
-    constructor (data) {
+    constructor (data, isDefault=true) {
+        
         this.data = data
+        
+        refs("Logs").innerHTML = ""
+
+        if (!isDefault) {
+            let backToDefault = new CommandButton("...", () => {
+                refs("Logs").innerHTML = ""
+                new CommandsTree({userActions})
+            })
+            refs("Logs").append(backToDefault.DOM)
+        }
+
         for (let [key, value] of Object.entries(data)) {
             let seed = new CommandButton(key, value)
             refs("Logs").append(seed.DOM)

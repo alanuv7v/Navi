@@ -1,6 +1,6 @@
 import * as SessionManager from "../interface/SessionManager"
 import appSession from "../resource/appSession"
-import * as UserActions  from "./UserActions"
+import * as UserActions  from "./userActions"
 import RootData from "../entity/static/RootData"
 import * as LocalDBManager from "../interface/LocalDBManager"
 

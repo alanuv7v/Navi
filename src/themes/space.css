@@ -9,6 +9,7 @@
     --hilight: rgba(99, 99, 253, 0.3);
     --alert: rgba(255, 0, 0, 0.3);
     --executable: rgb(226, 255, 147);
+    --authName: rgb(162, 216, 252);
 }
 
 html {
@@ -206,17 +207,6 @@ a:hover {
     overflow-y: auto;
 }
 
-@keyframes logAppear{
-    0% {
-    background-color: inherit;
-    }
-    50% {
-    background-color: var(--hilight);
-    }
-    100% {
-    background-color: inherit;
-    }
-}
 
 .tabs {
     width: 100%;
@@ -257,6 +247,11 @@ a:hover {
     flex-grow: 1;
 }
 .node {
+
+    animation-name: appear;
+    animation-duration: 0.3s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
     
     transition: all 0.3s ease;
     padding: 0px 10px 0px 10px;
@@ -316,6 +311,15 @@ a:hover {
     /* box-shadow: inset 4px 0px 0px -2px var(--light) !important; */
     > .options {
         display: flex;
+    }
+}
+
+.node.authName {
+    .value {
+        color: var(--authName)
+    }
+    .linksOpener {
+        background-color: var(--authName)
     }
 }
 
