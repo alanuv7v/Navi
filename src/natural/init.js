@@ -37,5 +37,5 @@ export async function initRootDB (rootHandle) {
     appSession.root.DB = await LocalDBManager.load(rootHandle)
     
     //show root node
-    UserActions.Navigate.showNode("root")
+    UserActions.Navigate.showNode("@root")
 }

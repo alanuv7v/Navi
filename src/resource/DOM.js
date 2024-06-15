@@ -1,6 +1,8 @@
 import appSession from "./appSession";
 import van from "vanjs-core";
 
+import * as userActions from "../natural/UserActions"
+
 const tagsToUse = "div button input".split(" ")
 const tag = {}
 
@@ -19,7 +21,9 @@ export default div("App", {},
         button("ToFrom", {}, "⇑"),
         button("ToLinks", {}, "⇓"),
         //button("RegrowTree", {}, "⟳"),
-        input("GoTo"),
+        input("GoTo", {onchange: (event) => {
+            userActions.Navigate.showNode(event.target.value)
+        }}),
         input("Filter", {type: "text", placeholder: "filter", value: "*"}),
     ),
     div("Main", {}, 

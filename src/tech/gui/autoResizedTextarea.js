@@ -36,7 +36,11 @@ export default function (props) {
     inputTextarea.style.color = "rgba(0,0,0,0)"
     visibleTextarea.style.pointerEvents = "none"
     visibleTextarea.style.backgroundColor = "transparent"
-    
+
+    inputTextarea.style.overflow = "hidden"
+    visibleTextarea.style.overflow = "hidden"
+
+    visibleTextarea.style.transition = "none"
 
     return res
 }

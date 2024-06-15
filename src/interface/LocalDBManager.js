@@ -24,7 +24,7 @@ export async function create() {
     DB.run(`
     INSERT INTO nodes VALUES (
         '${uuidv4().replaceAll("-", "")}',
-        '${"root"}',
+        '${"@root"}',
         '${JSON.stringify([])}'
     );`)
 

@@ -88,7 +88,7 @@ export default class NodeModel extends NodeData {
     }
 
     createLinkedNode (tie, value) {
-        tie = tie || ["_", "_"]
+        tie = tie || ["_origin", "_"] // [this, that]
         let mirrorTie = tie.reverse()
         
         let newNodeModel = new NodeModel(null, value, [this.id])

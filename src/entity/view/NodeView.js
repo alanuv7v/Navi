@@ -8,6 +8,9 @@ const {div, span, button, textarea, input, a} = van.tags
 
 import autoResizedTextarea from "../../tech/gui/autoResizedTextarea"
 
+import * as userActions from "../../natural/UserActions"
+
+
 export default class NodeView extends NodeModel {
     
     constructor (...data) {
@@ -21,7 +24,7 @@ export default class NodeView extends NodeModel {
     selected = false
     opened = false
     filter = null
-    origin = null //id of a node that opened this node
+    openedFrom = null //id of a node that opened this node
 
     linkedNodeViews = []
     deleteReady = false
@@ -75,7 +78,7 @@ export default class NodeView extends NodeModel {
                         else this.open()
                     }}, "open/close"),
                     input({placeholder: "filter"}),
-                    button("plant"),
+                    button({onclick: () => {userActions.Navigate.showNode(`#${this.id}`)}}, "plant"),
                 )
             ),
             div({class: "links"}),
@@ -113,7 +116,7 @@ export default class NodeView extends NodeModel {
                 let res = appSession.root.getNodeById(link[1])
                 return res[0]
             })
-            .filter(nodeData => nodeData[0] != this.origin)
+            .filter(nodeData => nodeData[0] != this.openedFrom)
             .filter(nodeData => {
                 return nodeData[1] === this.filter || !this.filter
             })

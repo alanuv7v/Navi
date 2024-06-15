@@ -20,7 +20,6 @@ html {
     box-sizing: border-box;
     color: var(--light);
     text-overflow: ellipsis;
-    
 }
 *:focus {
     outline: 1px solid var(--light);
@@ -257,11 +256,17 @@ a:hover {
 #GoTo {
     flex-grow: 1;
 }
-
 .node {
     
     transition: all 0.3s ease;
     padding: 0px 10px 0px 10px;
+    overflow-y: hidden !important;
+    overflow-x: hidden !important;
+
+    * {
+        overflow-y: hidden !important;
+        overflow-x: hidden !important;
+    }
 
     > *:has(.value) > *:not(:last-child) {
         margin-right: 1em;
