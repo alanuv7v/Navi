@@ -47,22 +47,22 @@ export default class NodeView extends NodeModel {
                 div({class: "options"},
                 button({onclick: () => {
                     this.deselect()
-                }}, "*"/* "hide options */),
+                }, tooltip: "deselect node"}, "*"/* "hide options */),
                 div({class: "data"},
                     button({onclick: async () => {
                         this.showAuthOrigin(0)
-                    }}, "^^"/* "show authName origin" */),
+                    }, tooltip: "find authentic origin"}, "^^"/* "show authName origin" */),
                     button({onclick: async () => {
                         this.showOrigin()
-                    }}, "^"/* "show origin" */),
+                    }, tooltip: "find origin"}, "^"/* "show origin" */),
                     button({onclick: () => {
                         this.createBranch("")
                         this.open()
-                    }}, "+" /* "new branch" */),
+                    }, tooltip: "create new branch"}, "+" /* "new branch" */),
                     button({onclick: () => {
                         this.createLinkedNode("")
                         this.open()
-                    }}, "~"/* "new link" */),
+                    }, tooltip: "create new link"}, "~"/* "new link" */),
                     /* input({onblur: async (event) => {
                         let queryString = event.target.value
                         let res = await parseQuery(queryString)
@@ -82,7 +82,7 @@ export default class NodeView extends NodeModel {
                         }
                     }, onblur: (e) => {
                         if (this.deleteReady) e.target.value = "delete"
-                    }
+                    }, tooltip: "delete node"
                     }, "X"/* "delete" */),
                     //button("save metadata"),
                 ),
@@ -90,7 +90,7 @@ export default class NodeView extends NodeModel {
                     button({onclick: () => {
                         if (this.opened) this.close() 
                         else this.open()
-                    }}, "<>"/* "open/close" */),
+                    }, tooltip: "open/close"}, "<>"/* "open/close" */),
                     button({onclick: () => {
 
                         refs("CommandPalette").focus()
@@ -107,8 +107,8 @@ export default class NodeView extends NodeModel {
 
                         refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
 
-                    }}, "()"/* "filter" */),
-                    button({onclick: () => {userActions.Navigate.showNode(`#${this.id}`)}}, "."/* "plant" */),
+                    }, tooltip: "filter links"}, "()"/* "filter" */),
+                    button({onclick: () => {userActions.Navigate.showNode(`#${this.id}`)}, tooltip: "plant this node"}, "."/* "plant" */),
                 )
             ),
             div({class: "links"}),

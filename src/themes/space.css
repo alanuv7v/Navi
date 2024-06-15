@@ -82,7 +82,7 @@ button, button:not(:hover), input, textarea, select {
     
     padding: 0.5em 0.5em 0.5em 0.5em;
 
-    background-color: var(--dark);
+    background-color: transparent;
     color: var(--light);    
     border: none;
     outline: none;
@@ -312,9 +312,12 @@ a:hover {
         padding: 0px;
         font-size: 1em;
         box-shadow: none;
+
+        scale: 0.8;
+        transition: scale 0.15s cubic-bezier(0, 0, 0.28, 2.1);
     }
     .linksOpener:hover {
-        font-size: 1em;
+        scale: 1;
     }
 }
 
@@ -374,7 +377,21 @@ a:hover {
     }
 }
 
-/* .node, textarea, input, button {
-    border-radius: 6px !important; 
-    margin: 2px;
-} */
+[tooltip]:hover::after {
+
+    display: block;
+    position: absolute;
+    transform: translate(0em, 1em);
+    content: attr(tooltip);
+    padding: 0.5em;
+    background: var(--light);
+    color: var(--dark);
+    border-radius: 0.5em;
+    z-index: 2;
+
+    animation-name: appear;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+
+}
