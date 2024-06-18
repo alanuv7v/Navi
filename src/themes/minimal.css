@@ -1,8 +1,11 @@
 :root {
     --light: rgba(225, 245, 231, 1);
     --slight: rgba(197, 218, 203, 1);
-    --mild: rgb(225, 245, 231, 0.5);
-    --deep: rgba(71, 71, 71, 1);
+    --nice: rgb(190, 192, 190);
+    --mild: rgb(137, 139, 137);
+    --mildshade: rgb(109, 109, 109);
+    --shade: rgb(85, 85, 85);
+    --deep: rgb(48, 48, 48);
     --dark: rgba(0, 0, 0, 1);
     --vivid: rgba(151, 200, 128, 1);
     --link: rgb(153, 247, 225);
@@ -14,9 +17,6 @@
     --error: rgb(248, 16, 47);
 }
 
-html {
-    background-color: var(--dark);
-}
     
 * {
     font-size: 16px;
@@ -62,7 +62,7 @@ textarea {
     width: 100vw;
     height: 100vh;
 
-    background-color: var(--dark);
+    background-color: var(--mild);
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -73,31 +73,41 @@ textarea {
 #App > * {
     flex-shrink: 0;
 }
+button, button:not(:hover) {
 
+    color: var(--deep);    
+
+}
 button, button:not(:hover), input, textarea, select {
+
+
+    border: none;
+    outline: none;
+
+    transition: all 0.2s ease;
+
     padding-top: 4px;
     padding-bottom: 4px;
     
     padding: 0.5em 0.5em 0.5em 0.5em;
 
-    background-color: transparent;
-    color: var(--light);    
+    background-color: var(--mild);
     border: none;
     outline: none;
 
-    border-radius: 4px;
+    border-radius: 1em;
 
     margin: 0.2em;
     
     flex-shrink: 0;
 
-}
-button, button:not(:hover) {
-    
     box-shadow: 
-    inset 0px 2px 0px 0px var(--slight), 
-    inset 0px -4px 0px 0px var(--slight),
-    inset 0px 0px 0px 1px var(--mild);
+    /* inset 0px 1px 2px 0px var(--mild), */ /* top */
+    /* inset 0px -3px 4px 0px var(--mild), */ /* bottom, extruded */
+    /* inset 0px -1px 0px 0px var(--mild), */ /* bottom, extruded */
+    /* inset 0px 0px 2px 1px var(--mild), */ /* border */
+    0px -1px 0px 0px var(--nice), /* top hilight */
+    0px 3px 2px 0px var(--shade); /* casting shadow */
 
 }
 
@@ -113,7 +123,6 @@ button:hover {
     inset 0px -3px 0px 0px var(--light),
     inset 0px 0px 0px 1px var(--mild),
     0px 1px 8px 0px var(--light);
-
 }
 
 button:active {
@@ -127,16 +136,23 @@ button:active {
 
 input, textarea, select {
     
+    color: var(--deep);    
     box-shadow: 
-    inset 0px 0px 0px 2px var(--slight);
+    inset 0px -1px 0px 0px var(--nice), /* bottom hilight */
+    inset 0px 4px 4px 0px var(--deep) /* inner casted shadow */
+    ;
 
 }
 
 input:hover, textarea:hover, .clickable:hover {
     
-    color: var(--light); 
+    color: var(--deep);
+    background-color: var(--slight);
+    
     box-shadow: 
-    inset 0px 0px 0px 2px var(--light), 0px 0px 8px 0px var(--light);
+    inset 0px 0px 0px 2px var(--light),
+    inset 0px 4px 4px 0px var(--mild),
+    0px 0px 8px 0px var(--light);
 
 }
 
@@ -144,7 +160,12 @@ input:hover, textarea:hover, .clickable:hover {
 
 input:focus, .clickable:focus {
     background-color: var(--light); 
-    color: var(--dark);
+    color: var(--deep);
+    box-shadow: 
+    inset 0px 0px 0px 2px var(--light),
+    inset 0px 4px 4px 0px var(--mild),
+    0px 0px 8px 0px var(--light);
+    
 }
 
 ::-webkit-scrollbar {
@@ -152,7 +173,8 @@ input:focus, .clickable:focus {
 	height: 14px;
 }
 ::-webkit-scrollbar-thumb {
-	background-color: var(--light);
+	background-color: var(--shade);
+    border-radius: 1em;
     min-height: 50px;
 }
 .group {
@@ -174,6 +196,7 @@ input:focus, .clickable:focus {
     /* flex-basis: 0; */
     /* flex-grow: 1; */
     box-shadow: inset 0px 0px 0px 1px var(--deep);
+    padding: 0.5em;
 }
 
 a, .link {
@@ -224,7 +247,6 @@ a:hover {
 
 }
 #Editor {
-    box-shadow: inset 0px 0px 0px 1px var(--deep);
     flex-grow: 1;
     padding: 1em;
     overflow: auto;
@@ -362,11 +384,12 @@ a:hover {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 
     #Logs {
         width: 100%;
         flex-grow: 1;
-        overflow-x: hidden;
+        overflow-x: auto;
         overflow-y: auto;
     }
 }

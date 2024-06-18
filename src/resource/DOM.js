@@ -15,15 +15,17 @@ tagsToUse.forEach(t => {
 const {div, button, input} = tag
 
 export default div("App", {},
-    div("Header", {}, 
+    div("Header", {class: "window"}, 
         button("PickRoot", {onclick: () => {
             new CommandsTree(userActions.Root, false)
         }}, "木 "),
         button("History", {}, "↹"),
         button("GoBack", {}, "◁"),
         button("GoForth", {}, "▷"),
-        button("ToFrom", {}, "⇑"),
+        button("ToOrigin", {}, "⇑"),
         button("ToLinks", {}, "⇓"),
+        button("Path", {}, "//"),
+        button("Adress", {}, ">>"),
         //button("RegrowTree", {}, "⟳"),
         input("GoTo", {onchange: (event) => {
             userActions.Navigate.showNode(event.target.value)
@@ -31,13 +33,12 @@ export default div("App", {},
         input("Filter", {type: "text", placeholder: "filter", value: "*"}),
     ),
     div("Main", {}, 
-        div("Commands", {},
+        div("Commands", {class: "window"},
             div("Logs"),
             input("CommandPalette"),
         ),
-        div("View", {}, 
+        div("View", {class: "window"}, 
             div("Editor"),
-            div("RawEditor"),
         ),
     ),
     div("Footer", {},
