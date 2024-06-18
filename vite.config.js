@@ -7,7 +7,7 @@ export default defineConfig({
     root: 'src',
     build: {
         rollupOptions: {
-            entry: 'index.html'
+            minify: "false"
         }
     },
     server: {
