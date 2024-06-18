@@ -26,6 +26,7 @@ export default class NodeView extends NodeModel {
     opened = false
     filter = null
     openedFrom = null //id of a node that opened this node
+    tie = ""
 
     deleteReady = false
 
@@ -34,7 +35,7 @@ export default class NodeView extends NodeModel {
             button({
                 class: "linksOpener", 
                 onclick: () => this.toggleOpen(),
-                innerText: this.links.filter(link => link[0].split("/")[1] != "_origin").length
+                innerText: this.links.filter(link => link[0].split("/")[1] != "_origin").length,
             }),
             autoResizedTextarea({
                 class: "value", 
@@ -162,6 +163,7 @@ export default class NodeView extends NodeModel {
             })
             .forEach(({tie, view}) => {
                 view.openedFrom = this.id
+                view.tie = tie
                 view.DOM.querySelector(".tie").value = tie
                 this.DOM.querySelector(".links").append(view.DOM)
                 view.onDomMount()

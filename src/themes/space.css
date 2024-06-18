@@ -371,6 +371,10 @@ a:hover {
     }
 }
 
+*:has([tooltip]) {
+    overflow: visible;
+}
+
 [tooltip]:hover::after {
 
     display: block;
@@ -381,7 +385,6 @@ a:hover {
     background: var(--light);
     color: var(--dark);
     border-radius: 0.5em;
-    z-index: 2;
 
     animation-name: appear;
     animation-duration: 0.2s;

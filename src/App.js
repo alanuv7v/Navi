@@ -4,6 +4,10 @@
 // and merely display and organize them to show the final output to the cilent, not creating one.
 
 
+if ('serviceworker' in navigator) {
+    navigator.serviceWorker.register("./service-worker.js")
+}
+
 
 //test
 
