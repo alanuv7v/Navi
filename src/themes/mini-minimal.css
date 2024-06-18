@@ -97,7 +97,6 @@ input, textarea, select {
 
 input:hover, textarea:hover, .clickable:hover {
     
-    color: var(--deep);
     background-color: var(--slight);
     
     box-shadow: 
@@ -111,7 +110,6 @@ input:hover, textarea:hover, .clickable:hover {
 
 input:focus, .clickable:focus {
     background-color: var(--light); 
-    color: var(--deep);
     box-shadow: 
     inset 0px 0px 0px 2px var(--light),
     inset 0px 4px 4px 0px var(--mild),
@@ -485,7 +483,6 @@ input:focus, .clickable:focus {
 
 .node.authName {
     > * > .autoResize > .value {
-        color: var(--authName)
     }
     > * > .linksOpener {
         background-color: var(--authName)
