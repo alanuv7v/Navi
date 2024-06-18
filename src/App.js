@@ -9,15 +9,6 @@ if ('serviceworker' in navigator) {
 }
 
 
-//test
-
-import * as LocalDB from "./interface/LocalDBManager"
-
-window.LocalDB = await LocalDB.create()
-
-
-//test end
-
 import van from "vanjs-core"
 
 import * as userActions from "./natural/userActions"
@@ -48,6 +39,6 @@ van.add(document.body, App)
 
 new CommandsTree({...userActions})
 
-await init()
+init()
 
 export default App

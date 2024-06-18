@@ -1,9 +1,15 @@
+
 import { defineConfig } from 'vite';
 import ViteYaml from '@modyfi/vite-plugin-yaml';
 import wasm from "vite-plugin-wasm";
 
 export default defineConfig({
-    //root: 'src',
+    root: 'src',
+    build: {
+        rollupOptions: {
+            entry: 'index.html'
+        }
+    },
     server: {
         headers: {
             'Cross-Origin-Embedder-Policy': 'require-corp',
