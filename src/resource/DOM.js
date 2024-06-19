@@ -16,16 +16,33 @@ const {div, button, input} = tag
 
 export default div("App", {},
     div("Header", {class: "window"}, 
-        button("PickRoot", {onclick: () => {
-            new CommandsTree(userActions.Root, false)
-        }}, "木 "),
-        button("History", {}, "↹"),
-        button("GoBack", {}, "◁"),
-        button("GoForth", {}, "▷"),
-        button("ToOrigin", {}, "⇑"),
-        button("ToLinks", {}, "⇓"),
-        button("Path", {}, "//"),
-        button("Adress", {}, ">>"),
+        button("PickRoot", {
+            onclick: () => {
+                new CommandsTree(userActions.Root, false)
+            }, 
+            tooltip: "Root actions"
+        }, "木 "),
+        button("History", {
+            tooltip: "History"
+        }, "↹"),
+        button("GoBack", {
+            tooltip: "Go Back"
+        }, "◁"),
+        button("GoForth", {
+            tooltip: "Go Forth"
+        }, "▷"),
+        button("ToOrigin", {
+            tooltip: "Go to origin"
+        }, "⇑"),
+        button("ToLinks", {
+            tooltip: "Go to links"
+        }, "⇓"),
+        button("Path", {
+            tooltip: "View trace"
+        }, "//"),
+        button("Adress", {
+            tooltip: "View origins from root"
+        }, ">>"),
         //button("RegrowTree", {}, "⟳"),
         input("GoTo", {onchange: (event) => {
             userActions.Navigate.showNode(event.target.value)
