@@ -519,6 +519,7 @@ input:focus, .clickable:focus {
     #logs {
         flex-shrink: 1;
         overflow: hidden;
+        height: fit-content;
     }
 }
 
