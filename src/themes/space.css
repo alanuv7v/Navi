@@ -7,11 +7,9 @@
     --vivid: rgba(151, 200, 128, 1);
     --link: rgb(153, 247, 225);
     --hilight: rgba(99, 99, 253, 0.3);
-    --alert: rgba(255, 0, 0, 0.3);
     --executable: rgb(226, 255, 147);
     --authName: rgb(162, 252, 189);
     --back: rgb(252, 198, 162);
-    --error: rgb(248, 16, 47);
 }
 
 html {

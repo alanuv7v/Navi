@@ -22,13 +22,16 @@ import BrowserDB from "./resource/BrowserDB"
 import DOM from "./resource/DOM"
 import appSession from "./resource/appSession"
 import * as SessionManager from "./interface/SessionManager"
+import errorCatcher from "./tech/errorCatcher"
+import Logger from "./tech/gui/Logger"
 
 window._debug = {
     DOM,
     userActions,
     appSession,
     BrowserDB,
-    SessionManager
+    SessionManager,
+    Logger
 }
 
 //
@@ -39,6 +42,11 @@ van.add(document.body, App)
 
 new CommandsTree({...userActions})
 
+errorCatcher()
+
 init()
+
+Logger.log("Hi, user.")
+console.log(Logger.logs)
 
 export default App

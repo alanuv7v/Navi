@@ -18,7 +18,8 @@ export default class SessionData {
         seedNodeID: "",
         viewOptions: {
             globalFilter: "All"
-        }    
+        },
+        logs: []
     }
 
     root = {

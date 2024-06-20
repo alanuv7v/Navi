@@ -4,6 +4,7 @@ import van from "vanjs-core";
 import * as userActions from "../natural/userActions"
 import refs from "./DOMRefs";
 import CommandsTree from "../entity/view/CommandTree";
+import Logger from "../tech/gui/Logger";
 
 const tagsToUse = "div button input".split(" ")
 const tag = {}
@@ -15,7 +16,7 @@ tagsToUse.forEach(t => {
 const {div, button, input} = tag
 
 export default div("App", {},
-    div("Header", {class: "window"}, 
+    div("Header", {class: "window clean"}, 
         button("PickRoot", {
             onclick: () => {
                 new CommandsTree(userActions.Root, false)
@@ -58,8 +59,8 @@ export default div("App", {},
             div("Editor"),
         ),
     ),
-    div("Footer", {},
-        div("States")
+    div("Footer", {class: "clean"},
+        div("States"),
+        Logger.DOM
     ),
-    div("LogsPreview")
 )
