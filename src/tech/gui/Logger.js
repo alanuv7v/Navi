@@ -12,7 +12,7 @@ class Logger {
         return appSession.temp.logs
     }
 
-    maxLogs = 5
+    maxLogs = 100
 
     log (content, type) {
         
@@ -35,7 +35,7 @@ class Logger {
 
     showLastone() {
         let data = appSession.temp.logs[appSession.temp.logs.length-1]
-        this.DOM.append(this.createLogView(data))
+        this.DOM.querySelector("#logs").append(this.createLogView(data))
     }
     
     showAll() {
@@ -45,17 +45,19 @@ class Logger {
             if (!data) break
             logViews.push(this.createLogView(data))
         }
-        this.DOM.append(...logViews)
+        this.DOM.querySelector("#logs").append(...logViews)
     }
 
     render () {
         
-        this.DOM.innerHTML = ""
+        this.DOM.querySelector("#logs").innerHTML = ""
         if (this.expanded) {
             this.showAll()
+            this.DOM.classList.add("expanded")
         }
         else {
             this.showLastone()
+            this.DOM.classList.remove("expanded")
         }
         
     }
@@ -66,11 +68,16 @@ class Logger {
         this.render()
         
     }
+
     
-    DOM = button({
-        id: "LogsView",
-        onclick: () => this.onclick()
-    })
+    
+    DOM = div({id: "LogsView"},
+        div({id: "logs"}),
+        button({
+            onclick: () => this.onclick()
+        }, "<>")
+    )
+
 }
 
 export default new Logger()

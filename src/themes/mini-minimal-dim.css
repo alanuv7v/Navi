@@ -509,12 +509,22 @@ input:focus, .clickable:focus {
 }
 
 #LogsView {
+    display: flex;
     padding: 0px;
     width: 100%;
+    height: 100%;
+    flex-grow: 1;
+    
     overflow: auto;
+    #logs {
+        flex-shrink: 1;
+        overflow: hidden;
+    }
 }
 
 .log {
+    text-overflow: ellipsis;
+    overflow: hidden;
     padding: 0.25em 0.5em 0.25em 0.5em ;
     color: var(--alert);
 }
@@ -525,4 +535,10 @@ input:focus, .clickable:focus {
 
 .log.error {
     color: var(--error);
+}
+
+#LogsView.expanded {
+    .log {
+        word-wrap: break-word;
+    }
 }
