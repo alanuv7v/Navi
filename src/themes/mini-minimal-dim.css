@@ -517,7 +517,7 @@ input:focus, .clickable:focus {
     
     overflow: auto;
     #logs {
-        flex-shrink: 1;
+        flex-grow: 1;
         overflow: hidden;
         height: fit-content;
     }

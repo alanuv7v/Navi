@@ -10,4 +10,9 @@ export default function () {
         Logger.log(`UNHANDLED ERROR: ${error.stack}`, "error");
     };
 
+    window.addEventListener("error", function (e) {
+        Logger.log(`UNHANDLED ERROR: ${error.stack}`, "error");
+        return false;
+     })
+
 }
