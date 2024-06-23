@@ -170,7 +170,7 @@ button, button:not(:hover), input, textarea, select {
     border: none;
     outline: none;
 
-    transition: all 0.2s ease;
+    transition: all 0.2s ease, transform 0.1s ease;
 
     padding-top: 4px;
     padding-bottom: 4px;
@@ -204,19 +204,14 @@ textarea {
 
 button:hover, button:focus {
     color: var(--light); 
+
     box-shadow: 
-    inset 0px 1px 0px 0px var(--light), 
-    inset 0px -3px 0px 0px var(--light),
-    inset 0px 0px 0px 1px var(--mild),
-    0px 1px 8px 0px var(--light);
+    0px 2px 8px 0px var(--light); /* casting shadow */
+
 }
 
 button:active {
-    box-shadow: 
-    inset 0px 2px 0px 0px var(--light), 
-    inset 0px -1px 0px 0px var(--light),
-    inset 0px 0px 1px 1px var(--mild),
-    0px 1px 8px 0px var(--light);
+    transform: translate(0px, 2px);
 }
 
 
@@ -516,6 +511,10 @@ input:focus, .clickable:focus {
     flex-grow: 1;
     
     overflow: auto;
+    button.expand {
+        margin: 0px;
+        padding: 0.25em 0.5em 0.25em 0.5em ;
+    }
     #logs {
         flex-grow: 1;
         overflow: hidden;

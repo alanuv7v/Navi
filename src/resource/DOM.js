@@ -44,6 +44,17 @@ export default div("App", {},
         button("Adress", {
             tooltip: "View origins from root"
         }, ">>"),
+        button("Debugger", {
+            tooltip: "Debugger",
+            onclick: () => {
+                let t = van.tags.textarea()
+                refs("Editor").append(t)
+                t.addEventListener("change", (event) => {
+                    let res = JSON.stringify((new Function(`return ${event.target.value}`))(), null, 2)
+                    Logger.log(res)
+                })    
+            }
+        }, "<>"),
         //button("RegrowTree", {}, "⟳"),
         input("GoTo", {onchange: (event) => {
             userActions.Navigate.showNode(event.target.value)

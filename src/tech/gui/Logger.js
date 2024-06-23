@@ -74,6 +74,7 @@ class Logger {
     DOM = div({id: "LogsView"},
         div({id: "logs"}),
         button({
+            class: "expand",
             onclick: () => this.onclick()
         }, "<>")
     )
