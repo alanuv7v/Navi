@@ -63,3 +63,15 @@ export async function listAllFilesAndDirs(dirHandle) {
     }
     return files;
 }
+
+export async function downloadFile (name, blob) {
+    
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link to download it
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name || "root"
+    a.click();
+
+}

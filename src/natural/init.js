@@ -30,8 +30,8 @@ export default async function init () {
 }
 
 export async function initRootDB (rootHandle) {
-    if (!(await rootHandle.queryPermission()) === "granted") {
-        await rootHandle.requestPermission()
+    if (!(await rootHandle?.queryPermission()) === "granted") {
+        await rootHandle?.requestPermission()
     } 
     appSession.root.name = rootHandle.name, 
     appSession.root.DB = await LocalDBManager.load(rootHandle)

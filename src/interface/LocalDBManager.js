@@ -34,14 +34,26 @@ export async function create() {
 }
 
 
-export async function load(handle) {
+export async function load(input) {
 
     const SQL = await initSqlJs(
         {locateFile: file => `https://sql.js.org/dist/${file}`}
     )
-    await handle.requestPermission()
-    const file = await handle.getFile();
-    const blob = new Blob([file], { type: file.type })
+    
+    let blob
+
+    if (input instanceof Blob) {
+
+        blob = input
+
+    } else if (input instanceof FileSystemFileHandle) {  
+
+        await input.requestPermission()
+        let file = await input.getFile();
+        blob = new Blob([file], { type: file.type })
+        
+    }
+
     let dbArrayBuffer = await blob.arrayBuffer()
     let DB = new SQL.Database(new Uint8Array(dbArrayBuffer))
     return DB

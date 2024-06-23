@@ -10,6 +10,8 @@ import RootData from "../entity/static/RootData"
 
 import { default as init, initRootDB } from "./init"
 
+import * as fileSystem from "../interface/FileSystem"
+
 
 export const _initRootDB = async () => await initRootDB(appSession.temp.rootHandle)
 
@@ -41,36 +43,58 @@ export const Root = {
         // Export the database to an Uint8Array
         const data = localDB.export();
         const blob = new Blob([data], { type: "application/octet-stream" });
-        const url = window.URL.createObjectURL(blob);
-
-        // Create a link to download it
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = name || "root"
-        a.click();
-        window.URL.revokeObjectURL(url);
+        fileSystem.downloadFile(blob)
+        
     },
     async accessRoot() {
         return await appSession.temp.rootHandle.requestPermission()
     },
     async openRoot() {
-    
-        const rootHandle = (await window.showOpenFilePicker({multiple: false}))[0]
-        console.log(rootHandle)
-        if (!(await rootHandle.queryPermission()) === "granted") {
-            await rootHandle.requestPermission()
+
+        if (!window.showOpenFilePicker){
+
+            let rootHandle = (await window.showOpenFilePicker({multiple: false}))[0]
+
+            if (!(await rootHandle.queryPermission()) === "granted") {
+                await rootHandle.requestPermission()
+            }
+
+            appSession.temp.rootHandle = rootHandle
+            appSession.root.name = rootHandle.name, 
+            appSession.root.DB = await LocalDBManager.load(rootHandle)
+
+        } else {
+
+            let i = document.createElement('input')
+            i.type = "file"
+            i.multiple = false
+            i.click()
+
+            await (new Promise((resolve, reject) => {
+
+                async function onchange (event) {
+                    
+                    let rootBlob = event.target.files[0]
+                    
+                    appSession.temp.rootHandle = null
+                    appSession.root.name = rootBlob.name, 
+                    appSession.root.DB = await LocalDBManager.load(rootBlob)
+                    
+                    resolve()
+                
+                }
+                
+                i.addEventListener("change", onchange)
+
+            }))
+
         }
-        
-        appSession.temp.rootHandle = rootHandle
-        
-        appSession.root.name = rootHandle.name, 
-        appSession.root.DB = await LocalDBManager.load(rootHandle)
     
-        console.log(`Opened root: ${appSession.temp.rootHandle.name}`)
+        console.log(`Opened root: ${appSession.root.name}`)
         
         SessionManager.saveSession()
     
-        Navigate.showNode("root")
+        Navigate.showNode("@root")
     
         SessionManager.saveSession()
         
@@ -79,6 +103,11 @@ export const Root = {
     },
     async updateRoot() {
         return await LocalDBManager.update()
+    },
+    async downloadRoot() {
+        const data = await appSession.root.DB.export()
+        const blob = new Blob([data], { type: "application/octet-stream" });
+        return await fileSystem.downloadFile(appSession.root.name, blob)
     },
 }
 
@@ -140,6 +169,7 @@ export const Navigate = {
         }
         
         catch (err) {
+            console.trace()
             console.error(err, `Failed to show node by the given query: "${queryString}". the query is formatted wrongly or matching node not exist in the root.`)
         }
 
