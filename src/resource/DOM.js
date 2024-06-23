@@ -15,7 +15,9 @@ tagsToUse.forEach(t => {
 
 const {div, button, input} = tag
 
-export default div("App", {},
+export default div("App", {
+        style: "font-size: 16px;"
+    },
     div("Header", {class: "window clean"}, 
         button("PickRoot", {
             onclick: () => {

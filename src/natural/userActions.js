@@ -51,7 +51,7 @@ export const Root = {
     },
     async openRoot() {
 
-        if (!window.showOpenFilePicker){
+        if (window.showOpenFilePicker){
 
             let rootHandle = (await window.showOpenFilePicker({multiple: false}))[0]
 
@@ -182,4 +182,17 @@ export const Navigate = {
         },
     },
 
+}
+
+let global = () => document.querySelector('#App')
+let pureCssValue = (str) => Number(str.match(/[0-9]+/)[0])
+    
+export const Visual = {
+    sizeUp () {
+        //global fontsize down
+        global().style.fontSize = pureCssValue(global().style.fontSize) +1 + "px"
+    },
+    sizeDown () {
+        global().style.fontSize = pureCssValue(global().style.fontSize) -1 + "px"
+    }
 }

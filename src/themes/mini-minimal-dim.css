@@ -17,13 +17,12 @@
 }
 
     
+
 * {
-    font-size: 16px;
+    font-size: inherit;
     box-sizing: border-box;
     color: var(--light);
     text-overflow: ellipsis;
-}
-*:focus {
 }
 
 body {
@@ -56,6 +55,8 @@ textarea {
 }
 
 #App {
+
+    font-size: 16px;
 
     width: 100vw;
     height: 100vh;
@@ -368,10 +369,14 @@ input:focus, .clickable:focus {
 }
 
 .node {
-    
+
     transition: all 0.3s ease;
-    padding: 0px 10px 0px 10px;
     
+    overflow: visible;
+
+    > * {
+        overflow: visible;
+    }
 
     > *:has(.value) > *:not(:last-child) {
         margin-right: 1em;
@@ -388,7 +393,9 @@ input:focus, .clickable:focus {
 
     }
     .value:hover {
-        box-shadow: inset 2px 0px 0px 0px var(--deep) !important;
+        background-color: var(--deep);
+        box-shadow: 
+        inset 4px 0px 0px 0px var(--shade) !important;
     }
     .value:focus {
         box-shadow: 
@@ -396,11 +403,14 @@ input:focus, .clickable:focus {
     }
     .options {
         display: none;
-        overflow-x: auto;
+        overflow: visible;
         align-items: flex-start;
+        > * {
+            min-height: 2em;
+            height: 2em;
+        }
         button {
             min-width: 3em;
-            min-height: 2.5em;
         }
     }
     .links {

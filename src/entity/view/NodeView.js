@@ -61,6 +61,7 @@ export default class NodeView extends NodeModel {
             }, tooltip: "create new branch"}, "+" /* "new branch" */),
             button({onclick: () => {
                 this.createLinkedNode("")
+                this.render()
                 this.open()
             }, tooltip: "create new link"}, "~"/* "new link" */),
             /* input({onblur: async (event) => {
@@ -115,10 +116,8 @@ export default class NodeView extends NodeModel {
 
 
     render () {
-        this.refreshData()
         this.DOM.querySelector(".value").value = this.value
-        this.close()
-        this.open()
+        this.DOM.querySelector(".linksOpener").innerText = this.links.filter(link => link[0].split("/")[1] != "_origin").length
     }
 
     delete () {
