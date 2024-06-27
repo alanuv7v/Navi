@@ -9,6 +9,8 @@ const {div, span, button, textarea, input, a} = van.tags
 import autoResizedTextarea from "../../tech/gui/autoResizedTextarea"
 
 import * as userActions from "../../natural/userActions"
+import hearCommand from "./hearCommand"
+import Logger from "../../tech/gui/Logger"
 
 
 export default class NodeView extends NodeModel {
@@ -61,9 +63,16 @@ export default class NodeView extends NodeModel {
                 this.open()
             }, tooltip: "create new branch"}, "+" /* "new branch" */),
             button({onclick: () => {
-                this.createLinkedNode("")
-                this.render()
-                this.open()
+                hearCommand((queryString) => {
+                    try {
+                        let targetNodeId = parseQuery(queryString)[0].id
+                        this.linkTo(["_", "_"], targetNodeId)
+                        this.render()
+                        this.open()
+                    } catch (err) {
+                        Logger.log(`failed to link "${queryString}"`, "error")
+                    }
+                })
             }, tooltip: "create new link"}, "~"/* "new link" */),
             /* input({onblur: async (event) => {
                 let queryString = event.target.value

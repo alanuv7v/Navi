@@ -7,6 +7,7 @@ import refs from "../../resource/DOMRefs"
 import * as userActions from "../../natural/userActions"
 
 import Logger from "../../tech/gui/Logger"
+import hearCommand from "./hearCommand"
 
 export default class CommandsTree {
 
@@ -77,24 +78,9 @@ class CommandButton {
             Logger.log(`executing: ${this.name}()`) 
 
             if (this.requireParams) {
+
+                hearCommand(this.value)
             
-                refs("CommandPalette").focus()
-                refs("CommandPalette").placeholder = "arguments..."
-                
-                let onArgumentsSubmit = async (event) => {
-
-                    let actionResult = await this.value(event.target.value)
-                    Logger.log(`action result: ${actionResult}`)
-                    
-                    if (this.requireParams) {
-                        refs("CommandPalette").placeholder = ""
-                        refs("CommandPalette").removeEventListener("blur", onArgumentsSubmit)
-                    }
-
-                }
-
-                refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
-                
             } else {
 
                 let actionResult = await this.value()

@@ -115,23 +115,41 @@ export default class NodeModel extends NodeData {
         return this
     }
 
-    linkTo (tie, nodeID) {
-        let _tie = tie.join("/") || "_/_"
+    addLink (tie, nodeID) {
+        let _tie = tie?.join("/") || "_/_"
         this.links.push([_tie, nodeID])
         this.updateRecord()
     }
+
+    linkTo (tie, nodeID) {
+
+        tie = tie || ["_", "_"] // [this, that]
+        let mirrorTie = structuredClone(tie).reverse()
+        
+        let newNodeModel = new NodeModel(nodeID, null, [])
+        newNodeModel.refreshData()
+        
+        this.addLink(tie, newNodeModel.id)
+        this.updateRecord()
+
+        newNodeModel.addLink(mirrorTie, this.id)
+        newNodeModel.updateRecord()
+
+    }
+
+
 
     createLinkedNode (tie, value) {
         tie = tie || ["_", "_"] // [this, that]
         let mirrorTie = structuredClone(tie).reverse()
         
-        let newNodeModel = new NodeModel(null, value, [this.id])
+        let newNodeModel = new NodeModel(null, value, [])
         newNodeModel.createRecord()
         
-        this.linkTo(tie, newNodeModel.id)
+        this.addLink(tie, newNodeModel.id)
         this.updateRecord()
 
-        newNodeModel.linkTo(mirrorTie, this.id)
+        newNodeModel.addLink(mirrorTie, this.id)
         newNodeModel.updateRecord()
     }
 
