@@ -42,6 +42,7 @@ export default class NodeView extends NodeModel {
                 value: this.value, 
                 onclick: (event) => this.#onclick(event), 
                 onchange: (event) => {this.#onValueChange(event)},
+                onfocus: () => this.select()
             }),
         ),
         div({class: "options"},
@@ -193,6 +194,7 @@ export default class NodeView extends NodeModel {
         appSession.selectedNode = this
         this.DOM.querySelector("textarea.value.input").focus()
         this.selected = true
+        appSession.temp.lastNodeId = this.id
     }
 
     deselect() {

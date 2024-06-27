@@ -12,21 +12,41 @@ import { default as init, initRootDB } from "./init"
 
 import * as fileSystem from "../interface/FileSystem"
 import BrowserDB from "../resource/BrowserDB"
+import Logger from "../tech/gui/Logger"
 
 
-export const _initRootDB = async () => await initRootDB(appSession.temp.rootHandle)
+const _initRootDB = async () => await initRootDB(appSession.temp.rootHandle)
 
 
-export async function _init() { 
+async function _init() { 
     init()
 }
 
-export const Sessions = {
+const Sessions = {
+    autosaveOn () {
+        if (appSession.settings.autosaveInterval < 10*1000) return false
+        appSession.settings.autosave = true
+        appSession.settings.autosaveIntervalId = setTimeout(async () => {
+            await Sessions.saveSession_()
+        }, appSession.settings.autosaveInterval);
+        return appSession.settings.autosaveIntervalId
+    },
+    autosaveOff () {
+        appSession.settings.autosave = false
+        clearInterval(appSession.settings.autosaveIntervalId)
+    },
+    setAutosaveInterval_ (value) {
+        appSession.settings.autosaveInterval = Math.max(10*1000, value)
+        Sessions.autosaveOff()
+        Sessions.autosaveOn()
+    },
     async getAllSessions() {
         return await SessionManager.getAllSessions()
     },
     async saveSession_(id) {
-        return await SessionManager.saveSession(id || "lastUsed", appSession.temp)
+        let res = await SessionManager.saveSession(id || "lastUsed")
+        Logger.log("session saved", "success")
+        return res
     },
     async loadSession_(id) {
         return await SessionManager.loadSession(id || "lastUsed")
@@ -36,7 +56,7 @@ export const Sessions = {
     }
 }
 
-export const Root = {
+const Root = {
     async createRoot_(name) {
         //create the DB
         let localDB = await LocalDBManager.create()
@@ -91,8 +111,6 @@ export const Root = {
         }
     
         console.log(`Opened root: ${appSession.root.name}`)
-        
-        SessionManager.saveSession()
     
         Navigate.showNode_("@root")
     
@@ -111,7 +129,7 @@ export const Root = {
     },
 }
 
-export const Edit = {
+const Edit = {
     copyNode: () => {
         appSession.copiedNode = appSession.selectedNode
         return appSession.copiedNode
@@ -137,7 +155,7 @@ export const Edit = {
     }
 }
 
-export const Prune = {
+const Prune = {
 
     toggleOpen: () => {
         if (appSession.selectedNode.opened) {
@@ -153,7 +171,7 @@ export const Prune = {
 
 }
 
-export const Navigate = {
+const Navigate = {
     //search는 openTree와 동일해서 제외.
     async showNode_ (queryString) { //Navigate.plant로 옮길까.
         
@@ -185,7 +203,7 @@ export const Navigate = {
 let global = () => document.querySelector('#App')
 let pureCssValue = (str) => Number(str.match(/[0-9]+/)[0])
 
-export const Visual = {
+const Visual = {
     setSize () {
         global().style.fontSize = appSession.settings.style.fontSize + "px"
     },
@@ -199,7 +217,7 @@ export const Visual = {
     }
 }
 
-export const Settings = {
+const Settings = {
     async save () {
         return await BrowserDB.settings.put(
             {   
@@ -212,3 +230,5 @@ export const Settings = {
         return await BrowserDB.settings.clear()
     }
 }
+
+export {Root, Sessions, Navigate, Prune, Edit, Visual, _init, _initRootDB}

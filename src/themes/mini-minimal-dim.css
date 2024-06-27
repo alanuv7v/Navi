@@ -1,11 +1,11 @@
 :root {
     --light: rgb(250, 250, 250);
-    --slight: rgb(206, 211, 208);
-    --nice: rgb(211, 214, 211);
+    --slight: rgb(197, 194, 194);
+    --nice: rgb(208, 211, 208);
     --mild: rgb(181, 185, 181);
     --mildshade: rgb(109, 109, 109);
     --shade: rgb(85, 85, 85);
-    --deep: rgb(48, 48, 48);
+    --deep: rgb(44, 44, 44);
     --deeper: rgb(20, 20, 20);
     --dark: rgba(0, 0, 0, 1);
     --vivid: rgba(151, 200, 128, 1);
@@ -14,6 +14,9 @@
     --executable: rgb(186, 253, 208);
     --authName: rgb(162, 252, 189);
     --back: rgb(252, 198, 162);
+
+    
+    --success: rgba(151, 200, 128, 1);
 }
 
     
@@ -229,18 +232,40 @@ button:hover {
 @keyframes active {
     0% {    
         box-shadow: 
-        0px 2px 6px 0px var(--light); /* casting shadow */
+        0px -1px 0px 0px var(--shade), /* top hilight */
+        0px 4px 4px 0px var(--deeper); /* casting shadow */
+    }
+    50% {
+        box-shadow: 
+        0px -1px 1px 0px var(--shade),
+        0px 1px 1px 0px var(--deeper); /* casting shadow */
     }
     100% {
         box-shadow: 
-        0px 2px 12px 0px var(--light); /* casting shadow */
+        inset 0px 1px 1px 0px var(--dark),
+        inset 0px 1px 2px 0px var(--dark),
+        inset 0px -1px 1px 0px var(--dark),
+        0px 2px 1px 0px var(--shade); 
     }
 }
 
-button:active {
+button:focus {
+    color: var(--light);
+
     box-shadow: 
+    inset 0px 1px 1px 0px var(--dark),
+    inset 0px 1px 2px 0px var(--dark),
+    inset 0px -1px 1px 0px var(--dark),
+    0px 2px 1px 0px var(--shade);
+    
+    animation-name: active;
+    animation-duration: 0.15s;
+    animation-iteration-count: 1;
+    animation-direction: alternate;
+    animation-timing-function: ease-in;
+    /* box-shadow: 
     0px -1px 1px 0px var(--shade),
-    0px 1px 1px 0px var(--deeper); /* casting shadow */
+    0px 1px 1px 0px var(--deeper); */ /* casting shadow */
 }
 
 .nothing button:focus {
@@ -259,6 +284,7 @@ animation-timing-function: ease; */
 input, textarea, select {
     
     color: var(--slight);    
+    background-color: var(--shade);
     box-shadow: 
     inset 0px -1px 0px 0px var(--shade), /* bottom hilight */
     inset 0px 4px 4px 0px var(--dark) /* inner casted shadow */
@@ -272,9 +298,8 @@ input:hover, textarea:hover, .clickable:hover {
     background-color: var(--mild);
     
     box-shadow: 
-    inset 0px 0px 0px 2px var(--nice),
     inset 0px 4px 4px 0px var(--mildshade),
-    0px 0px 8px 0px var(--nice);
+    0px 0px 8px 0px var(--mildshade);
 
 }
 
@@ -284,9 +309,8 @@ input:focus, .clickable:focus {
     background-color: var(--light); 
     color: var(--deep);
     box-shadow: 
-    inset 0px 0px 0px 2px var(--light),
     inset 0px 4px 4px 0px var(--mild),
-    0px 0px 8px 0px var(--light);
+    0px 0px 8px 0px var(--slight);
     
 }
 
@@ -433,10 +457,14 @@ input:focus, .clickable:focus {
     }
     .value {
         margin: 0px;
-        min-width: 30em;
+        min-width: 10em;
+        width: 100vw;
+        
         padding-left: 1em;
         flex-grow: 1;
         transition: all 0.3s ease;
+        
+        background-color: transparent;
         box-shadow: inset 0px 0px 0px 0px var(--deep) !important;
 
         line-height: 1.8em;
@@ -594,6 +622,10 @@ input:focus, .clickable:focus {
 
 .log.error {
     color: var(--error);
+}
+
+.log.success {
+    color: var(--success);
 }
 
 #LogsView.expanded {

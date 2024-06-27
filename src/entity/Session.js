@@ -19,7 +19,8 @@ export default class SessionData {
         viewOptions: {
             globalFilter: "All"
         },
-        logs: []
+        logs: [],
+        lastNodeId: null
     }
 
     root = {
@@ -35,7 +36,12 @@ export default class SessionData {
     settings = {
         style: {
             fontSize: 16
-        }
+        },
+        autosave: true,
+        autosaveInterval: 10*1000,
+        autosaveIntervalId: null
     }
+
+    
 
 }

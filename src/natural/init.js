@@ -6,27 +6,36 @@ import * as LocalDBManager from "../interface/LocalDBManager"
 import BrowserDB from "../resource/BrowserDB"
 
 import * as userActions from "./userActions"
+import Logger from "../tech/gui/Logger"
 
 export default async function init () {
 
     let defaultSettings = appSession.settings
     try {
-        appSession.settings = {defaultSettings, ...JSON.parse((await BrowserDB.settings.get("lastUsed")).data)}
+        appSession.settings = {...defaultSettings, ...JSON.parse((await BrowserDB.settings.get("lastUsed")).data)}
     } catch {
 
     }
     userActions.Visual.setSize()
-    
 
     //init appSession
     let lastSession = await SessionManager.getLastSession()
+    console.log(lastSession)
 
-    if (lastSession) {
+    if (lastSession?.data) {
 
         appSession.copy(lastSession.data)
         console.log("Loaded last session data.")
         console.log(lastSession)
-        initRootDB(lastSession.data.rootHandle)
+        await initRootDB(lastSession.data.rootHandle)
+
+        try {
+            userActions.Navigate.showNode_("#" + appSession.temp.lastNodeId)
+        }  catch(err) {
+            Logger.log(err, "error")
+            //show root node
+            UserActions.Navigate.showNode_("@root")
+        }
 
     } else {
 
@@ -35,6 +44,8 @@ export default async function init () {
         console.log("Created new app session with empty data.")
 
     }
+    
+    userActions.Sessions.autosaveOn()
     
 
 }
@@ -45,7 +56,5 @@ export async function initRootDB (rootHandle) {
     } 
     appSession.root.name = rootHandle.name, 
     appSession.root.DB = await LocalDBManager.load(rootHandle)
-    
-    //show root node
-    UserActions.Navigate.showNode_("@root")
+    return appSession.root.DB
 }

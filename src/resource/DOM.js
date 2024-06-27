@@ -59,10 +59,16 @@ export default div("App", {
                 }
             }, "<>"),
             //button("RegrowTree", {}, "⟳"),
-            input("GoTo", {onchange: (event) => {
-                userActions.Navigate.showNode_(event.target.value)
-            }}),
-            input("Filter", {type: "text", placeholder: "filter", value: "*"}),
+            input("GoTo", {
+                onchange: (event) => {
+                    userActions.Navigate.showNode_(event.target.value)
+                }, 
+                tooltip: "Go to"
+            }),
+            input("Filter", {    
+                tooltip: "Filter",
+                type: "text", placeholder: "filter", value: "*"
+            }),
         ),
         div("Commands", {},
             div("Logs"),
@@ -73,7 +79,7 @@ export default div("App", {
             div("Editor"),
         ),
     ),
-    div("Footer", {class: "clean"},
+    div("Footer", {class: ""},
         input("CommandPalette"),
         div("States"),
         Logger.DOM
