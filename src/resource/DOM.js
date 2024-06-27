@@ -18,7 +18,7 @@ const {div, button, input} = tag
 export default div("App", {
         style: "font-size: 16px;"
     },
-    div("Header", {class: "window clean"}, 
+    div("Header", {class: ""}, 
         div("QuickActions", {}, 
             button("PickRoot", {
                 onclick: () => {
@@ -69,7 +69,7 @@ export default div("App", {
         ),
     ),
     div("Main", {}, 
-        div("View", {class: "window"}, 
+        div("View", {class: ""}, 
             div("Editor"),
         ),
     ),
