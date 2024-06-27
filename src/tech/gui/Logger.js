@@ -19,7 +19,7 @@ class Logger {
         if (appSession.temp.logs.length > this.maxLogs) {
             appSession.temp.logs = appSession.temp.logs.slice(-this.maxLogs)
         }
-
+        
         appSession.temp.logs.push({content, type})
         this.render()
 
@@ -28,8 +28,7 @@ class Logger {
     createLogView (data) {
         let {content, type} = data
         return div(
-            {class: type ? `log ${type}` : "log"},
-            content
+            {class: type ? `log ${type}` : "log", innerHTML: content}
         )
     }
 
@@ -68,8 +67,6 @@ class Logger {
         this.render()
         
     }
-
-    
     
     DOM = div({id: "LogsView"},
         div({id: "logs"}),

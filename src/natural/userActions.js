@@ -11,6 +11,7 @@ import RootData from "../entity/static/RootData"
 import { default as init, initRootDB } from "./init"
 
 import * as fileSystem from "../interface/FileSystem"
+import BrowserDB from "../resource/BrowserDB"
 
 
 export const _initRootDB = async () => await initRootDB(appSession.temp.rootHandle)
@@ -24,11 +25,11 @@ export const Sessions = {
     async getAllSessions() {
         return await SessionManager.getAllSessions()
     },
-    async saveSession(id) {
-        return await SessionManager.saveSession(id, appSession.temp)
+    async saveSession_(id) {
+        return await SessionManager.saveSession(id || "lastUsed", appSession.temp)
     },
-    async loadSession(id) {
-        return await SessionManager.loadSession(id)
+    async loadSession_(id) {
+        return await SessionManager.loadSession(id || "lastUsed")
     },
     async clearSessions () {
         return await SessionManager.clearAllSessions()
@@ -36,22 +37,21 @@ export const Sessions = {
 }
 
 export const Root = {
-    async createRoot() {
+    async createRoot_(name) {
         //create the DB
         let localDB = await LocalDBManager.create()
         
         // Export the database to an Uint8Array
         const data = localDB.export();
         const blob = new Blob([data], { type: "application/octet-stream" });
-        fileSystem.downloadFile(blob)
-        
+        fileSystem.downloadFile(name || "root", blob)
     },
     async accessRoot() {
         return await appSession.temp.rootHandle.requestPermission()
     },
     async openRoot() {
 
-        if (window.showOpenFilePicker){
+        if (window.showOpenFilePicker) {
 
             let rootHandle = (await window.showOpenFilePicker({multiple: false}))[0]
 
@@ -94,7 +94,7 @@ export const Root = {
         
         SessionManager.saveSession()
     
-        Navigate.showNode("@root")
+        Navigate.showNode_("@root")
     
         SessionManager.saveSession()
         
@@ -112,17 +112,15 @@ export const Root = {
 }
 
 export const Edit = {
-    copyNode: (node) => {
+    copyNode: () => {
         appSession.copiedNode = appSession.selectedNode
         return appSession.copiedNode
     },
-    pasteNode: (parentNodeQueryString) => {
+    pasteNode: () => {
         appSession.copiedNode.changeParent(appSession.selectedNode)
         return appSession.selectedNode
     },
     addLinkedNode: (key, value) => {
-        //let parentNode = Tree.selectedNode
-        //this.pasteNode(parentNode)
         appSession.selectedNode.addChild(key, value)
         return appSession.selectedNode
     },
@@ -157,7 +155,7 @@ export const Prune = {
 
 export const Navigate = {
     //search는 openTree와 동일해서 제외.
-    async showNode (queryString) { //Navigate.plant로 옮길까.
+    async showNode_ (queryString) { //Navigate.plant로 옮길까.
         
         try {
             let res = (await parseQuery(queryString))
@@ -186,13 +184,31 @@ export const Navigate = {
 
 let global = () => document.querySelector('#App')
 let pureCssValue = (str) => Number(str.match(/[0-9]+/)[0])
-    
+
 export const Visual = {
+    setSize () {
+        global().style.fontSize = appSession.settings.style.fontSize + "px"
+    },
     sizeUp () {
-        //global fontsize down
-        global().style.fontSize = pureCssValue(global().style.fontSize) +1 + "px"
+        appSession.settings.style.fontSize++
+        Visual.setSize()
     },
     sizeDown () {
-        global().style.fontSize = pureCssValue(global().style.fontSize) -1 + "px"
+        appSession.settings.style.fontSize--
+        Visual.setSize()
+    }
+}
+
+export const Settings = {
+    async save () {
+        return await BrowserDB.settings.put(
+            {   
+                id: "lastUsed",
+                data: JSON.stringify(appSession.settings)
+            }
+        )
+    },
+    async clear () {
+        return await BrowserDB.settings.clear()
     }
 }

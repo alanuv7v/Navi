@@ -71,7 +71,7 @@ export async function downloadFile (name, blob) {
     // Create a link to download it
     const a = document.createElement("a");
     a.href = url;
-    a.download = name || "root"
+    a.download = name
     a.click();
 
 }

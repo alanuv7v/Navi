@@ -32,4 +32,10 @@ export default class SessionData {
     selectedNode = null // nodeID
     copiedNode = null // nodeID
 
+    settings = {
+        style: {
+            fontSize: 16
+        }
+    }
+
 }

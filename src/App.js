@@ -44,9 +44,9 @@ new CommandsTree({...userActions})
 
 errorCatcher()
 
-init()
-
 Logger.log("Hi, user.")
 console.log(Logger.logs)
+
+init()
 
 export default App

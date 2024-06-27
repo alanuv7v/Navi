@@ -6,6 +6,8 @@ const t = van.tags
 import refs from "../../resource/DOMRefs"
 import * as userActions from "../../natural/userActions"
 
+import Logger from "../../tech/gui/Logger"
+
 export default class CommandsTree {
 
     constructor (data, isDefault=true) {
@@ -17,7 +19,7 @@ export default class CommandsTree {
         if (!isDefault) {
             let backToDefault = new CommandButton("...", () => {
                 refs("Logs").innerHTML = ""
-                new CommandsTree({userActions})
+                new CommandsTree({...userActions})
             })
             refs("Logs").append(backToDefault.DOM)
         }
@@ -59,9 +61,12 @@ class CommandButton {
 
     opened = false
 
-    onclick = () => {
+    get requireParams () {
+        return (typeof this.value === "function") && (this.name.slice(-1) === "_")
+    }
+
+    onclick = async () => {
         //execute function
-        console.log(this)
 
         if (this.backToDefault) {
 
@@ -69,19 +74,34 @@ class CommandButton {
 
         } else if (typeof this.value === "function") {
             
-            console.log("executing: ", this.value) 
+            Logger.log(`executing: ${this.name}()`) 
 
-            refs("CommandPalette").focus()
-            refs("CommandPalette").placeholder = "arguments..."
+            if (this.requireParams) {
             
-            let onArgumentsSubmit = async (event) => {
-                let actionResult = await this.value(event.target.value)
-                console.log(actionResult)
-                refs("CommandPalette").placeholder = ""
-                refs("CommandPalette").removeEventListener("blur", onArgumentsSubmit)
-            }
+                refs("CommandPalette").focus()
+                refs("CommandPalette").placeholder = "arguments..."
+                
+                let onArgumentsSubmit = async (event) => {
 
-            refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
+                    let actionResult = await this.value(event.target.value)
+                    Logger.log(`action result: ${actionResult}`)
+                    
+                    if (this.requireParams) {
+                        refs("CommandPalette").placeholder = ""
+                        refs("CommandPalette").removeEventListener("blur", onArgumentsSubmit)
+                    }
+
+                }
+
+                refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
+                
+            } else {
+
+                let actionResult = await this.value()
+                Logger.log(`action result: ${actionResult}`)
+
+            }
+            
             
         } else {
         

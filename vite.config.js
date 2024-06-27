@@ -2,6 +2,7 @@
 import { defineConfig } from 'vite';
 import ViteYaml from '@modyfi/vite-plugin-yaml';
 import wasm from "vite-plugin-wasm";
+import path from "path"
 
 export default defineConfig({
     root: 'src',
@@ -21,6 +22,16 @@ export default defineConfig({
         ViteYaml(), 
         wasm(),
     ],
+    css: {
+        preprocessorOptions: {
+            styl: {
+                additionalData: [path.resolve(__dirname, './src/themes/mini-minimal-dim.styl')],
+                //imports: `@import "./src/themes/mini-minimal-dim.styl"`
+                //additionalData: `@import "./src/themes/mini-minimal-dim.styl"`
+            }
+        }
+    },
+    
 });
 
 /* export default defineConfig({

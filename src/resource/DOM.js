@@ -19,60 +19,62 @@ export default div("App", {
         style: "font-size: 16px;"
     },
     div("Header", {class: "window clean"}, 
-        button("PickRoot", {
-            onclick: () => {
-                new CommandsTree(userActions.Root, false)
-            }, 
-            tooltip: "Root actions"
-        }, "木 "),
-        button("History", {
-            tooltip: "History"
-        }, "↹"),
-        button("GoBack", {
-            tooltip: "Go Back"
-        }, "◁"),
-        button("GoForth", {
-            tooltip: "Go Forth"
-        }, "▷"),
-        button("ToOrigin", {
-            tooltip: "Go to origin"
-        }, "⇑"),
-        button("ToLinks", {
-            tooltip: "Go to links"
-        }, "⇓"),
-        button("Path", {
-            tooltip: "View trace"
-        }, "//"),
-        button("Adress", {
-            tooltip: "View origins from root"
-        }, ">>"),
-        button("Debugger", {
-            tooltip: "Debugger",
-            onclick: () => {
-                let t = van.tags.textarea()
-                refs("Editor").append(t)
-                t.addEventListener("change", (event) => {
-                    let res = JSON.stringify((new Function(`return ${event.target.value}`))(), null, 2)
-                    Logger.log(res)
-                })    
-            }
-        }, "<>"),
-        //button("RegrowTree", {}, "⟳"),
-        input("GoTo", {onchange: (event) => {
-            userActions.Navigate.showNode(event.target.value)
-        }}),
-        input("Filter", {type: "text", placeholder: "filter", value: "*"}),
+        div("QuickActions", {}, 
+            button("PickRoot", {
+                onclick: () => {
+                    new CommandsTree(userActions.Root, false)
+                }, 
+                tooltip: "Root actions"
+            }, "木 "),
+            button("History", {
+                tooltip: "History"
+            }, "↹"),
+            button("GoBack", {
+                tooltip: "Go Back"
+            }, "◁"),
+            button("GoForth", {
+                tooltip: "Go Forth"
+            }, "▷"),
+            button("ToOrigin", {
+                tooltip: "Go to origin"
+            }, "⇑"),
+            button("ToLinks", {
+                tooltip: "Go to links"
+            }, "⇓"),
+            button("Path", {
+                tooltip: "View trace"
+            }, "//"),
+            button("Adress", {
+                tooltip: "View origins from root"
+            }, ">>"),
+            button("Debugger", {
+                tooltip: "Debugger",
+                onclick: () => {
+                    let t = van.tags.textarea()
+                    refs("Editor").append(t)
+                    t.addEventListener("change", (event) => {
+                        let res = JSON.stringify((new Function(`return ${event.target.value}`))(), null, 2)
+                        Logger.log(res)
+                    })    
+                }
+            }, "<>"),
+            //button("RegrowTree", {}, "⟳"),
+            input("GoTo", {onchange: (event) => {
+                userActions.Navigate.showNode_(event.target.value)
+            }}),
+            input("Filter", {type: "text", placeholder: "filter", value: "*"}),
+        ),
+        div("Commands", {},
+            div("Logs"),
+        ),
     ),
     div("Main", {}, 
-        div("Commands", {class: "window"},
-            div("Logs"),
-            input("CommandPalette"),
-        ),
         div("View", {class: "window"}, 
             div("Editor"),
         ),
     ),
     div("Footer", {class: "clean"},
+        input("CommandPalette"),
         div("States"),
         Logger.DOM
     ),

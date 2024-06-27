@@ -107,7 +107,7 @@ export default class NodeView extends NodeModel {
                 refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
 
             }, tooltip: "filter links"}, "()"/* "filter" */),
-            button({onclick: () => {userActions.Navigate.showNode(`#${this.id}`)}, tooltip: "plant this node"}, "."/* "plant" */),
+            button({onclick: () => {userActions.Navigate.showNode_(`#${this.id}`)}, tooltip: "plant this node"}, "."/* "plant" */),
 
         ),
         div({class: "links"})

@@ -8,6 +8,10 @@ BrowserDB.version(1).stores({
     dateCreated,
     dateModified,
     data`,
+  settings: `
+    id,
+    data
+  `
 });
 
 export default BrowserDB

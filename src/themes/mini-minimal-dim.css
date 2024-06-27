@@ -1,5 +1,5 @@
 :root {
-    --light: rgba(225, 245, 231, 1);
+    --light: rgb(250, 250, 250);
     --slight: rgb(206, 211, 208);
     --nice: rgb(211, 214, 211);
     --mild: rgb(181, 185, 181);
@@ -194,7 +194,7 @@ button, button:not(:hover), input, textarea, select {
     /* inset 0px -1px 0px 0px var(--mild), */ /* bottom, extruded */
     /* inset 0px 0px 2px 1px var(--mild), */ /* border */
     0px -1px 0px 0px var(--shade), /* top hilight */
-    0px 2px 4px 0px var(--deeper); /* casting shadow */
+    0px 4px 4px 0px var(--deeper); /* casting shadow */
 
 }
 
@@ -203,18 +203,40 @@ textarea {
 }
 
 
-button:hover, button:focus {
+button:hover {
     color: var(--light); 
 
-    box-shadow: 
-    0px 2px 8px 0px var(--light); /* casting shadow */
+}
 
+@keyframes active {
+    0% {    
+        box-shadow: 
+        0px 2px 6px 0px var(--light); /* casting shadow */
+    }
+    100% {
+        box-shadow: 
+        0px 2px 12px 0px var(--light); /* casting shadow */
+    }
 }
 
 button:active {
-    transform: translate(0px, 2px);
+    box-shadow: 
+    0px -1px 1px 0px var(--shade),
+    0px 1px 1px 0px var(--deeper); /* casting shadow */
 }
 
+.nothing button:focus {
+    box-shadow: 
+    0px 2px 8px 0px var(--light); /* casting shadow */
+}
+    
+/* animation-name: active;
+animation-duration: 0.2s;
+animation-iteration-count: infinite;
+animation-direction: alternate;
+animation-timing-function: ease; */
+
+/* transform: translate(0px, 2px); */
 
 input, textarea, select {
     
@@ -229,12 +251,12 @@ input, textarea, select {
 input:hover, textarea:hover, .clickable:hover {
     
     color: var(--deep);
-    background-color: var(--slight);
+    background-color: var(--mild);
     
     box-shadow: 
-    inset 0px 0px 0px 2px var(--light),
-    inset 0px 4px 4px 0px var(--mild),
-    0px 0px 8px 0px var(--light);
+    inset 0px 0px 0px 2px var(--nice),
+    inset 0px 4px 4px 0px var(--mildshade),
+    0px 0px 8px 0px var(--nice);
 
 }
 
@@ -256,11 +278,8 @@ input:focus, .clickable:focus {
 
     padding: 0px;
 
-    display: flex; 
-    flex-direction: row; 
-    align-items: center;
 
-    > * {
+    * {
         margin: 0px !important;
     }
 
@@ -284,7 +303,7 @@ input:focus, .clickable:focus {
         margin-bottom: 1px;
 
         box-shadow: 
-        inset 0px 0px 1px 1px var(--shade), 
+        inset 0px 0px 1px 1px var(--shade);
 
     }
 
@@ -323,13 +342,14 @@ input:focus, .clickable:focus {
 
     input:hover, textarea:hover, .clickable:hover {
         
+        
         color: var(--deep);
-        background-color: var(--slight);
+        background-color: var(--mild);
         
         box-shadow: 
-        inset 0px 0px 0px 2px var(--light),
-        inset 0px 4px 4px 0px var(--mild),
-        0px 0px 8px 0px var(--light);
+        inset 0px 0px 0px 2px var(--nice),
+        inset 0px 4px 4px 0px var(--mildshade),
+        0px 0px 8px 0px var(--nice);
 
     }
 
@@ -346,9 +366,21 @@ input:focus, .clickable:focus {
     }
 
 }
-#Header > * {
-    min-width: 3em;
-    height: 2.5em;
+
+
+#Header {
+    overflow: auto;
+    #QuickActions {
+        display: flex;
+        > * {
+            min-width: 3em;
+            height: 2.5em;
+            margin: 0px;
+        }
+    }
+    #Commands {
+        width: fit-content;
+    }
 }
 
 
@@ -459,8 +491,7 @@ input:focus, .clickable:focus {
 
 #Footer {
     max-height: 50%;
-    display: flex;
-    overflow: auto;
+    overflow: hidden;
 }
 
 
@@ -489,8 +520,7 @@ input:focus, .clickable:focus {
     #Logs {
         width: 100%;
         flex-grow: 1;
-        overflow-x: auto;
-        overflow-y: auto;
+        display: flex;
     }
 }
 
@@ -504,7 +534,7 @@ input:focus, .clickable:focus {
     background: var(--light);
     color: var(--dark);
     border-radius: 0.5em;
-    z-index: 2;
+    z-index: 3;
 
     animation-name: appear;
     animation-duration: 0.2s;
@@ -522,6 +552,7 @@ input:focus, .clickable:focus {
     
     overflow: auto;
     button.expand {
+        height: fit-content;
         margin: 0px;
         padding: 0.25em 0.5em 0.25em 0.5em ;
     }
@@ -551,4 +582,8 @@ input:focus, .clickable:focus {
     .log {
         word-wrap: break-word;
     }
+}
+
+#CommandPalette {
+    width: 100%;
 }

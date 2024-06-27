@@ -3,16 +3,26 @@ import appSession from "../resource/appSession"
 import * as UserActions  from "./userActions"
 import RootData from "../entity/static/RootData"
 import * as LocalDBManager from "../interface/LocalDBManager"
+import BrowserDB from "../resource/BrowserDB"
+
+import * as userActions from "./userActions"
 
 export default async function init () {
 
-    await import("../resource/BrowserDB")
-    console.log("Imported BrowserDB.")
+    let defaultSettings = appSession.settings
+    try {
+        appSession.settings = {defaultSettings, ...JSON.parse((await BrowserDB.settings.get("lastUsed")).data)}
+    } catch {
+
+    }
+    userActions.Visual.setSize()
     
+
     //init appSession
     let lastSession = await SessionManager.getLastSession()
 
     if (lastSession) {
+
         appSession.copy(lastSession.data)
         console.log("Loaded last session data.")
         console.log(lastSession)
@@ -37,5 +47,5 @@ export async function initRootDB (rootHandle) {
     appSession.root.DB = await LocalDBManager.load(rootHandle)
     
     //show root node
-    UserActions.Navigate.showNode("@root")
+    UserActions.Navigate.showNode_("@root")
 }
