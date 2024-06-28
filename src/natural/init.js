@@ -30,11 +30,18 @@ export default async function init () {
         await initRootDB(lastSession.data.rootHandle)
 
         try {
-            userActions.Navigate.showNode_("#" + appSession.temp.lastNodeId)
-        }  catch(err) {
-            Logger.log(err, "error")
-            //show root node
-            UserActions.Navigate.showNode_("@root")
+            
+            await userActions.Navigate.showNode_("#" + appSession.temp.lastNodeId)
+
+        } catch (err) {
+
+            try {
+                let rootName = appSession.root.name
+                UserActions.Navigate.showNode_(`@${rootName}`)
+            } catch {
+                UserActions.Navigate.showNode_(`@root`)
+            }
+            
         }
 
     } else {

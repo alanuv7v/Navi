@@ -32,96 +32,102 @@ export default class NodeView extends NodeModel {
 
     deleteReady = false
 
-    DOM = div({class: "node"},
+    DOM = div({class: "node", onmouseenter: (event) => this.#onHover(event)},
         div({class: "h-flex"},
             button({
                 class: "linksOpener", 
                 onclick: () => this.toggleOpen(),
                 innerText: this.links.filter(link => link[0].split("/")[1] != "_origin").length,
             }),
-            autoResizedTextarea({
-                class: "value", 
-                value: this.value, 
-                onclick: (event) => this.#onclick(event), 
-                onchange: (event) => {this.#onValueChange(event)},
-                onfocus: () => this.select()
-            }),
-        ),
-        div({class: "options"},
-            input({class: "tie", placeholder: "tie(this/that)"}),
-            button({onclick: () => {
-                this.deselect()
-            }, tooltip: "deselect node"}, "*"/* "hide options */),
-            button({onclick: async () => {
-                this.showAuthOrigin(0)
-            }, tooltip: "find authentic origin"}, "^^"/* "show authName origin" */),
-            button({onclick: async () => {
-                this.showOrigin()
-            }, tooltip: "find origin"}, "^"/* "show origin" */),
-            button({onclick: () => {
-                this.createBranch("")
-                this.open()
-            }, tooltip: "create new branch"}, "+" /* "new branch" */),
-            button({onclick: () => {
-                hearCommand((queryString) => {
-                    try {
-                        let targetNodeId = parseQuery(queryString)[0].id
-                        this.linkTo(["_", "_"], targetNodeId)
-                        this.render()
+            div(
+                autoResizedTextarea({
+                    class: "value", 
+                    value: this.value, 
+                    onclick: (event) => this.#onclick(event), 
+                    onchange: (event) => {this.#onValueChange(event)},
+                    onfocus: () => this.select()
+                }),
+                div({class: "options"},
+                    input({class: "tie", placeholder: "tie(this/that)"}),
+                    button({onclick: () => {
+                        this.deselect()
+                    }, tooltip: "deselect node"}, "*"/* "hide options */),
+                    button({onclick: async () => {
+                        this.showAuthOrigin(0)
+                    }, tooltip: "find authentic origin"}, "^^"/* "show authName origin" */),
+                    button({onclick: async () => {
+                        this.showOrigin()
+                    }, tooltip: "find origin"}, "^"/* "show origin" */),
+                    button({onclick: () => {
+                        this.createBranch("")
                         this.open()
-                    } catch (err) {
-                        Logger.log(`failed to link "${queryString}"`, "error")
-                    }
-                })
-            }, tooltip: "create new link"}, "~"/* "new link" */),
-            /* input({onblur: async (event) => {
-                let queryString = event.target.value
-                let res = await parseQuery(queryString)
-                if (!res) return false
-                let targetNodeData = res[0]
-                this.linkTo(targetNodeData[0])
-                this.open()
-            }, placeholder: "linkTo"}), */
-            button({onclick: (e) => {
-                console.log(this)
-                if (this.deleteReady) {
-                    this.deleteRecord()
-                    this.DOM.remove()
-                } else {
-                    e.target.innerText = "confirm to delete!"
-                    this.deleteReady = true
-                }
-            }, onblur: (e) => {
-                if (this.deleteReady) e.target.value = "delete"
-            }, tooltip: "delete node"
-            }, "X"/* "delete" */),
-            //button("save metadata"),
-            button({onclick: () => {
-                if (this.opened) this.close() 
-                else this.open()
-            }, tooltip: "open/close"}, "<>"/* "open/close" */),
-            button({onclick: () => {
-
-                refs("CommandPalette").focus()
-                refs("CommandPalette").placeholder = "filter..."
-                
-                let onArgumentsSubmit = async (event) => {
-                    let actionResult = this.filter = event.target.value
-                    console.log(actionResult)
-                    refs("CommandPalette").placeholder = ""
-                    refs("CommandPalette").removeEventListener("blur", onArgumentsSubmit)
-                    this.close()
-                    this.open()
-                }
-
-                refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
-
-            }, tooltip: "filter links"}, "()"/* "filter" */),
-            button({onclick: () => {userActions.Navigate.showNode_(`#${this.id}`)}, tooltip: "plant this node"}, "."/* "plant" */),
-
+                    }, tooltip: "create new branch"}, "+" /* "new branch" */),
+                    button({onclick: () => {
+                        hearCommand((queryString) => {
+                            try {
+                                let targetNodeId = parseQuery(queryString)[0].id
+                                this.linkTo(["_", "_"], targetNodeId)
+                                this.render()
+                                this.open()
+                            } catch (err) {
+                                Logger.log(`failed to link "${queryString}"`, "error")
+                            }
+                        })
+                    }, tooltip: "create new link"}, "~"/* "new link" */),
+                    /* input({onblur: async (event) => {
+                        let queryString = event.target.value
+                        let res = await parseQuery(queryString)
+                        if (!res) return false
+                        let targetNodeData = res[0]
+                        this.linkTo(targetNodeData[0])
+                        this.open()
+                    }, placeholder: "linkTo"}), */
+                    button({onclick: (e) => {
+                        console.log(this)
+                        if (this.deleteReady) {
+                            this.deleteRecord()
+                            this.DOM.remove()
+                        } else {
+                            e.target.innerText = "confirm to delete!"
+                            this.deleteReady = true
+                        }
+                    }, onblur: (e) => {
+                        if (this.deleteReady) e.target.value = "delete"
+                    }, tooltip: "delete node"
+                    }, "X"/* "delete" */),
+                    //button("save metadata"),
+                    button({onclick: () => {
+                        if (this.opened) this.close() 
+                        else this.open()
+                    }, tooltip: "open/close"}, "<>"/* "open/close" */),
+                    button({onclick: () => {
+        
+                        refs("CommandPalette").focus()
+                        refs("CommandPalette").placeholder = "filter..."
+                        
+                        let onArgumentsSubmit = async (event) => {
+                            let actionResult = this.filter = event.target.value
+                            console.log(actionResult)
+                            refs("CommandPalette").placeholder = ""
+                            refs("CommandPalette").removeEventListener("blur", onArgumentsSubmit)
+                            this.close()
+                            this.open()
+                        }
+        
+                        refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
+        
+                    }, tooltip: "filter links"}, "()"/* "filter" */),
+                    button({onclick: () => {userActions.Navigate.showNode_(`#${this.id}`)}, tooltip: "plant this node"}, "."/* "plant" */),
+        
+                ),
+            )
         ),
         div({class: "links"})
     )
+
+    linkedNodeViews = []
+
+    originView = null
     
 
 
@@ -148,7 +154,7 @@ export default class NodeView extends NodeModel {
         this.DOM.querySelector(".links").innerHTML = ""
 
         //append linkedNodeViews to links DOM
-        this.links
+        this.linkedNodeViews = this.links
             .map((link) => {
                 try {
                     let tie = link[0]
@@ -169,15 +175,15 @@ export default class NodeView extends NodeModel {
                     tie,
                     view: replacers.find(r => r.id === data[0]) || new NodeView(...data)
                 }
-            })
-            .forEach(({tie, view}) => {
+            }).map(({tie, view}) => {
+                if (tie==="_origin/_value") view.originView = this
                 view.openedFrom = this.id
                 view.tie = tie
                 view.DOM.querySelector(".tie").value = tie
                 this.DOM.querySelector(".links").append(view.DOM)
                 view.onDomMount()
-            }
-        )
+                return view
+            })
         
         //set state
         this.opened = true
@@ -215,6 +221,7 @@ export default class NodeView extends NodeModel {
     plant () {
         refs("Editor").innerHTML = ""
         refs("Editor").append(this.DOM)
+        this.originView = null
         this.onDomMount()
     }
 
@@ -233,6 +240,9 @@ export default class NodeView extends NodeModel {
         originNodeView.plant()
         originNodeView.open([this])
         originNodeView.select()
+
+        this.originView = originNodeView
+
         return originNodeView
     }
 
@@ -273,6 +283,10 @@ export default class NodeView extends NodeModel {
         this.updateRecord()
         this.updateStyle()
 
+    }
+
+    #onHover (event) {
+        appSession.hoveredNode = this
     }
 
     updateStyle () {

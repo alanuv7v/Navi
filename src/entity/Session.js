@@ -30,8 +30,9 @@ export default class SessionData {
         getNodeByValue: (value) => this.root.DB.exec(`SELECT * FROM nodes WHERE value='${value}'`)[0].values
     }
     
-    selectedNode = null // nodeID
-    copiedNode = null // nodeID
+    selectedNode = null 
+    hoveredNode = null 
+    copiedNode = null 
 
     settings = {
         style: {

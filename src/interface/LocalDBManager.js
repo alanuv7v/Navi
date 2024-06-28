@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as FileSystem from "./FileSystem"
 import appSession from "../resource/appSession";
 
-export async function create() {
+export async function create(name) {
         
     const SQL = await initSqlJs(
         {locateFile: file => `https://sql.js.org/dist/${file}`}
@@ -24,7 +24,7 @@ export async function create() {
     DB.run(`
     INSERT INTO nodes VALUES (
         '${uuidv4().replaceAll("-", "")}',
-        '${"@root"}',
+        '${`@${name}`}',
         '${JSON.stringify([])}'
     );`)
 

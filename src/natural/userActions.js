@@ -59,7 +59,7 @@ const Sessions = {
 const Root = {
     async createRoot_(name) {
         //create the DB
-        let localDB = await LocalDBManager.create()
+        let localDB = await LocalDBManager.create(name)
         
         // Export the database to an Uint8Array
         const data = localDB.export();
@@ -181,12 +181,14 @@ const Navigate = {
             nodeView.plant()
             
             SessionManager.saveSession()
-    
+            return res
+
         }
         
         catch (err) {
             console.trace()
             console.error(err, `Failed to show node by the given query: "${queryString}". the query is formatted wrongly or matching node not exist in the root.`)
+            throw err
         }
 
     },
