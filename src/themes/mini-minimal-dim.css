@@ -27,6 +27,7 @@
     box-sizing: border-box;
     color: var(--light);
     text-overflow: ellipsis;
+
 }
 
 body {
@@ -214,7 +215,7 @@ button, button:not(:hover), input, textarea, select {
     border: none;
     outline: none;
 
-    transition: all 0.2s ease, transform 0.1s ease;
+    transition: color 0.2s ease, transform 0.1s ease;
 
     padding-top: 4px;
     padding-bottom: 4px;
@@ -356,7 +357,7 @@ input:focus, .clickable:focus {
 
         border-radius: 0px;
 
-        transition: all 0.2s ease;
+        transition: color 0.2s ease;
 
         padding-top: 4px;
         padding-bottom: 4px;
@@ -470,8 +471,6 @@ input:focus, .clickable:focus {
 }
 
 .node {
-
-    transition: all 0.3s ease;
     
     overflow: visible;
 
@@ -493,7 +492,6 @@ input:focus, .clickable:focus {
         padding-bottom: 0em;
 
         flex-grow: 1;
-        transition: all 0.3s ease;
         
         background-color: transparent;
         box-shadow: inset 0px 0px 0px 0px var(--deep) !important;
@@ -552,10 +550,6 @@ input:focus, .clickable:focus {
         display: none;
     }
 
-    .linksOpener:hover {
-        scale: 0.8;
-        opacity: 1;
-    }
 }
 
 .node.selected {
@@ -564,6 +558,11 @@ input:focus, .clickable:focus {
         display: flex;
         flex-flow: wrap;
     }
+}
+
+.node .linksOpener:hover, .node.node.selected .linksOpener {
+    scale: 0.8;
+    opacity: 1;
 }
 
 .node.authName {
