@@ -8,68 +8,67 @@ import NodeView from "../entity/view/NodeView"
 import refs from "../resource/DOMRefs"
 import RootData from "../entity/static/RootData"
 
-import { default as init, initRootDB } from "./init"
+import { default as init, initRootDB as init_root_DB } from "./init"
 
 import * as fileSystem from "../interface/FileSystem"
 import BrowserDB from "../resource/BrowserDB"
 import Logger from "../tech/gui/Logger"
 
 
-const _initRootDB = async () => await initRootDB(appSession.temp.rootHandle)
-
-
-async function _init() { 
-    init()
+export const fix = {
+    init,
+    init_root_DB
 }
 
-const Sessions = {
-    autosaveOn () {
+export const Sessions = {
+    autosave_on () {
         if (appSession.settings.autosaveInterval < 10*1000) return false
         appSession.settings.autosave = true
         appSession.settings.autosaveIntervalId = setTimeout(async () => {
-            await Sessions.saveSession_()
+            await Sessions.save_session_()
         }, appSession.settings.autosaveInterval);
         return appSession.settings.autosaveIntervalId
     },
-    autosaveOff () {
+    autosave_off () {
         appSession.settings.autosave = false
         clearInterval(appSession.settings.autosaveIntervalId)
     },
-    setAutosaveInterval_ (value) {
+    set_autosave_interval (value) {
         appSession.settings.autosaveInterval = Math.max(10*1000, value)
         Sessions.autosaveOff()
         Sessions.autosaveOn()
     },
-    async getAllSessions() {
+    async get_all_sessions() {
         return await SessionManager.getAllSessions()
     },
-    async saveSession_(id) {
+    async save_session_ (id) {
         let res = await SessionManager.saveSession(id || "lastUsed")
         Logger.log("session saved", "success")
         return res
     },
-    async loadSession_(id) {
+    async load_session_ (id) {
         return await SessionManager.loadSession(id || "lastUsed")
     },
-    async clearSessions () {
+    async clear_session () {
         return await SessionManager.clearAllSessions()
     }
 }
 
-const Root = {
-    async createRoot_(name) {
+export const Root = {
+    async create_root_ (name) {
         //create the DB
-        let localDB = await LocalDBManager.create(name)
+        let _name = name || "root"
+        let localDB = await LocalDBManager.create(_name)
         
         // Export the database to an Uint8Array
         const data = localDB.export();
         const blob = new Blob([data], { type: "application/octet-stream" });
         fileSystem.downloadFile(name || "root", blob)
     },
-    async accessRoot() {
+    async access_root() {
         return await appSession.temp.rootHandle.requestPermission()
     },
-    async openRoot() {
+    async open_root() {
 
         if (window.showOpenFilePicker) {
 
@@ -80,7 +79,7 @@ const Root = {
             }
 
             appSession.temp.rootHandle = rootHandle
-            appSession.root.name = rootHandle.name, 
+            appSession.root.name = rootHandle.name || "root", 
             appSession.root.DB = await LocalDBManager.load(rootHandle)
 
         } else {
@@ -97,7 +96,7 @@ const Root = {
                     let rootBlob = event.target.files[0]
                     
                     appSession.temp.rootHandle = null
-                    appSession.root.name = rootBlob.name, 
+                    appSession.root.name = rootBlob.name || "root", 
                     appSession.root.DB = await LocalDBManager.load(rootBlob)
                     
                     resolve()
@@ -112,40 +111,40 @@ const Root = {
     
         console.log(`Opened root: ${appSession.root.name}`)
     
-        Navigate.showNode_("@root")
+        Navigate.show_node_("@root")
     
         SessionManager.saveSession()
         
         return appSession.root
     
     },
-    async updateRoot() {
+    async update_root () {
         return await LocalDBManager.update()
     },
-    async downloadRoot() {
+    async download_root () {
         const data = await appSession.root.DB.export()
         const blob = new Blob([data], { type: "application/octet-stream" });
         return await fileSystem.downloadFile(appSession.root.name, blob)
     },
 }
 
-const Edit = {
-    copyNode: () => {
+export const Edit = {
+    copy_node: () => {
         appSession.copiedNode = appSession.selectedNode
         return appSession.copiedNode
     },
-    pasteNode: () => {
+    paste_node: () => {
         appSession.copiedNode.changeParent(appSession.selectedNode)
         return appSession.selectedNode
     },
-    addLinkedNode: (key, value) => {
+    add_linked_node: (key, value) => {
         appSession.selectedNode.addChild(key, value)
         return appSession.selectedNode
     },
-    deleteNode: () => {
+    delete_node: () => {
         return appSession.selectedNode.delete()
     },
-    changeOrder: (change) => {
+    change_order: (change) => {
         appSession.selectedNode.changeOrder(change)
         return appSession.selectedNode
     },
@@ -155,9 +154,9 @@ const Edit = {
     }
 }
 
-const Prune = {
+export const Prune = {
 
-    toggleOpen: () => {
+    toggle_open: () => {
         if (appSession.selectedNode.opened) {
             appSession.selectedNode.close()
         } else {
@@ -166,14 +165,14 @@ const Prune = {
         return appSession.selectedNode
     },
 
-    globalFilterNodes: (key) => {
+    global_filter: (key) => {
     }
 
 }
 
-const Navigate = {
+export const Navigate = {
     //search는 openTree와 동일해서 제외.
-    async showNode_ (queryString) { //Navigate.plant로 옮길까.
+    async show_node_ (queryString) { //Navigate.plant로 옮길까.
         
         try {
             let res = (await parseQuery(queryString))
@@ -188,15 +187,14 @@ const Navigate = {
         catch (err) {
             console.trace()
             console.error(err, `Failed to show node by the given query: "${queryString}". the query is formatted wrongly or matching node not exist in the root.`)
-            throw err
         }
 
     },
 
     history: {
-        pastAdress: () => {
+        past_adress: () => {
         },
-        nextAdress: () => {
+        next_adress: () => {
         },
     },
 
@@ -205,21 +203,21 @@ const Navigate = {
 let global = () => document.querySelector('#App')
 let pureCssValue = (str) => Number(str.match(/[0-9]+/)[0])
 
-const Visual = {
-    setSize () {
+export const Visual = {
+    set_size () {
         global().style.fontSize = appSession.settings.style.fontSize + "px"
     },
-    sizeUp () {
+    size_up () {
         appSession.settings.style.fontSize++
-        Visual.setSize()
+        Visual.set_size()
     },
-    sizeDown () {
+    size_down () {
         appSession.settings.style.fontSize--
-        Visual.setSize()
+        Visual.set_size()
     }
 }
 
-const Settings = {
+export const Settings = {
     async save () {
         return await BrowserDB.settings.put(
             {   
@@ -232,5 +230,3 @@ const Settings = {
         return await BrowserDB.settings.clear()
     }
 }
-
-export {Root, Sessions, Navigate, Prune, Edit, Visual, _init, _initRootDB}

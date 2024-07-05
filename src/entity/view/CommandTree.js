@@ -43,9 +43,9 @@ class CommandButton {
         
         let button = this.DOM.querySelector("button")
         
-        button.innerText = this.name
+        button.innerText = this.name.replaceAll("_", " ")
 
-        if (typeof value === "object" && value) {    
+        if (typeof value === "object" && value && this.showChildrenCount) {    
             let childrenCount = Object.keys(value).length
             button.innerText += `[${childrenCount}] `
         }
@@ -54,11 +54,12 @@ class CommandButton {
             button.style.color = "var(--back)"
         }
         else if (typeof value === "function") {
-            button.innerText += "()"
             button.classList.add("function")
         }
 
     }
+
+    showChildrenCount = false
 
     opened = false
 

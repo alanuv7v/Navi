@@ -38,9 +38,27 @@ window._debug = {
 
 const App = DOM
 
+const theme = "minimal"
+if (theme) DOM.classList.add(`theme-${theme}`)
+
 van.add(document.body, App)
 
-new CommandsTree({...userActions})
+let actionsOrder = "Root Edit Navigate Prune Visual Sessions Settings fix".split(" ")
+let userActionsSorted = Object.keys(userActions)
+    .sort((k, kk) => {
+        return (actionsOrder.indexOf(k) - actionsOrder.indexOf(kk))
+    })
+    .map(key => {
+        return [key, userActions[key]]
+    })
+    .reduce((acc, cur) => {
+        acc[cur[0]] = cur[1]
+        return acc
+    }, {})
+
+console.log(actionsOrder, userActionsSorted)
+
+new CommandsTree(userActionsSorted)
 
 errorCatcher()
 

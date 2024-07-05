@@ -1,17 +1,17 @@
 :root {
     --light: rgb(250, 250, 250);
-    --slight: rgb(197, 194, 194);
+    --slight: rgb(214, 212, 212);
     --nice: rgb(208, 211, 208);
     --mild: rgb(181, 185, 181);
-    --mildshade: rgb(109, 109, 109);
-    --shade: rgb(85, 85, 85);
+    --mildshade: rgb(100, 100, 100);
+    --shade: rgb(66, 66, 66);
     --deep: rgb(44, 44, 44);
     --deeper: rgb(20, 20, 20);
     --dark: rgba(0, 0, 0, 1);
     --vivid: rgba(151, 200, 128, 1);
     --link: rgb(153, 247, 225);
     --hilight: rgb(202, 231, 188);
-    --mildhilight: rgba(99, 99, 253, 0.3);
+    --active: rgba(185, 156, 189, 0.3);
     --executable: rgb(186, 253, 208);
     --authName: rgb(162, 252, 189);
     --back: rgb(252, 198, 162);
@@ -61,7 +61,7 @@ textarea {
 
 #App {
 
-    font-size: 16px;
+    font-size: 14px;
 
     width: 100vw;
     height: 100vh;
@@ -185,8 +185,17 @@ a:hover {
 
 button, button:not(:hover) {
 
-    color: var(--slight);   
     position: relative;
+    
+    box-shadow: 
+    /* inset 0px 1px 2px 0px var(--mild), */ /* top */
+    /* inset 0px -3px 4px 0px var(--mild), */ /* bottom, extruded */
+    /* inset 0px -1px 0px 0px var(--mild), */ /* bottom, extruded */
+    /* inset 0px 0px 2px 1px var(--mild), */ /* border */
+    
+    /* fissure */
+    0px -1px 0px 0px var(--shade), /* top hilight */
+    0px 2px 4px 0px var(--deeper); /* casting shadow */
 
 }
 
@@ -212,6 +221,8 @@ button:hover:before {
 button, button:not(:hover), input, textarea, select {
 
 
+    color: var(--slight);   
+    
     border: none;
     outline: none;
 
@@ -232,15 +243,6 @@ button, button:not(:hover), input, textarea, select {
     
     flex-shrink: 0;
 
-    box-shadow: 
-    /* inset 0px 1px 2px 0px var(--mild), */ /* top */
-    /* inset 0px -3px 4px 0px var(--mild), */ /* bottom, extruded */
-    /* inset 0px -1px 0px 0px var(--mild), */ /* bottom, extruded */
-    /* inset 0px 0px 2px 1px var(--mild), */ /* border */
-    
-    /* fissure */
-    0px -1px 0px 0px var(--shade), /* top hilight */
-    0px 4px 4px 0px var(--deeper); /* casting shadow */
 
 
 }
@@ -309,36 +311,23 @@ animation-timing-function: ease; */
 
 /* transform: translate(0px, 2px); */
 
-input, textarea, select {
+input, textarea {
+    box-shadow: 0px 0px 0px 1px var(--deeper);
+}
+
+input:hover, textarea:hover, input:focus, textarea:focus, .clickable:hover {
     
-    color: var(--slight);    
+    color: var(--light) !important;
     background-color: var(--shade);
-    box-shadow: 
-    inset 0px -1px 0px 0px var(--shade), /* bottom hilight */
-    inset 0px 4px 4px 0px var(--dark) /* inner casted shadow */
-    ;
-
-}
-
-input:hover, textarea:hover, .clickable:hover {
-    
-    color: var(--deep);
-    background-color: var(--mild);
-    
-    box-shadow: 
-    inset 0px 4px 4px 0px var(--mildshade),
-    0px 0px 8px 0px var(--mildshade);
 
 }
 
 
 
-input:focus, .clickable:focus {
-    background-color: var(--light); 
-    color: var(--deep);
-    box-shadow: 
-    inset 0px 4px 4px 0px var(--mild),
-    0px 0px 8px 0px var(--slight);
+input:active, .clickable:active {
+
+    border: none;
+    outline: none;
     
 }
 
@@ -445,7 +434,7 @@ input:focus, .clickable:focus {
         > * {
             min-width: 3em;
             height: 2.5em;
-            margin: 0px;
+            /* margin: 0px; */
         }
     }
     #Commands {
@@ -532,17 +521,22 @@ input:focus, .clickable:focus {
 
         width: 2em;
         height: 2em;
-        background-color: var(--light);
-        opacity: 0.5;
 
-        color: var(--dark);
+        color: var(--slight);
+        background-color: var(--shade);
+        
         padding: 0px;
         font-size: 1em;
         box-shadow: none;
 
         scale: 0.7;
-        transition: scale 0.1s cubic-bezier(0, 0, 0.38, 1.55);
-        
+        transition: scale 0.2s cubic-bezier(0, 0, 0.38, 1.55) !important;
+
+        box-shadow: none !important;
+
+        :active {
+            animation: none;
+        }
 
     }
     
@@ -560,16 +554,12 @@ input:focus, .clickable:focus {
     }
 }
 
-.node .linksOpener:hover, .node.node.selected .linksOpener {
-    scale: 0.8;
-    opacity: 1;
-}
-
 .node.authName {
     > * > .autoResize > .value {
     }
     > * > .linksOpener {
-        background-color: var(--authName)
+        color: var(--dark) !important;
+        background-color: var(--authName) !important;
     }
 }
 
@@ -617,7 +607,7 @@ input:focus, .clickable:focus {
     display: block;
     position: absolute;
 
-    transform: translate(0px, 0.5em);
+    transform: translate(0.25em, 0.75em);
     
     content: attr(tooltip);
     padding: 0.5em;

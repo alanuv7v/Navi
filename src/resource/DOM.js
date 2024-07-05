@@ -61,7 +61,7 @@ export default div("App", {
             //button("RegrowTree", {}, "⟳"),
             input("GoTo", {
                 onchange: (event) => {
-                    userActions.Navigate.showNode_(event.target.value)
+                    userActions.Navigate.show_node_(event.target.value)
                 }, 
                 tooltip: "Go to"
             }),

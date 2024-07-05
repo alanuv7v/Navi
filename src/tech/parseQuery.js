@@ -1,4 +1,5 @@
 import appSession from "../resource/appSession"
+import Logger from "./gui/Logger"
 
 export default async function parseQuery (input) {
     
@@ -22,8 +23,8 @@ export default async function parseQuery (input) {
     }
 
     catch (err) {
-        console.error(err)
+        Logger.log(`failed to parse query: ${input}. details: ${err}`, "error")
         return undefined
-    }    
+    }
 
 }
