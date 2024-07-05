@@ -432,8 +432,8 @@ input:active, .clickable:active {
     #QuickActions {
         display: flex;
         > * {
-            min-width: 3em;
-            height: 2.5em;
+            min-width: 2em;
+            /* height: 2.5em; */
             /* margin: 0px; */
         }
     }

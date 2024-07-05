@@ -174,20 +174,13 @@ export const Navigate = {
     //search는 openTree와 동일해서 제외.
     async show_node_ (queryString) { //Navigate.plant로 옮길까.
         
-        try {
-            let res = (await parseQuery(queryString))
-            let nodeView = new NodeView(...res[0])
-            nodeView.plant()
-            
-            SessionManager.saveSession()
-            return res
-
-        }
+        let res = (await parseQuery(queryString))
+        let nodeView = new NodeView(...res[0])
+        nodeView.plant()
         
-        catch (err) {
-            console.trace()
-            console.error(err, `Failed to show node by the given query: "${queryString}". the query is formatted wrongly or matching node not exist in the root.`)
-        }
+        SessionManager.saveSession()
+        return res
+
 
     },
 

@@ -1,6 +1,7 @@
 import NodeData from "../static/NodeData"
 import appSession from '../../resource/appSession';
 import { escape } from "../../tech/escapeSqlQuery"
+import Logger from "../../tech/gui/Logger";
 
 export default class NodeModel extends NodeData {
 
@@ -72,32 +73,32 @@ export default class NodeModel extends NodeData {
     }
 
     deleteRecord () {
-        
-        for (let link of this.links) { //remove mirror links
-            let linkedNodeID = link[1]
-            let linkedNodePrevLinks = JSON.parse(appSession.root.DB.exec(
-                `SELECT links FROM nodes WHERE id='${linkedNodeID}'`
-                )[0].values[0])
+        try {
+            // remove this node from other nodes data
+            for (let link of this.links) { //remove mirror links
+                let oppID = link[1]
+                let oppLinks = JSON.parse(appSession.root.DB.exec(
+                    `SELECT links FROM nodes WHERE id='${oppID}'`
+                    )[0].values[0])
+    
+                for (let i=0; i<oppLinks.length; i++) {
 
-            console.log(linkedNodePrevLinks)
-            let linkedNodeNewLinks = structuredClone(linkedNodePrevLinks)
+                    console.log(oppLinks[i])
 
-            for (let i=0; i<linkedNodeNewLinks.length; i++) {
-                console.log(linkedNodeNewLinks[i])
-                if (linkedNodeNewLinks[i][1]===this.id) {
-                    linkedNodeNewLinks.splice(i, 1)
-                    console.log(linkedNodeNewLinks, i, escape(JSON.stringify(linkedNodeNewLinks)), linkedNodeID)
-                    appSession.root.DB.exec(
-                        `UPDATE nodes SET links='${
-                            escape(JSON.stringify(linkedNodeNewLinks))
-                        }' WHERE id='${linkedNodeID}'`
-                    )
-                    console.log(appSession.root.DB.exec(
-                        `SELECT * FROM nodes WHERE id='${linkedNodeID}'`
-                    )[0].values)
+                    if (oppLinks[i][1]===this.id) {
+                        //delete the link with this
+                        oppLinks.splice(i, 1) 
+                        //update the opposite node
+                        appSession.root.DB.exec(
+                            `UPDATE nodes SET links='${
+                                escape(JSON.stringify(oppLinks))
+                            }' WHERE id='${oppID}'`
+                        )
+                    }
                 }
             }
-            
+        } catch (err) {
+            Logger.log(err, "error")    
         }
         return appSession.root.DB.exec(`DELETE FROM nodes WHERE id='${this.id}'`)
     }

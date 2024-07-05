@@ -45,7 +45,8 @@ export default class NodeView extends NodeModel {
                     value: this.value, 
                     onclick: (event) => this.#onclick(event), 
                     onchange: (event) => {this.#onValueChange(event)},
-                    onfocus: () => this.select()
+                    onfocus: () => this.select(),
+                    onkeydown: (event) => this.#onkeydown(event)
                 }),
                 div({class: "options"},
                     input({class: "tie", placeholder: "tie(this/that)"}),
@@ -137,8 +138,14 @@ export default class NodeView extends NodeModel {
     }
 
     delete () {
-        this.deleteRecord()
         this.DOM.remove()
+        this.deleteRecord()
+        this.originView.open()
+        try {
+            this.originView.linkedNodeViews.slice(-1)[0].select()
+        } catch {
+            this.originView?.select()
+        }
     }
 
 
@@ -187,6 +194,8 @@ export default class NodeView extends NodeModel {
         
         //set state
         this.opened = true
+
+        return this.linkedNodeViews
 
     }
 
@@ -287,6 +296,18 @@ export default class NodeView extends NodeModel {
 
     #onHover (event) {
         appSession.hoveredNode = this
+    }
+
+    #onkeydown (event) {
+        if (event.key === "Enter" && event.shiftKey) {
+            event.preventDefault()
+            this.originView.createBranch()
+            this.originView.open()
+            this.originView.linkedNodeViews.slice(-1)[0].select()
+        }
+        else if (event.key === "Backspace" && event.target.value.length <= 0) {
+            this.delete()            
+        }
     }
 
     updateStyle () {
