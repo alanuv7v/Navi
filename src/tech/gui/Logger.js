@@ -34,6 +34,7 @@ class Logger {
 
     showLastone() {
         let data = appSession.temp.logs[appSession.temp.logs.length-1]
+        if (!data) return
         this.DOM.querySelector("#logs").append(this.createLogView(data))
     }
     
@@ -45,6 +46,7 @@ class Logger {
             logViews.push(this.createLogView(data))
         }
         this.DOM.querySelector("#logs").append(...logViews)
+        this.DOM.querySelector("#logs").scroll(0, this.DOM.querySelector("#logs").scrollHeight)
     }
 
     render () {
@@ -60,6 +62,11 @@ class Logger {
         }
         
     }
+
+    clear () {
+        appSession.temp.logs = []
+        this.render()
+    }
     
     onclick () {
         
@@ -69,11 +76,17 @@ class Logger {
     }
     
     DOM = div({id: "LogsView"},
-        div({id: "logs"}),
-        button({
-            class: "expand",
-            onclick: () => this.onclick()
-        }, "<>")
+        div({id: "logs"}, 
+        ),
+        div({class: "options"},
+            button({
+                class: "expand",
+                onclick: () => this.onclick()
+            }, "<>"),
+            button({
+                onclick: () => this.clear()
+            }, "Clear")
+        )
     )
 
 }

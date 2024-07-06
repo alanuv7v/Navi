@@ -119,7 +119,9 @@ export const Root = {
     
     },
     async update_root () {
-        return await LocalDBManager.update()
+        let res = await LocalDBManager.update()
+        Logger.log("root saved!", "success")
+        return res
     },
     async download_root () {
         const data = await appSession.root.DB.export()

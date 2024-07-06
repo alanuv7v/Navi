@@ -84,9 +84,9 @@ export default div("App", {
         ),
     ),
     div("Footer", {class: ""},
-        input("CommandPalette"),
         div("States"),
-        Logger.DOM
+        Logger.DOM,
+        input("CommandPalette"),
     ),
 )
 

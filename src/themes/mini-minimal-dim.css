@@ -564,11 +564,6 @@ input:active, .clickable:active {
     color: var(--error) !important;
 }
 
-#Footer {
-    max-height: 50%;
-    overflow: hidden;
-}
-
 
 .Command {
     width: fit-content;
@@ -623,23 +618,48 @@ input:active, .clickable:active {
 
 }
 
+#Footer {    
+    display: flex;
+    flex-direction: column-reverse;
+    overflow: hidden;
+    max-height: 50%;
+}
+
 #LogsView {
     display: flex;
     padding: 0px;
     width: 100%;
-    height: 100%;
+    overflow: hidden;
+
+    /* height: 100%; NEVER. */
+
     flex-grow: 1;
     
-    overflow: auto;
-    button.expand {
+    button {
         height: fit-content;
         margin: 0px;
         padding: 0.25em 0.5em 0.25em 0.5em ;
     }
     #logs {
         flex-grow: 1;
-        overflow: hidden;
-        height: fit-content;
+        overflow: auto;
+    }
+    .log {
+        white-space: nowrap;
+        word-wrap: unset;
+    }
+    .options {
+        display: flex;
+    }
+}
+
+#LogsView.expanded {
+    .log {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    .options {
+        display: block;
     }
 }
 
@@ -660,12 +680,6 @@ input:active, .clickable:active {
 
 .log.success {
     color: var(--success);
-}
-
-#LogsView.expanded {
-    .log {
-        word-wrap: break-word;
-    }
 }
 
 #CommandPalette {

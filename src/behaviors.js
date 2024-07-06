@@ -1,4 +1,5 @@
 import appSession from "./resource/appSession"
+import * as userActions from "./natural/userActions"
 
 //Wheel event
 document.addEventListener("wheel", (event) => {
@@ -58,7 +59,10 @@ document.addEventListener("wheel", (event) => {
 
 
 document.addEventListener("keydown", (event) => {
-    let key = event.key
-    console.log(key)
-    if (key === "s")
+    let key = event.key.toLowerCase()
+    if (key === "s" && event.altKey) {
+        event.preventDefault()
+        userActions.Root.update_root()
+        userActions.Sessions.save_session_()
+    }
 })

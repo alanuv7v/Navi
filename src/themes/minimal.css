@@ -11,8 +11,7 @@
     
     button, input {
         box-shadow: inset 0px 0px 0px 1px var(--deeper);
-        border-radius: 1em;
-        margin: 0.25em;
+        border-radius: 0.5em;
         transition: background-color 0.3s ease;
     }
 
