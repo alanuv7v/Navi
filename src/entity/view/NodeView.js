@@ -11,6 +11,7 @@ import autoResizedTextarea from "../../tech/gui/autoResizedTextarea"
 import * as userActions from "../../natural/userActions"
 import hearCommand from "./hearCommand"
 import Logger from "../../tech/gui/Logger"
+import { updateOriginIndicators } from "../../natural/AutoActions"
 
 
 export default class NodeView extends NodeModel {
@@ -27,10 +28,19 @@ export default class NodeView extends NodeModel {
     selected = false
     opened = false
     filter = null
-    openedFrom = null //id of a node that opened this node
+    openedFrom = null //NodeView that opened this node
     tie = ""
-
+    linkedNodeViews = []
+    
     deleteReady = false
+    
+    get siblings () {
+        return this.openedFrom.linkedNodeViews
+    }
+
+    get siblingsIndex () {
+        return this.siblings.indexOf(this)
+    }
     
     actionsDOM = div({class: "actions"},
         button({onclick: () => {
@@ -40,7 +50,7 @@ export default class NodeView extends NodeModel {
             this.showAuthOrigin(0)
         }, tooltip: "find authentic origin"}, "^^"/* "show authName origin" */),
         button({onclick: async () => {
-            this.showOrigin()
+            this.showContext()
         }, tooltip: "find origin"}, "^"/* "show origin" */),
         button({onclick: () => {
             this.createBranch("")
@@ -51,7 +61,7 @@ export default class NodeView extends NodeModel {
                 try {
                     let targetNodeId = parseQuery(queryString)[0].id
                     this.linkTo(["_", "_"], targetNodeId)
-                    this.render()
+                    this.updateStyle()
                     this.open()
                 } catch (err) {
                     Logger.log(`failed to link "${queryString}"`, "error")
@@ -69,8 +79,7 @@ export default class NodeView extends NodeModel {
         button({onclick: (e) => {
             console.log(this)
             if (this.deleteReady) {
-                this.deleteRecord()
-                this.DOM.remove()
+                this.delete()
             } else {
                 e.target.innerText = "confirm to delete!"
                 this.deleteReady = true
@@ -104,27 +113,19 @@ export default class NodeView extends NodeModel {
         button({onclick: () => {userActions.Navigate.show_node_(`#${this.id}`)}, tooltip: "plant this node"}, "."/* "plant" */),
     )
         
-    linkedNodeViews = []
-    originView = null
-        
-    render () {
-        this.DOM.querySelector(".value").value = this.value
-        this.DOM.querySelector(".linksOpener").innerText = this.links.filter(link => link[0].split("/")[1] != "_origin").length
-    }
-        
     delete () {
+        let prevSiblingsIndex = this.siblingsIndex
         this.DOM.remove()
         this.deleteRecord()
-        this.originView.open()
+        this.openedFrom.refreshData()
+        this.openedFrom.updateStyle()
+        this.openedFrom.open()
         try {
-            this.originView.linkedNodeViews.slice(-1)[0].select()
+            this.openedFrom.linkedNodeViews.at(prevSiblingsIndex-1).select()
         } catch {
-            this.originView?.select()
+            this.openedFrom?.select()
         }
     }
-
-
-
 
     DOM = div({class: "node", onmouseenter: (event) => this.#onHover(event)},
         div({class: "h-flex"},
@@ -145,9 +146,10 @@ export default class NodeView extends NodeModel {
                     class: "value", 
                     value: this.value, 
                     onclick: (event) => this.#onclick(event), 
-                    onchange: (event) => {this.#onValueChange(event)},
+                    onchange: (event) => {this.#onvaluechange(event)},
                     onfocus: () => this.select(),
-                    onkeydown: (event) => this.#onkeydown(event)
+                    onkeydown: (event) => this.#onkeydown(event),
+                    onselect: (event) => this.#onselect(event)
                 }),
             ),
         ),
@@ -168,17 +170,13 @@ export default class NodeView extends NodeModel {
         //append linkedNodeViews to links DOM
         this.linkedNodeViews = this.links
             .map((link) => {
-                try {
-                    let tie = link[0]
-                    let res = appSession.root.getNodeById(link[1])
-                    return {tie, data: res[0]}
-                } catch {
-                    return undefined
-                }
+                let tie = link[0]
+                let res = appSession.root.getNodeById(link[1])
+                return {tie, data: res[0]}
             })
             .filter(link => link.data)
-            .filter(link => link.data[0] != this.openedFrom)
-            .filter(link => link.data[0] != this.origin)
+            .filter(link => link.data[0] != this.openedFrom?.id)
+            .filter(link => link.data[0] != this.context)
             .filter(link => {
                 return link.data[1] === this.filter || !this.filter
             })
@@ -189,7 +187,7 @@ export default class NodeView extends NodeModel {
                 }
             }).map(({tie, view}) => {
                 if (tie==="_origin/_value") view.originView = this
-                view.openedFrom = this.id
+                view.openedFrom = this
                 view.tie = tie
                 view.DOM.querySelector(".tieFrom").value = tie.split("/")[0]
                 view.DOM.querySelector(".tieTo").value = tie.split("/")[1]
@@ -216,15 +214,27 @@ export default class NodeView extends NodeModel {
     }
 
     select() {
+
         console.log(this)
+
+        //deselct the prev
         if (appSession.selectedNode) {
             appSession.selectedNode.deselect()
         }
+
+        //style
         this.DOM.classList.add("selected")
-        appSession.selectedNode = this
-        this.DOM.querySelector("textarea.value.input").focus()
+        
+        //set state
         this.selected = true
+        appSession.selectedNode = this
         appSession.temp.lastNodeId = this.id
+        
+        //focus
+        this.DOM.querySelector("textarea.value.input").focus()
+        
+        updateOriginIndicators()
+
     }
 
     deselect() {
@@ -236,7 +246,7 @@ export default class NodeView extends NodeModel {
     plant () {
         refs("Nodes").innerHTML = ""
         refs("Nodes").append(this.DOM)
-        this.originView = null
+        this.contextView = null
         this.onDomMount()
     }
 
@@ -248,17 +258,16 @@ export default class NodeView extends NodeModel {
         }
     }
 
-    async showOrigin () {
-        if (!this.origin) return false
-        let res = (await parseQuery(`#${this.origin}`))
-        let originNodeView = new NodeView(...res[0])
-        originNodeView.plant()
-        originNodeView.open([this])
-        originNodeView.select()
+    async showContext () {
+        if (!this.context) return false
+        let res = (await parseQuery(`#${this.context}`))
+        let contextView = new NodeView(...res[0])
+        
+        contextView.plant()
+        contextView.open([this])
+        contextView.select()
 
-        this.originView = originNodeView
-
-        return originNodeView
+        return contextView
     }
 
     async showAuthOrigin (i) {
@@ -267,7 +276,7 @@ export default class NodeView extends NodeModel {
             return false
         }
 
-        let lastOrigin = await this.showOrigin()
+        let lastOrigin = await this.showContext()
         
         if (!lastOrigin.isAuthname) {
             i++
@@ -286,7 +295,7 @@ export default class NodeView extends NodeModel {
         } */
     }
     
-    #onValueChange (event) {
+    #onvaluechange (event) {
         this.value = event.target.value
         if (this.isAuthname && this.authNameConflict) {
             console.log(this.DOM, event.target)
@@ -306,23 +315,76 @@ export default class NodeView extends NodeModel {
 
     #onkeydown (event) {
         if (event.key === "Enter" && event.shiftKey) {
+            
             event.preventDefault()
-            this.originView.createBranch()
-            this.originView.open()
-            this.originView.linkedNodeViews.slice(-1)[0].select()
-        }
+            try {
+                this.openedFrom.createBranch()
+                this.openedFrom.open()
+                this.openedFrom.linkedNodeViews.slice(-1)[0]?.select()
+            } catch {
+                
+            }
+        
+        } 
         else if (event.key === "Backspace" && event.target.value.length <= 0) {
-            this.delete()            
+            
+            this.delete()
+
+        } else if (event.key === "ArrowLeft" && event.altKey) {
+
+            if (!this.openedFrom) {
+                this.showContext()
+            }
+            this.openedFrom?.select()
+
+        } else if (event.key === "ArrowRight" && event.altKey) {
+
+            this.open()
+            this.linkedNodeViews[0]?.select()
+
+        } else if (event.key === "ArrowUp" && event.altKey) {
+
+            this.siblings[this.siblingsIndex-1]?.select()
+
+            
+        } else if (event.key === "ArrowDown" && event.altKey) {
+            
+            this.siblings[this.siblingsIndex+1]?.select()
+
+        } else if (event.key.startsWith("Arrow") && event.target.selectionStart === event.target.selectionEnd) { 
+        
+            let pos = event.target.selectionStart
+            let lines = event.target.value.split("\n")
+            let lastLineStart = lines.slice(0, -1).reduce((acc, l) => acc + l.length, 0) + (Math.max(lines.length - 1, 0) * "\n".length)
+
+            let atTheTopLine = pos <= lines[0].length
+            let atTheBottomLine = pos >= lastLineStart
+            
+            console.log(pos, lines, lastLineStart, atTheTopLine, atTheBottomLine)
+            
+            if (event.key === "ArrowUp" && atTheTopLine) {
+                this?.siblings[this.siblingsIndex-1]?.select()
+            }
+            else if (event.key === "ArrowDown" && atTheBottomLine) {
+                this?.siblings[this.siblingsIndex+1]?.select()
+            }
         }
+    }
+
+    #onselect (event) {
     }
 
     updateStyle () {
         try {
+            
             if (this.isAuthname) {
                 this.DOM.classList.add("authName")
             } else {
                 this.DOM.classList.remove("authName")
             }
+
+            this.DOM.querySelector(".linksOpener").innerText = this.links.filter(link => link[0].split("/")[1] != "context").length
+
         } catch (err) {
             console.error(err)
         }

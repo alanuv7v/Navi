@@ -10,8 +10,8 @@ export default class NodeModel extends NodeData {
         //should sync all these with the LocalDB automatically
     }
 
-    get origin() {
-        let originLink = this.links.find(link => link[0].split("/")[1] === "_origin")
+    get context() {
+        let originLink = this.links.find(link => link[0].split("/")[1] === "context")
         if (originLink) return originLink[1]
         else return null
     }
@@ -72,30 +72,35 @@ export default class NodeModel extends NodeData {
         )
     }
 
+    forget (id) {
+        let aliveLinks = this.links.filter(l => l[1] != id)
+        this.links = aliveLinks
+        return this.updateRecord()
+    }
+
+    get readableLinks () {
+        return this.links.map(l => {
+            return {
+                tie: l[0],
+                id: l[1],
+                value: appSession.root.DB.exec(
+                    `SELECT value FROM nodes WHERE id='${l[1]}'`
+                )[0]?.values?.at(0)?.at(0) || "unknown"
+            }
+        })
+    }
+
     deleteRecord () {
         try {
             // remove this node from other nodes data
             for (let link of this.links) { //remove mirror links
                 let oppID = link[1]
-                let oppLinks = JSON.parse(appSession.root.DB.exec(
-                    `SELECT links FROM nodes WHERE id='${oppID}'`
-                    )[0].values[0])
-    
-                for (let i=0; i<oppLinks.length; i++) {
-
-                    console.log(oppLinks[i])
-
-                    if (oppLinks[i][1]===this.id) {
-                        //delete the link with this
-                        oppLinks.splice(i, 1) 
-                        //update the opposite node
-                        appSession.root.DB.exec(
-                            `UPDATE nodes SET links='${
-                                escape(JSON.stringify(oppLinks))
-                            }' WHERE id='${oppID}'`
-                        )
-                    }
-                }
+                let oppData = appSession.root.DB.exec(
+                    `SELECT * FROM nodes WHERE id='${oppID}'`
+                )[0].values[0]
+                let model = new NodeModel(...oppData)
+                model.forget(this.id)
+                console.log(oppID, oppData, model)
             }
         } catch (err) {
             Logger.log(err, "error")    
@@ -117,14 +122,14 @@ export default class NodeModel extends NodeData {
     }
 
     addLink (tie, nodeID) {
-        let _tie = tie?.join("/") || "_/_"
+        let _tie = tie?.join("/") || "context/"
         this.links.push([_tie, nodeID])
         this.updateRecord()
     }
 
     linkTo (tie, nodeID) {
 
-        tie = tie || ["_", "_"] // [this, that]
+        tie = tie || ["context", ""] // [this, that]
         let mirrorTie = structuredClone(tie).reverse()
         
         let newNodeModel = new NodeModel(nodeID, null, [])
@@ -141,7 +146,7 @@ export default class NodeModel extends NodeData {
 
 
     createLinkedNode (tie, value) {
-        tie = tie || ["_", "_"] // [this, that]
+        tie = tie || ["context", ""] // [this, that]
         let mirrorTie = structuredClone(tie).reverse()
         
         let newNodeModel = new NodeModel(null, value, [])
@@ -156,7 +161,7 @@ export default class NodeModel extends NodeData {
 
     createBranch (value) {
 
-        return this.createLinkedNode (["_origin", "_value"], value) //["context", ""]로 바뀔 예정
+        return this.createLinkedNode (["context", ""], value)
         
     }
 

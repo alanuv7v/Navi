@@ -8,7 +8,7 @@ const {div} = van.tags
 
 let originIndicators = []
 
-export function updateOriginIndicators (event) {
+export function updateOriginIndicators () {
 
     function getElemCenter (elem) {
         return {
@@ -22,7 +22,7 @@ export function updateOriginIndicators (event) {
         let originCenter = getElemCenter(origin.DOM.querySelector(".linksOpener"))
         let branchCenter = getElemCenter(branch.DOM.querySelector(".linksOpener"))
     
-        return van.tags.div({style: `
+        return div({style: `
             position: absolute;
             left: ${(originCenter.left - (thickness/2)) + "px"};
             top: ${originCenter.top + "px"};
@@ -31,24 +31,25 @@ export function updateOriginIndicators (event) {
         `, class: "originIndicator"})
     }
 
-    function getOriginStack (start, length=20) {
+    function getFromStack (start, length=20) {
         let stack = []
-        let lastOrigin = start
+        let lastFrom = start
         for (let i = 0; i < length; i++) {
-            if (!lastOrigin?.originView) break
+            if (!lastFrom?.openedFrom) break
             stack.push({
-                origin: lastOrigin.originView,
-                branch: lastOrigin
+                origin: lastFrom.openedFrom,
+                branch: lastFrom
             })
-            lastOrigin = lastOrigin.originView
+            lastFrom = lastFrom.openedFrom
         }
         return stack
     }
 
     let maxOriginIndicators = 10
     let selectedNodeView = appSession.selectedNode
+    console.log(selectedNodeView)
 
-    let newIndicatorStack = getOriginStack(selectedNodeView, maxOriginIndicators)
+    let newIndicatorStack = getFromStack(selectedNodeView, maxOriginIndicators)
     let diffRemaningStack = originIndicators.filter(i => newIndicatorStack.find(ii => i.origin.id === ii.origin.id && i.branch.id === ii.branch.id)) || []
     let diffOldStack = originIndicators.filter(i => diffRemaningStack.indexOf(i) < 0) || []
     let diffNewStack = newIndicatorStack.filter(i => !diffRemaningStack.find(ii => i.origin.id === ii.origin.id && i.branch.id === ii.branch.id))

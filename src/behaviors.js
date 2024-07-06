@@ -14,16 +14,15 @@ document.addEventListener("wheel", (event) => {
 
 
     
-    console.log(event.altKey, event.shiftKey, targetNodeView.value)
-
+    
     try {
+        console.log(navigateSiblings)
         if (navigateSiblings) {
             
-            let siblings = targetNodeView.originView.linkedNodeViews
+            console.log(targetNodeView, targetNodeView.openedFrom)
+            let siblings = targetNodeView.openedFrom.linkedNodeViews
             let thisIndex = siblings.indexOf(targetNodeView)
-            
-            console.log(siblings)
-    
+                
             if (event.deltaY > 0) {
                 siblings[thisIndex + 1].select()
             } else {
@@ -44,15 +43,22 @@ document.addEventListener("wheel", (event) => {
     
         } else {
     
-            if (targetNodeView.originView) {
-                targetNodeView.originView.select()
+            if (targetNodeView.openedFrom) {
+                targetNodeView.openedFrom.select()
             } else {
-                targetNodeView.showOrigin()
+                targetNodeView.showContext()
             }
     
         }
-    } catch {
-        
+    } catch (err) {
+        console.error(err)
     }
 
 }, {passive: false})
+
+
+document.addEventListener("keydown", (event) => {
+    let key = event.key
+    console.log(key)
+    if (key === "s")
+})

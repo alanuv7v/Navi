@@ -77,7 +77,7 @@ export default div("App", {
     ),
     div("Main", {}, 
         div("View", {class: ""}, 
-            div("Editor", {onclick: (event) => onEditorScroll(event)}, 
+            div("Editor", {}, 
                 div("Nodes"),
                 div("", {class: "overlay"})
             )
@@ -90,7 +90,3 @@ export default div("App", {
     ),
 )
 
-
-function onEditorScroll (event) {
-    updateOriginIndicators(event)
-}
