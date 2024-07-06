@@ -427,7 +427,7 @@ input:active, .clickable:active {
 
 
 #Header {
-    overflow: auto;
+    overflow-x: auto;
     #QuickActions {
         display: flex;
         > * {
@@ -602,7 +602,7 @@ input:active, .clickable:active {
 [tooltip]:hover::after {
 
     display: block;
-    position: absolute;
+    position: fixed;
 
     transform: translate(0.25em, 0.75em);
     
