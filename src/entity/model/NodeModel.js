@@ -156,7 +156,7 @@ export default class NodeModel extends NodeData {
 
     createBranch (value) {
 
-        return this.createLinkedNode (["_origin", "_value"], value)
+        return this.createLinkedNode (["_origin", "_value"], value) //["context", ""]로 바뀔 예정
         
     }
 

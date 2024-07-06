@@ -177,7 +177,6 @@ a:hover {
 }
 #Editor {
     flex-grow: 1;
-    padding: 1em;
     overflow: auto;
 }
 
@@ -498,7 +497,7 @@ input:active, .clickable:active {
         inset 4px 0px 0px 0px var(--light) !important;
     }
     .options {
-        display: none;
+        /* display: none; */
         overflow: visible;
         align-items: flex-start;
         > * {
@@ -510,9 +509,11 @@ input:active, .clickable:active {
         }
     }
     .links {
-        margin-left: 1em;
+        margin-left: 2em;
     }
     .linksOpener {
+
+        z-index: 1;
         
         /* margin: 0.5em 0.5em 0.5em 1em; */
         margin: 0px;
@@ -673,4 +674,29 @@ input:active, .clickable:active {
 
 #CommandPalette {
     width: 100%;
+}
+
+#View {    
+    padding: 1em;
+}
+
+#Editor {
+    position: relative;
+}
+
+#Editor > .overlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.originIndicator {
+    z-index: 0;
+    border-left: 4px dotted var(--mildshade);
+    border-bottom: 4px dotted var(--mildshade);
+    /* box-shadow: inset 2px -2px 0px 0px var(--mildshade); */
+    border-bottom-left-radius: 0em;
 }
