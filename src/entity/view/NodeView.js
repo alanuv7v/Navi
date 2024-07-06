@@ -31,33 +31,7 @@ export default class NodeView extends NodeModel {
     tie = ""
 
     deleteReady = false
-
-    DOM = div({class: "node", onmouseenter: (event) => this.#onHover(event)},
-        div({class: "h-flex"},
-            button({
-                class: "linksOpener", 
-                onclick: () => this.toggleOpen(),
-                innerText: this.links.filter(link => link[0].split("/")[1] != "_origin").length,
-            }),
-            div(
-                div({class: "options"},
-                    input({class: "tieThis", placeholder: "this"}),
-                    input({class: "tieThat", placeholder: "that"}),
-                    this.actionsDOM
-                ),
-                autoResizedTextarea({
-                    class: "value", 
-                    value: this.value, 
-                    onclick: (event) => this.#onclick(event), 
-                    onchange: (event) => {this.#onValueChange(event)},
-                    onfocus: () => this.select(),
-                    onkeydown: (event) => this.#onkeydown(event)
-                }),
-            ),
-        ),
-        div({class: "links"})
-    )
-
+    
     actionsDOM = div({class: "actions"},
         button({onclick: () => {
             this.deselect()
@@ -111,36 +85,33 @@ export default class NodeView extends NodeModel {
             else this.open()
         }, tooltip: "open/close"}, "<>"/* "open/close" */),
         button({onclick: () => {
-
+            
             refs("CommandPalette").focus()
             refs("CommandPalette").placeholder = "filter..."
             
             let onArgumentsSubmit = async (event) => {
-                let actionResult = this.filter = event.target.value
-                console.log(actionResult)
-                refs("CommandPalette").placeholder = ""
-                refs("CommandPalette").removeEventListener("blur", onArgumentsSubmit)
-                this.close()
-                this.open()
-            }
-
-            refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
-
-        }, tooltip: "filter links"}, "()"/* "filter" */),
+                    let actionResult = this.filter = event.target.value
+                    console.log(actionResult)
+                    refs("CommandPalette").placeholder = ""
+                    refs("CommandPalette").removeEventListener("blur", onArgumentsSubmit)
+                    this.close()
+                    this.open()
+                }
+                
+                refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
+                
+            }, tooltip: "filter links"}, "()"/* "filter" */),
         button({onclick: () => {userActions.Navigate.show_node_(`#${this.id}`)}, tooltip: "plant this node"}, "."/* "plant" */),
     )
-
+        
     linkedNodeViews = []
-
     originView = null
-    
-
-
+        
     render () {
         this.DOM.querySelector(".value").value = this.value
         this.DOM.querySelector(".linksOpener").innerText = this.links.filter(link => link[0].split("/")[1] != "_origin").length
     }
-
+        
     delete () {
         this.DOM.remove()
         this.deleteRecord()
@@ -152,6 +123,36 @@ export default class NodeView extends NodeModel {
         }
     }
 
+
+
+
+    DOM = div({class: "node", onmouseenter: (event) => this.#onHover(event)},
+        div({class: "h-flex"},
+            button({
+                class: "linksOpener", 
+                onclick: () => this.toggleOpen(),
+                innerText: this.links.filter(link => link[0].split("/")[1] != "_origin").length,
+            }),
+            div(
+                div({class: "options"},
+                    div(
+                        input({class: "tieFrom", placeholder: "From"}),
+                        input({class: "tieTo", placeholder: "To"}),
+                    ),
+                    this.actionsDOM
+                ),
+                autoResizedTextarea({
+                    class: "value", 
+                    value: this.value, 
+                    onclick: (event) => this.#onclick(event), 
+                    onchange: (event) => {this.#onValueChange(event)},
+                    onfocus: () => this.select(),
+                    onkeydown: (event) => this.#onkeydown(event)
+                }),
+            ),
+        ),
+        div({class: "links"})
+    )
 
     open (replacers=[]) {
 
@@ -190,8 +191,8 @@ export default class NodeView extends NodeModel {
                 if (tie==="_origin/_value") view.originView = this
                 view.openedFrom = this.id
                 view.tie = tie
-                view.DOM.querySelector(".tieThis").value = tie.split("/")[0]
-                view.DOM.querySelector(".tieThat").value = tie.split("/")[1]
+                view.DOM.querySelector(".tieFrom").value = tie.split("/")[0]
+                view.DOM.querySelector(".tieTo").value = tie.split("/")[1]
                 this.DOM.querySelector(".links").append(view.DOM)
                 view.onDomMount()
                 return view

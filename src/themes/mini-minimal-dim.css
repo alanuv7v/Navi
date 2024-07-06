@@ -497,13 +497,9 @@ input:active, .clickable:active {
         inset 4px 0px 0px 0px var(--light) !important;
     }
     .options {
-        /* display: none; */
+        display: none;
         overflow: visible;
         align-items: flex-start;
-        > * {
-            min-height: 2em;
-            height: 2em;
-        }
         button {
             min-width: 3em;
         }
@@ -551,7 +547,7 @@ input:active, .clickable:active {
     /* box-shadow: inset 4px 0px 0px -2px var(--light) !important; */
     > * > * > .options {
         display: flex;
-        flex-flow: wrap;
+        flex-direction: column;
     }
 }
 
