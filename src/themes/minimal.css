@@ -36,5 +36,9 @@
     }
 
 
+    button:focus, input:focus {
+        box-shadow: inset 0px 0px 0px 1px var(--mild);
+    }
+
 
 }
