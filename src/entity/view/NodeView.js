@@ -39,9 +39,29 @@ export default class NodeView extends NodeModel {
     }
 
     get siblingsIndex () {
-        return this.siblings.indexOf(this)
+        let res
+        for (let i = 0; i < this.siblings.length; i++) {
+            let s = this.siblings[i]
+            if (this.id === s.id) {
+                res = i
+                break
+            }
+        }
+        return res
     }
-    
+
+    get linkIndex () {
+        let res
+        for (let i = 0; i < this.openedFrom.links.length; i++) {
+            let l = this.openedFrom.links[i]
+            if (this.tie === l[0] && this.id === l[1]) {
+                res = i
+                break
+            }
+        }
+        return res
+    }
+
     actionsDOM = div({class: "actions"},
         button({onclick: () => {
             this.deselect()
@@ -287,6 +307,29 @@ export default class NodeView extends NodeModel {
 
     }
 
+    moveLinkIndex (toAdd) {
+        if (toAdd === 0) return false
+        let targetIndex = this.siblings[this.siblingsIndex + toAdd]?.linkIndex
+        if (!targetIndex || targetIndex < -1 || targetIndex > this.openedFrom.links.length) return false
+        this.openedFrom.links.splice(this.linkIndex, 1) //delete pre-existing self
+        this.openedFrom.links.splice(targetIndex, 0, [this.tie, this.id]) //insert self
+        return this.openedFrom.updateRecord()
+    }
+
+    moveUp () {
+        //this.DOM.insertBefore(this.DOM.previousSibling)
+        let res = this.moveLinkIndex(-1)
+        this.openedFrom.open()
+        return res
+    }
+
+    moveDown () {
+        //this.DOM.insertBefore(this.DOM.nextSibling)
+        let res = this.moveLinkIndex(1)
+        this.openedFrom.open()
+        return res
+    }
+
     #onclick () {
         if (!this.selected ) {
             this.select()
@@ -314,7 +357,8 @@ export default class NodeView extends NodeModel {
     }
 
     #onkeydown (event) {
-        if (event.key === "Enter" && event.shiftKey) {
+
+        if (event.key === "Enter" && event.altKey) {
             
             event.preventDefault()
             try {
@@ -342,10 +386,17 @@ export default class NodeView extends NodeModel {
             this.open()
             this.linkedNodeViews[0]?.select()
 
+        } else if (event.key === "ArrowUp" && event.altKey && event.shiftKey) {
+
+            this.moveUp()
+            
+        } else if (event.key === "ArrowDown" && event.altKey && event.shiftKey) {
+            
+            this.moveDown()
+
         } else if (event.key === "ArrowUp" && event.altKey) {
 
             this.siblings[this.siblingsIndex-1]?.select()
-
             
         } else if (event.key === "ArrowDown" && event.altKey) {
             

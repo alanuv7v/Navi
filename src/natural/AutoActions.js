@@ -47,14 +47,11 @@ export function updateOriginIndicators () {
 
     let maxOriginIndicators = 10
     let selectedNodeView = appSession.selectedNode
-    console.log(selectedNodeView)
 
     let newIndicatorStack = getFromStack(selectedNodeView, maxOriginIndicators)
     let diffRemaningStack = originIndicators.filter(i => newIndicatorStack.find(ii => i.origin.id === ii.origin.id && i.branch.id === ii.branch.id)) || []
     let diffOldStack = originIndicators.filter(i => diffRemaningStack.indexOf(i) < 0) || []
     let diffNewStack = newIndicatorStack.filter(i => !diffRemaningStack.find(ii => i.origin.id === ii.origin.id && i.branch.id === ii.branch.id))
-
-    console.log({originIndicators, newIndicatorStack, diffRemaningStack, diffOldStack, diffNewStack})
 
     diffOldStack.forEach(d => d.indicator.remove())
 
