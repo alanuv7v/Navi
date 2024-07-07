@@ -201,7 +201,7 @@ button, button:not(:hover), input, textarea, select {
     border: none;
     outline: none;
 
-    transition: color 0.2s ease, transform 0.1s ease;
+    transition: color 0.15s ease, transform 0.1s ease;
 
     padding-top: 4px;
     padding-bottom: 4px;
@@ -408,7 +408,7 @@ input:active, .clickable:active {
         box-shadow: none;
 
         scale: 0.7;
-        transition: scale 0.2s cubic-bezier(0, 0, 0.38, 1.55) !important;
+        /* transition: scale 0.2s cubic-bezier(0, 0, 0.38, 1.55) !important; */
 
         box-shadow: none !important;
 

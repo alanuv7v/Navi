@@ -32,7 +32,8 @@
     }
 
     .linksOpener:hover {
-        scale: 0.9;
+        /* scale: 0.9; */
+        background-color: var(--mildshade);
     }
 
 

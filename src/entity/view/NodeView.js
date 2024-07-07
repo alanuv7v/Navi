@@ -166,6 +166,7 @@ export default class NodeView extends NodeModel {
                     class: "value", 
                     value: this.value, 
                     onclick: (event) => this.#onclick(event), 
+                    onauxclick: (event) => this.#onauxclick(event), 
                     onchange: (event) => {this.#onvaluechange(event)},
                     onfocus: () => this.select(),
                     onkeydown: (event) => this.#onkeydown(event),
@@ -356,6 +357,10 @@ export default class NodeView extends NodeModel {
         } /* else {
             this.deselect()
         } */
+    }
+    
+    #onauxclick () {
+        //toggle the visibility of options
     }
     
     #onvaluechange (event) {
