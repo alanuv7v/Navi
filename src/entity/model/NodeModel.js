@@ -59,11 +59,20 @@ export default class NodeModel extends NodeData {
         if (this.isAuthname && this.authNameConflict) {
             return false
         } 
+        console.log(`UPDATE nodes SET ${
+            ["value", "links"]
+                .map(s => {
+                    return `${s}='${typeof this[s] === "string" ? 
+                    escape(this[s])
+                    : escape(JSON.stringify(this[s]))}'`
+                })
+                .join(", ")
+        } WHERE id='${this.id}';`)
         return appSession.root.DB.exec(
             `UPDATE nodes SET ${
                 ["value", "links"]
                     .map(s => {
-                        return `${s} = '${typeof this[s] === "string" ? 
+                        return `${s}='${typeof this[s] === "string" ? 
                         escape(this[s])
                         : escape(JSON.stringify(this[s]))}'`
                     })

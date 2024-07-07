@@ -309,24 +309,44 @@ export default class NodeView extends NodeModel {
 
     moveLinkIndex (toAdd) {
         if (toAdd === 0) return false
-        let targetIndex = this.siblings[this.siblingsIndex + toAdd]?.linkIndex
+        let toSwapWith = this.siblings[this.siblingsIndex + toAdd]
+        console.log(toSwapWith.value)
+        let targetIndex = toSwapWith?.linkIndex
         if (!targetIndex || targetIndex < -1 || targetIndex > this.openedFrom.links.length) return false
         this.openedFrom.links.splice(this.linkIndex, 1) //delete pre-existing self
         this.openedFrom.links.splice(targetIndex, 0, [this.tie, this.id]) //insert self
-        return this.openedFrom.updateRecord()
+        console.log(this.openedFrom.links)
+        this.openedFrom.updateRecord()
     }
 
     moveUp () {
-        //this.DOM.insertBefore(this.DOM.previousSibling)
+        //move perm data
         let res = this.moveLinkIndex(-1)
-        this.openedFrom.open()
+        //move temp data
+        let prevSiblingsIndex = this.siblingsIndex
+        this.openedFrom.linkedNodeViews.splice(prevSiblingsIndex, 1) //delete pre-existing self
+        this.openedFrom.linkedNodeViews.splice(prevSiblingsIndex - 1, 0, this) //insert self
+        //move DOM
+        this.DOM.parentNode.insertBefore(this.DOM, this.DOM.previousSibling)
+        this.select()
         return res
     }
 
     moveDown () {
-        //this.DOM.insertBefore(this.DOM.nextSibling)
+        //move data
         let res = this.moveLinkIndex(1)
-        this.openedFrom.open()
+        //move temp data
+        let prevSiblingsIndex = this.siblingsIndex
+        this.openedFrom.linkedNodeViews.splice(prevSiblingsIndex, 1) //delete pre-existing self
+        this.openedFrom.linkedNodeViews.splice(prevSiblingsIndex + 1, 0, this) //insert self
+        //move DOM
+        if (this.DOM.nextSibling.nextSibling) {
+            this.DOM.parentNode.insertBefore(this.DOM, this.DOM.nextSibling.nextSibling) 
+        } else {
+            this.DOM.parentNode.insertBefore(this.DOM, null) //to the end
+        }
+
+        this.select()
         return res
     }
 
