@@ -432,11 +432,16 @@ input:active, .clickable:active {
 }
 
 .node.authName {
-    > * > .autoResize > .value {
-    }
     > * > .linksOpener {
         color: var(--dark) !important;
         background-color: var(--authName) !important;
+    }
+}
+
+.node.reference {
+    > * > .linksOpener {
+        color: var(--dark) !important;
+        background-color: var(--reference) !important;
     }
 }
 

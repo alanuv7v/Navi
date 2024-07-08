@@ -1,23 +1,24 @@
 :root {
-    --light: rgb(250, 250, 250);
-    --slight: rgb(214, 212, 212);
-    --nice: rgb(208, 211, 208);
-    --mild: rgb(181, 185, 181);
+    --light: rgb(250 250 250);
+    --slight: rgb(214 212 212);
+    --nice: rgb(208 211 208);
+    --mild: rgb(181 185 181);
     --mildshade: rgb(60 60 60);
     --shade: rgb(40 40 40);
     --deep: rgb(25 25 25);
     --deeper: rgb(59 59 59);
     --dark: rgb(0 0 0);
-    --vivid: rgba(151, 200, 128, 1);
-    --link: rgb(153, 247, 225);
-    --hilight: rgb(202, 231, 188);
-    --active: rgba(185, 156, 189, 0.3);
-    --executable: rgb(186, 253, 208);
-    --authName: rgb(162, 252, 189);
-    --back: rgb(252, 198, 162);
-
+    --vivid: rgba(151 200 128 1);
+    --link: rgb(153 247 225);
+    --hilight: rgb(202 231 188);
+    --active: rgba(185 156 189 0.3);
+    --executable: rgb(186 253 208);
+    --back: rgb(252 198 162);
     
-    --alert: rgb(252, 222, 90);
-    --error: rgb(255, 100, 121);
-    --success: rgba(151, 200, 128, 1);
+    --authName: rgb(162 252 189);
+    --reference: rgb(180 150 250);
+    
+    --alert: rgb(252 222 90);
+    --error: rgb(255 100 121);
+    --success: rgba(151 200 128 1);
 }

@@ -10,6 +10,8 @@ import Logger from "../tech/gui/Logger"
 
 export default async function init () {
 
+    appSession.browserDB = BrowserDB
+
     let defaultSettings = appSession.settings
     try {
         appSession.settings = {...defaultSettings, ...JSON.parse((await BrowserDB.settings.get("lastUsed")).data)}
@@ -20,14 +22,16 @@ export default async function init () {
 
     //init appSession
     let lastSession = await SessionManager.getLastSession()
-    console.log(lastSession)
+    console.log("lastSession: ", lastSession)
 
     if (lastSession?.data) {
 
         appSession.copy(lastSession.data)
         console.log("Loaded last session data.")
-        console.log(lastSession)
+        
+        console.log("initializing root DB...")
         await initRootDB(lastSession.data.rootHandle)
+        console.log("initialized root DB.")
 
         try {
             

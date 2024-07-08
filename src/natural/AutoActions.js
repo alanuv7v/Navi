@@ -63,3 +63,8 @@ export function updateOriginIndicators () {
     originIndicators = [...diffRemaningStack, ...diffNewStack]
        
 }
+
+export function resetOriginIndicators () {
+    originIndicators = [] //reset!
+    return updateOriginIndicators()
+}

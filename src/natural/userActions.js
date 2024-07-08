@@ -111,7 +111,12 @@ export const Root = {
     
         console.log(`Opened root: ${appSession.root.name}`)
     
-        Navigate.show_node_("@root")
+        try {
+            let rootName = appSession.root.name
+            Navigate.show_node_(`@${rootName}`)
+        } catch {
+            Navigate.show_node_(`@root`)
+        }
     
         SessionManager.saveSession()
         
@@ -128,6 +133,44 @@ export const Root = {
         const blob = new Blob([data], { type: "application/octet-stream" });
         return await fileSystem.downloadFile(appSession.root.name, blob)
     },
+    async open_root_oldway () {
+        
+        let i = document.createElement('input')
+        i.type = "file"
+        i.multiple = false
+        i.click()
+
+        await (new Promise((resolve, reject) => {
+
+            async function onchange (event) {
+                
+                let rootBlob = event.target.files[0]
+                
+                appSession.temp.rootHandle = null
+                appSession.root.name = rootBlob.name || "root", 
+                appSession.root.DB = await LocalDBManager.load(rootBlob)
+                
+                resolve()
+            
+            }
+            
+            i.addEventListener("change", onchange)
+
+        }))
+    
+        console.log(`Opened root: ${appSession.root.name}`)
+    
+        try {
+            let rootName = appSession.root.name
+            Navigate.show_node_(`@${rootName}`)
+        } catch {
+            Navigate.show_node_(`@root`)
+        }
+    
+        SessionManager.saveSession()
+        
+        return appSession.root
+    }
 }
 
 export const Edit = {
@@ -223,5 +266,8 @@ export const Settings = {
     },
     async clear () {
         return await BrowserDB.settings.clear()
+    },
+    async clear_indexedDB () {
+        return await indexedDB.deleteDatabase("Root")
     }
 }

@@ -11,7 +11,7 @@ import autoResizedTextarea from "../../tech/gui/autoResizedTextarea"
 import * as userActions from "../../natural/userActions"
 import hearCommand from "./hearCommand"
 import Logger from "../../tech/gui/Logger"
-import { updateOriginIndicators } from "../../natural/AutoActions"
+import { resetOriginIndicators, updateOriginIndicators } from "../../natural/AutoActions"
 
 
 export default class NodeView extends NodeModel {
@@ -33,6 +33,14 @@ export default class NodeView extends NodeModel {
     linkedNodeViews = []
     
     deleteReady = false
+
+    get isReference () {
+        return this.value.startsWith(">")
+    }
+
+    get referenceQuery () {
+        return this.value.slice(1)
+    }
     
     get siblings () {
         return this.openedFrom.linkedNodeViews
@@ -79,7 +87,7 @@ export default class NodeView extends NodeModel {
             this.createBranch("")
             this.open()
         }, tooltip: "create new branch"}, "+" /* "new branch" */),
-        button({onclick: () => {
+        /* button({onclick: () => {
             hearCommand((queryString) => {
                 try {
                     let targetNodeId = parseQuery(queryString)[0].id
@@ -89,7 +97,7 @@ export default class NodeView extends NodeModel {
                     Logger.log(`failed to link "${queryString}"`, "error")
                 }
             })
-        }, tooltip: "create new link"}, "~"/* "new link" */),
+        }, tooltip: "create new link"}, "~"), */ //replaced by creating a link with value=">(queryString)"
         button({onclick: (e) => {
             console.log(this)
             if (this.deleteReady) {
@@ -123,7 +131,7 @@ export default class NodeView extends NodeModel {
                 
                 refs("CommandPalette").addEventListener("blur", onArgumentsSubmit)
                 
-            }, tooltip: "filter links"}, "()"/* "filter" */),
+        }, tooltip: "filter links"}, "()"/* "filter" */),
         button({onclick: () => {userActions.Navigate.show_node_(`#${this.id}`)}, tooltip: "plant this node"}, "."/* "plant" */),
     )
         
@@ -178,41 +186,52 @@ export default class NodeView extends NodeModel {
         //clear DOM
         if (this.opened) this.close()
 
-        // return if no links
-        if (!this.links || this.links.length < 1) return
-
-        //reset links DOM
-        this.DOM.querySelector(".links").innerHTML = ""
-
-        //append linkedNodeViews to links DOM
-        this.linkedNodeViews = this.links
-            .map((link) => {
-                let tie = link[0]
-                let res = appSession.root.getNodeById(link[1])
-                return {tie, data: res[0]}
-            })
-            .filter(link => link.data)
-            .filter(link => link.data[0] != this.openedFrom?.id)
-            .filter(link => link.data[0] != this.context)
-            .filter(link => {
-                return link.data[1] === this.filter || !this.filter
-            })
-            .map(({tie, data}) => {
-                return {
-                    tie,
-                    view: replacers.find(r => r.id === data[0]) || new NodeView(...data)
-                }
-            }).map(({tie, view}) => {
-                if (tie==="_origin/_value") view.originView = this
+        if (true) {
+            if (!this.links || this.links.length < 1) {
+                // return if no links
+                return false
+            } 
+            //append linkedNodeViews to links DOM
+            this.linkedNodeViews = this.links
+                .map((link) => {
+                    let tie = link[0]
+                    let res = appSession.root.getNodeById(link[1])
+                    return {tie, data: res[0]}
+                })
+                .filter(link => link.data)
+                .filter(link => link.data[0] != this.openedFrom?.id)
+                .filter(link => link.data[0] != this.context)
+                .filter(link => {
+                    return link.data[1] === this.filter || !this.filter
+                })
+                .map(({tie, data}) => {
+                    return {
+                        tie,
+                        view: replacers.find(r => r.id === data[0]) || new NodeView(...data)
+                    }
+                }).map(({tie, view}) => {
+                    view.openedFrom = this
+                    view.tie = tie
+                    view.DOM.querySelector(".tieFrom").value = tie.split("/")[0]
+                    view.DOM.querySelector(".tieTo").value = tie.split("/")[1]
+                    this.DOM.querySelector(".links").append(view.DOM)
+                    view.onDomMount()
+                    return view
+                })
+        } else {
+            this.linkedNodeViews = parseQuery(this.referenceQuery).map(data => {
+                let view = new NodeView(...data)
                 view.openedFrom = this
-                view.tie = tie
-                view.DOM.querySelector(".tieFrom").value = tie.split("/")[0]
-                view.DOM.querySelector(".tieTo").value = tie.split("/")[1]
+                view.tie = "/:reference"
                 this.DOM.querySelector(".links").append(view.DOM)
                 view.onDomMount()
                 return view
             })
-        
+        }
+
+        //reset links DOM
+        this.DOM.querySelector(".links").innerHTML = ""
+
         //set state
         this.opened = true
 
@@ -375,13 +394,36 @@ export default class NodeView extends NodeModel {
         //end finding new origin
         appSession.onClickedNodeChange = () => {}
         this.DOM.classList.remove("finding-new-origin")
-        updateOriginIndicators()
+        resetOriginIndicators()
     }
 
     createBranch (value) {
+        if (this.isReference) return false
         return this.createLinkedNode (this.tie, value)
     }
 
+    updateStyle () {
+        try {
+            
+            if (this.isAuthname) {
+                this.DOM.classList.add("authName")
+            } else {
+                this.DOM.classList.remove("authName")
+            }
+            
+            if (this.isReference) {
+                this.DOM.classList.add("reference")
+            } else {
+                this.DOM.classList.remove("reference")
+            }
+
+            this.DOM.querySelector(".linksOpener").innerText = this.links.filter(link => link[0].split("/")[1] != "context").length
+
+        } catch (err) {
+            console.error(err)
+        }
+    }
+    
     #onclick () {
         appSession.clickedNode = this 
         if (!this.selected ) {
@@ -482,20 +524,4 @@ export default class NodeView extends NodeModel {
     #onselect (event) {
     }
 
-    updateStyle () {
-        try {
-            
-            if (this.isAuthname) {
-                this.DOM.classList.add("authName")
-            } else {
-                this.DOM.classList.remove("authName")
-            }
-
-            this.DOM.querySelector(".linksOpener").innerText = this.links.filter(link => link[0].split("/")[1] != "context").length
-
-        } catch (err) {
-            console.error(err)
-        }
-    }
-    
 }

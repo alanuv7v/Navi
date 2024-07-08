@@ -56,14 +56,11 @@ let userActionsSorted = Object.keys(userActions)
         return acc
     }, {})
 
-console.log(actionsOrder, userActionsSorted)
-
 new CommandsTree(userActionsSorted)
 
 errorCatcher()
 
 Logger.log("Hi, user.")
-console.log(Logger.logs)
 
 init()
 

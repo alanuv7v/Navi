@@ -6,7 +6,8 @@ import appSession from "../resource/appSession";
 export async function create(name) {
         
     const SQL = await initSqlJs(
-        {locateFile: file => `https://sql.js.org/dist/${file}`}
+        //{locateFile: file => `https://sql.js.org/dist/${file}`}
+        {locateFile: file => `sqlite/${file}`}
     )
 
     const DB = new SQL.Database();
@@ -37,7 +38,8 @@ export async function create(name) {
 export async function load(input) {
 
     const SQL = await initSqlJs(
-        {locateFile: file => `https://sql.js.org/dist/${file}`}
+        //{locateFile: file => `https://sql.js.org/dist/${file}`}
+        {locateFile: file => `sqlite/${file}`}
     )
     
     let blob

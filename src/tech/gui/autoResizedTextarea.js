@@ -21,7 +21,6 @@ export default function (props) {
         visibleTextarea
     )
     res.autoResize = () => {
-        console.log("resize")
         inputTextarea.style.height = "0px" //리셋해서 scrollHeight 다시 계산
         inputTextarea.style.height = (inputTextarea.scrollHeight) + "px"
         visibleTextarea.style.height = inputTextarea.style.height
