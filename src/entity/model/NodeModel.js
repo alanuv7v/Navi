@@ -118,59 +118,50 @@ export default class NodeModel extends NodeData {
     }
 
     refreshData() {
-        let newData = this.readRecord()[0].values[0]
-        for (let i=0; i < newData.length; i++) {
-            let prop = ["id", "value", "links"][i] 
-            if (prop === "links") {
-                this[prop] = JSON.parse(newData[i])
+        let newData = this.readRecord()[0]
+        let newValues = newData.values[0]
+        for (let i=0; i < newData.columns.length; i++) {
+            let prop = newData.columns[i] 
+            if (prop === "id") {
+                //do nothing
+            } else if (prop === "links") {
+                this[prop] = JSON.parse(newValues[i])
             } else {
-                this[prop] = newData[i] 
+                this[prop] = newValues[i]
             }
         }
         return this
     }
 
     addLink (tie, nodeID) {
-        let _tie = tie?.join("/") || "context/"
-        this.links.push([_tie, nodeID])
+        this.links.push([tie, nodeID])
         this.updateRecord()
     }
 
     linkTo (tie, nodeID) {
 
-        tie = tie || ["context", ""] // [this, that]
-        let mirrorTie = structuredClone(tie).reverse()
+        let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
         
         let newNodeModel = new NodeModel(nodeID, null, [])
         newNodeModel.refreshData()
         
         this.addLink(tie, newNodeModel.id)
-        this.updateRecord()
-
         newNodeModel.addLink(mirrorTie, this.id)
-        newNodeModel.updateRecord()
-
     }
 
-
-
     createLinkedNode (tie, value) {
-        tie = tie || ["context", ""] // [this, that]
-        let mirrorTie = structuredClone(tie).reverse()
+        let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
         
         let newNodeModel = new NodeModel(null, value, [])
         newNodeModel.createRecord()
         
         this.addLink(tie, newNodeModel.id)
-        this.updateRecord()
-
         newNodeModel.addLink(mirrorTie, this.id)
-        newNodeModel.updateRecord()
     }
 
     createBranch (value) {
 
-        return this.createLinkedNode (["context", ""], value)
+        return this.createLinkedNode ("context/", value)
         
     }
 

@@ -369,7 +369,6 @@ input:active, .clickable:active {
 
     }
     .value:hover {
-        background-color: var(--deep);
         box-shadow: 
         inset 4px 0px 0px 0px var(--shade) !important;
     }
@@ -439,6 +438,23 @@ input:active, .clickable:active {
         color: var(--dark) !important;
         background-color: var(--authName) !important;
     }
+}
+
+.node.finding-new-origin {    
+    box-shadow: 0px 0px 0px 4px var(--shade);
+    
+}
+
+.node.finding-new-origin::before {
+
+    display: block;
+    font-size: 0.75em;
+    /* transform: translate(0.25em, 0.75em); */
+    
+    content: "finding new origin...";/* attr(tooltip); */
+    color: var(--mildshade);
+    z-index: 3;
+
 }
 
 .node.error .value {

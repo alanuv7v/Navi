@@ -30,7 +30,17 @@ export default class SessionData {
         getNodeByValue: (value) => this.root.DB.exec(`SELECT * FROM nodes WHERE value='${value}'`)[0].values
     }
     
-    selectedNode = null 
+    selectedNode = null
+    #clickedNode = null
+    get clickedNode () {
+        return this.#clickedNode
+    } 
+    set clickedNode (value) {
+        this.#clickedNode = value 
+        this.onClickedNodeChange(value)
+        return true
+    }
+    onClickedNodeChange = () => {}
     hoveredNode = null 
     copiedNode = null 
 

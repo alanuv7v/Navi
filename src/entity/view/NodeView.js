@@ -77,7 +77,7 @@ export default class NodeView extends NodeModel {
             this.open()
         }, tooltip: "create new branch"}, "+" /* "new branch" */),
         button({onclick: () => {
-            hearCommand((queryString) => {
+            /* hearCommand((queryString) => {
                 try {
                     let targetNodeId = parseQuery(queryString)[0].id
                     this.linkTo(["_", "_"], targetNodeId)
@@ -86,7 +86,7 @@ export default class NodeView extends NodeModel {
                 } catch (err) {
                     Logger.log(`failed to link "${queryString}"`, "error")
                 }
-            })
+            }) */
         }, tooltip: "create new link"}, "~"/* "new link" */),
         /* input({onblur: async (event) => {
             let queryString = event.target.value
@@ -147,6 +147,8 @@ export default class NodeView extends NodeModel {
         }
     }
 
+    linksDOM = div({class: "links"})
+
     DOM = div({class: "node", onmouseenter: (event) => this.#onHover(event)},
         div({class: "h-flex"},
             button({
@@ -174,7 +176,7 @@ export default class NodeView extends NodeModel {
                 }),
             ),
         ),
-        div({class: "links"})
+        this.linksDOM
     )
 
     open (replacers=[]) {
@@ -351,7 +353,32 @@ export default class NodeView extends NodeModel {
         return res
     }
 
+    findNewOrigin () {
+        this.DOM.classList.add("finding-new-origin")
+        appSession.onClickedNodeChange = (nodeView) => {
+            this.reOrigin(nodeView.id, nodeView)
+        }
+    }
+
+    reOrigin (newOriginId, newOriginView) {
+        //move data
+        let newModel = new NodeModel(newOriginId)
+        newModel.refreshData()
+        newModel.addLink(this.tie, this.id)
+        //move temp data
+        this.openedFrom.linkedNodeViews.splice(this.siblingsIndex, 1) //delete pre-existing self
+        //move DOM
+        if (!newOriginView) return
+        newOriginView.refreshData()
+        newOriginView.open()
+
+        //end finding new origin
+        appSession.onClickedNodeChange = () => {}
+        this.DOM.classList.remove("finding-new-origin")
+    }
+
     #onclick () {
+        appSession.clickedNode = this 
         if (!this.selected ) {
             this.select()
         } /* else {
