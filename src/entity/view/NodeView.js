@@ -66,36 +66,30 @@ export default class NodeView extends NodeModel {
         button({onclick: () => {
             this.deselect()
         }, tooltip: "deselect node"}, "*"/* "hide options */),
+        button({onclick: () => {
+            this.findNewOrigin()
+        }, tooltip: "set new origin"}, "$"),
         button({onclick: async () => {
             this.showAuthOrigin(0)
-        }, tooltip: "find authentic origin"}, "^^"/* "show authName origin" */),
+        }, tooltip: "find full context"}, "^^"/* "show authName origin" */),
         button({onclick: async () => {
             this.showContext()
-        }, tooltip: "find origin"}, "^"/* "show origin" */),
+        }, tooltip: "find context"}, "^"/* "show origin" */),
         button({onclick: () => {
             this.createBranch("")
             this.open()
         }, tooltip: "create new branch"}, "+" /* "new branch" */),
         button({onclick: () => {
-            /* hearCommand((queryString) => {
+            hearCommand((queryString) => {
                 try {
                     let targetNodeId = parseQuery(queryString)[0].id
-                    this.linkTo(["_", "_"], targetNodeId)
-                    this.updateStyle()
+                    this.linkTo(this.tie, targetNodeId)
                     this.open()
                 } catch (err) {
                     Logger.log(`failed to link "${queryString}"`, "error")
                 }
-            }) */
+            })
         }, tooltip: "create new link"}, "~"/* "new link" */),
-        /* input({onblur: async (event) => {
-            let queryString = event.target.value
-            let res = await parseQuery(queryString)
-            if (!res) return false
-            let targetNodeData = res[0]
-            this.linkTo(targetNodeData[0])
-            this.open()
-        }, placeholder: "linkTo"}), */
         button({onclick: (e) => {
             console.log(this)
             if (this.deleteReady) {
@@ -222,6 +216,8 @@ export default class NodeView extends NodeModel {
         //set state
         this.opened = true
 
+        this.updateStyle()
+
         return this.linkedNodeViews
 
     }
@@ -236,7 +232,7 @@ export default class NodeView extends NodeModel {
     
     }
 
-    select() {
+    select () {
 
         console.log(this)
 
@@ -355,26 +351,35 @@ export default class NodeView extends NodeModel {
 
     findNewOrigin () {
         this.DOM.classList.add("finding-new-origin")
+        updateOriginIndicators()
         appSession.onClickedNodeChange = (nodeView) => {
             this.reOrigin(nodeView.id, nodeView)
         }
     }
 
     reOrigin (newOriginId, newOriginView) {
+        if (this.id === newOriginId) return false
         //move data
         let newModel = new NodeModel(newOriginId)
         newModel.refreshData()
         newModel.addLink(this.tie, this.id)
+        this.openedFrom.links.splice(this.linkIndex, 1)
+        this.openedFrom.updateRecord()
         //move temp data
-        this.openedFrom.linkedNodeViews.splice(this.siblingsIndex, 1) //delete pre-existing self
+        this.openedFrom.linkedNodeViews.splice(this.siblingsIndex, 1)
+        this.openedFrom.open()
         //move DOM
         if (!newOriginView) return
         newOriginView.refreshData()
         newOriginView.open()
-
         //end finding new origin
         appSession.onClickedNodeChange = () => {}
         this.DOM.classList.remove("finding-new-origin")
+        updateOriginIndicators()
+    }
+
+    createBranch (value) {
+        return this.createLinkedNode (this.tie, value)
     }
 
     #onclick () {

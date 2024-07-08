@@ -10,7 +10,7 @@ export default class NodeModel extends NodeData {
         //should sync all these with the LocalDB automatically
     }
 
-    get context() {
+    get context () {
         let originLink = this.links.find(link => link[0].split("/")[1] === "context")
         if (originLink) return originLink[1]
         else return null
@@ -157,12 +157,6 @@ export default class NodeModel extends NodeData {
         
         this.addLink(tie, newNodeModel.id)
         newNodeModel.addLink(mirrorTie, this.id)
-    }
-
-    createBranch (value) {
-
-        return this.createLinkedNode ("context/", value)
-        
     }
 
 }
