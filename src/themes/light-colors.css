@@ -1,6 +1,6 @@
 :root {
     --light: rgb(40 40 40);
-    --slight: rgb(21 21 21);
+    --slight: rgb(10 10 10);
     --nice: rgb(63 63 63);
     --mild: rgb(99 99 99);
     --mildshade: rgb(173 173 173);
@@ -14,7 +14,6 @@
     --active: rgba(185, 156, 189, 0.3);
     --executable: rgb(151 48 171);
     --authName: rgb(87 205 122);
-    --back: rgb(0 0 0);
 
     
     --alert: rgb(252, 222, 90);

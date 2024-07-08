@@ -51,7 +51,6 @@ class CommandButton {
         }
         else if (this.backToDefault) {
             console.log(this.name)
-            button.style.color = "var(--back)"
         }
         else if (typeof value === "function") {
             button.classList.add("function")

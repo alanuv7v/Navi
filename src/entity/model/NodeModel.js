@@ -111,10 +111,10 @@ export default class NodeModel extends NodeData {
                 model.forget(this.id)
                 console.log(oppID, oppData, model)
             }
+            return appSession.root.DB.exec(`DELETE FROM nodes WHERE id='${this.id}'`)
         } catch (err) {
             Logger.log(err, "error")    
         }
-        return appSession.root.DB.exec(`DELETE FROM nodes WHERE id='${this.id}'`)
     }
 
     refreshData() {

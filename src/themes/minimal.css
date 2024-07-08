@@ -8,7 +8,12 @@
 }
 
 #App.theme-minimal {
-    
+
+    * {
+        font-family: 'Borgen', 'gowun batang', 'suit', '나눔명조', 'freemono', serif, monospace;
+        font-weight: 300;
+    }
+
     button, input {
         box-shadow: inset 0px 0px 0px 1px var(--deeper);
         border-radius: 0.5em;

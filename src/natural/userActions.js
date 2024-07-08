@@ -220,6 +220,7 @@ export const Navigate = {
     async show_node_ (queryString) { //Navigate.plant로 옮길까.
         
         let res = (await parseQuery(queryString))
+        console.log("parseQuery res: ", res)
         let nodeView = new NodeView(...res[0])
         nodeView.plant()
         

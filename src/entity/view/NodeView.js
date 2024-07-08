@@ -11,7 +11,7 @@ import autoResizedTextarea from "../../tech/gui/autoResizedTextarea"
 import * as userActions from "../../natural/userActions"
 import hearCommand from "./hearCommand"
 import Logger from "../../tech/gui/Logger"
-import { resetOriginIndicators, updateOriginIndicators } from "../../natural/AutoActions"
+import { clearOriginIndicators, resetOriginIndicators, updateOriginIndicators } from "../../natural/AutoActions"
 
 
 export default class NodeView extends NodeModel {
@@ -151,7 +151,11 @@ export default class NodeView extends NodeModel {
 
     linksDOM = div({class: "links"})
 
-    DOM = div({class: "node", onmouseenter: (event) => this.#onHover(event)},
+    DOM = div({
+        class: "node", 
+        onmouseenter: (event) => this.#onHover(event),
+        oncontextmenu: (event) => event.preventDefault(),
+    },
         div({class: "h-flex"},
             button({
                 class: "linksOpener", 
@@ -174,23 +178,39 @@ export default class NodeView extends NodeModel {
                     onchange: (event) => {this.#onvaluechange(event)},
                     onfocus: () => this.select(),
                     onkeydown: (event) => this.#onkeydown(event),
-                    onselect: (event) => this.#onselect(event)
+                    onselect: (event) => this.#onselect(event),
                 }),
             ),
         ),
         this.linksDOM
     )
 
-    open (replacers=[]) {
+    async open (replacers=[]) {
 
         //clear DOM
         if (this.opened) this.close()
 
-        if (true) {
-            if (!this.links || this.links.length < 1) {
-                // return if no links
-                return false
-            } 
+        if (this.isReference) {
+            this.linkedNodeViews = parseQuery(this.referenceQuery)
+        } else if (!this.links || this.links.length < 1) {
+            // return if no links
+            return
+        } 
+
+        //reset links DOM
+        this.DOM.querySelector(".links").innerHTML = ""
+
+        if (this.isReference) {
+            console.log(await parseQuery(this.referenceQuery))
+            this.linkedNodeViews = (await parseQuery(this.referenceQuery)).map(data => {
+                let view = new NodeView(...data)
+                view.openedFrom = this
+                view.tie = "/:reference"
+                this.DOM.querySelector(".links").append(view.DOM)
+                view.onDomMount()
+                return view
+            })
+        } else {
             //append linkedNodeViews to links DOM
             this.linkedNodeViews = this.links
                 .map((link) => {
@@ -210,6 +230,7 @@ export default class NodeView extends NodeModel {
                         view: replacers.find(r => r.id === data[0]) || new NodeView(...data)
                     }
                 }).map(({tie, view}) => {
+                    if (tie==="_origin/_value") view.originView = this
                     view.openedFrom = this
                     view.tie = tie
                     view.DOM.querySelector(".tieFrom").value = tie.split("/")[0]
@@ -218,24 +239,14 @@ export default class NodeView extends NodeModel {
                     view.onDomMount()
                     return view
                 })
-        } else {
-            this.linkedNodeViews = parseQuery(this.referenceQuery).map(data => {
-                let view = new NodeView(...data)
-                view.openedFrom = this
-                view.tie = "/:reference"
-                this.DOM.querySelector(".links").append(view.DOM)
-                view.onDomMount()
-                return view
-            })
         }
-
-        //reset links DOM
-        this.DOM.querySelector(".links").innerHTML = ""
 
         //set state
         this.opened = true
 
         this.updateStyle()
+
+        resetOriginIndicators()
 
         return this.linkedNodeViews
 
@@ -249,6 +260,7 @@ export default class NodeView extends NodeModel {
         //set state
         this.opened = false
     
+        resetOriginIndicators()
     }
 
     select () {
@@ -275,10 +287,12 @@ export default class NodeView extends NodeModel {
 
     }
 
-    deselect() {
+    deselect () {
         this.DOM.classList.remove("selected")
         appSession.selectedNode = null
         this.selected = false
+        this.optionSleep = true
+        clearOriginIndicators()
     }
 
     plant () {
@@ -370,10 +384,10 @@ export default class NodeView extends NodeModel {
 
     findNewOrigin () {
         this.DOM.classList.add("finding-new-origin")
-        updateOriginIndicators()
         appSession.onClickedNodeChange = (nodeView) => {
             this.reOrigin(nodeView.id, nodeView)
         }
+        this.select()
     }
 
     reOrigin (newOriginId, newOriginView) {
@@ -394,7 +408,7 @@ export default class NodeView extends NodeModel {
         //end finding new origin
         appSession.onClickedNodeChange = () => {}
         this.DOM.classList.remove("finding-new-origin")
-        resetOriginIndicators()
+        this.select()
     }
 
     createBranch (value) {
@@ -425,16 +439,33 @@ export default class NodeView extends NodeModel {
     }
     
     #onclick () {
-        appSession.clickedNode = this 
         if (!this.selected ) {
             this.select()
-        } /* else {
-            this.deselect()
-        } */
+        }
+        if (this.optionSleep) {
+            this.optionSleep = false
+        } else {
+            this.toggleOptionDisplay()
+        }
     }
+
+    optionSleep = true
+    optionShown = false
     
-    #onauxclick () {
+    toggleOptionDisplay () {
         //toggle the visibility of options
+        if (this.optionShown) {
+            this.DOM.classList.remove("option-shown")
+            this.optionShown = false
+        } else {
+            this.DOM.classList.add("option-shown")
+            this.optionShown = true
+        }
+    }
+
+    #onauxclick (event) {
+        event.preventDefault()
+        this.toggleOptionDisplay()
     }
     
     #onvaluechange (event) {
@@ -474,7 +505,8 @@ export default class NodeView extends NodeModel {
             this.delete()
 
         } else if (event.key === "ArrowLeft" && event.altKey) {
-
+            
+            event.preventDefault()
             if (!this.openedFrom) {
                 this.showContext()
             }
@@ -482,6 +514,7 @@ export default class NodeView extends NodeModel {
 
         } else if (event.key === "ArrowRight" && event.altKey) {
 
+            event.preventDefault()
             this.open()
             this.linkedNodeViews[0]?.select()
 

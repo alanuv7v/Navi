@@ -3,7 +3,6 @@
     box-sizing: border-box;
     color: var(--light);
     text-overflow: ellipsis;
-
 }
 
 body {
@@ -291,8 +290,8 @@ input, textarea {
 }
 
 input:hover, textarea:hover, input:focus, textarea:focus, .clickable:hover {
-    
-    color: var(--light) !important;
+    /* 
+    color: var(--light) !important; */
     background-color: var(--shade);
 
 }
@@ -423,7 +422,7 @@ input:active, .clickable:active {
 
 }
 
-.node.selected {
+.node.option-shown {
     /* box-shadow: inset 4px 0px 0px -2px var(--light) !important; */
     > * > * > .options {
         display: flex;

@@ -36,18 +36,6 @@ export default div("App", {
             button("GoForth", {
                 tooltip: "Go Forth"
             }, "▷"),
-            button("ToOrigin", {
-                tooltip: "Go to origin"
-            }, "⇑"),
-            button("ToLinks", {
-                tooltip: "Go to links"
-            }, "⇓"),
-            button("Path", {
-                tooltip: "View trace"
-            }, "//"),
-            button("Adress", {
-                tooltip: "View origins from root"
-            }, ">>"),
             button("Debugger", {
                 tooltip: "Debugger",
                 onclick: () => {
