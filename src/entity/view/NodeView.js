@@ -179,6 +179,10 @@ export default class NodeView extends NodeModel {
                     onfocus: () => this.select(),
                     onkeydown: (event) => this.#onkeydown(event),
                     onselect: (event) => this.#onselect(event),
+                    onfocus: ((e) => {
+                        e.preventDefault();
+                        e.target.focus({preventScroll: true});
+                      })
                 }),
             ),
         ),
