@@ -7,10 +7,30 @@
     }
 }
 
+@font-face {
+    font-family: Borgen;
+    src: url('/public/fonts/Borgen.otf') format('opentype');
+}
+
+@font-face {
+    font-family: Borgen;
+    src: url('/public/fonts/BorgenOblique.otf') format('opentype');
+    font-style: oblique;
+}
+
+@font-face {
+    font-family: gowun batang;
+    src: url('/public/fonts/GowunBatang-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: suit;
+    src: url('/public/fonts/SUIT-Light.otf') format('opentype');
+}
+
 #App.theme-minimal {
 
     * {
-        font-family: 'Borgen', 'gowun batang', 'suit', '나눔명조', 'freemono', serif, monospace;
+        font-family: 'gowun batang', 'suit', '나눔명조', 'freemono', serif, monospace;
         font-weight: 300;
     }
 

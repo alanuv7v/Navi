@@ -15,6 +15,8 @@ class Logger {
     maxLogs = 100
 
     log (content, type) {
+
+        console.log(content)
         
         if (appSession.temp.logs.length > this.maxLogs) {
             appSession.temp.logs = appSession.temp.logs.slice(-this.maxLogs)
