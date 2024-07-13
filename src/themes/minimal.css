@@ -7,15 +7,15 @@
     }
 }
 
-@font-face {
+/* @font-face {
     font-family: Borgen;
     src: url('/public/fonts/Borgen.otf') format('opentype');
 }
-
+ */
 @font-face {
     font-family: Borgen;
     src: url('/public/fonts/BorgenOblique.otf') format('opentype');
-    font-style: oblique;
+    /* font-style: oblique; */
 }
 
 @font-face {
@@ -24,15 +24,15 @@
 }
 @font-face {
     font-family: suit;
-    src: url('/public/fonts/SUIT-Light.otf') format('opentype');
+    src: url('/public/fonts/SUIT-Thin.otf') format('opentype');
 }
 
 #App.theme-minimal {
 
-    * {
-        font-family: 'gowun batang', 'suit', '나눔명조', 'freemono', serif, monospace;
+    /* * {
+        font-family: 'borgen', 'gowun batang', 'suit', '나눔명조', 'freemono', serif, monospace;
         font-weight: 300;
-    }
+    } */
 
     button, input {
         box-shadow: inset 0px 0px 0px 1px var(--deeper);
