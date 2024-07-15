@@ -149,11 +149,37 @@ export default class NodeModel extends NodeData {
         newNodeModel.addLink(mirrorTie, this.id)
     }
 
+    
     createLinkedNode (tie, value) {
         let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
         
         let newNodeModel = new NodeModel(null, value, [])
         newNodeModel.createRecord()
+        
+        this.addLink(tie, newNodeModel.id)
+        newNodeModel.addLink(mirrorTie, this.id)
+    }
+
+    deleteLink (tie, nodeID) {
+        //미완!!!!
+        let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
+        
+        let newNodeModel = new NodeModel(nodeID, null, [])
+        newNodeModel.refreshData()
+        let prevMirroredLink = newNodeModel.links.find(([t, n]) => t === mirrorTie && n === this.id)
+        newNodeModel.links.splice(newNodeModel.links.indexOf(prevMirroredLink), 1)
+
+        this.addLink(tie, newNodeModel.id)
+        newNodeModel.addLink(mirrorTie, this.id)
+        
+    }
+    
+    changeTie (tie, nodeID) {
+        //미완!!!!
+        let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
+        
+        let newNodeModel = new NodeModel(nodeID, null, [])
+        newNodeModel.refreshData()
         
         this.addLink(tie, newNodeModel.id)
         newNodeModel.addLink(mirrorTie, this.id)

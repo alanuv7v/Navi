@@ -45,6 +45,10 @@ export default class NodeView extends NodeModel {
     
     deleteReady = false
 
+    get context () {
+        this.links.find(link => link[0] === "/context")
+    }
+
     get isReference () {
         return this.value.startsWith(">")
     }
@@ -179,8 +183,24 @@ export default class NodeView extends NodeModel {
         div({class: "main"},
             div({class: "options"},
                 div(
-                    input({class: "tieFrom", placeholder: "From"}),
-                    input({class: "tieTo", placeholder: "To"}),
+                    input({class: "tieFrom", placeholder: "from", onchange: (event) => {
+                        //미완!!!!
+                        let [prevFrom, prevTo] = this.tie?.split("/")
+                        if (prevTo) {
+                            this.tie = event.target.value + "/" + prevTo
+                        } else {
+                            this.tie = event.target.value + "/"
+                        }
+                    }}),
+                    input({class: "tieTo", placeholder: "to", onchange: (event) => {
+                        //미완!!!!
+                        let [prevFrom, prevTo] = this.tie?.split("/")
+                        if (prevFrom) {
+                            this.tie = prevFrom + "/" + event.target.value
+                        } else {
+                            this.tie = "/" + event.target.value
+                        }
+                    }}),
                 ),
                 this.actionsDOM
             ),
@@ -430,7 +450,7 @@ export default class NodeView extends NodeModel {
 
     createBranch (value) {
         if (this.isReference) return false
-        return this.createLinkedNode (this.tie, value)
+        return this.createLinkedNode (this.tie || "context/", value)
     }
 
     updateStyle () {
