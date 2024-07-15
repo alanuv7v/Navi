@@ -19,6 +19,18 @@ export default class NodeView extends NodeModel {
     constructor (...data) {
         super(...data)
         this.updateStyle()
+
+        this.DOM._offsetTop = -1
+        Object.defineProperty(this.DOM, "offsetTop", {
+            get: function () {
+                return this._offsetTop
+            },
+            set: function (value) {
+                console.log("!" + value)
+                this._offsetTop = value
+                return true
+            }
+        });
     }
 
     onDomMount = () => {

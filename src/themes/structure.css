@@ -349,76 +349,95 @@ input:active, .clickable:active {
     > *:has(.value) > *:not(:last-child) {
         margin-right: 1em;
     }
-    .value {
-        margin: 0px;
-        min-width: 10em;
-        width: 100vw;
-        
-        padding-left: 1em;
-        padding-right: 0em;
-        padding-top: 0em;
-        padding-bottom: 0em;
-
-        flex-grow: 1;
-        
-        background-color: transparent;
-        box-shadow: inset 0px 0px 0px 0px var(--deep) !important;
-
-        line-height: 1.8em;
-
-    }
-    .value:hover {
-        box-shadow: 
-        inset 4px 0px 0px 0px var(--shade) !important;
-    }
-    .value:focus {
-        box-shadow: 
-        inset 4px 0px 0px 0px var(--light) !important;
-    }
-    .options {
-        display: none;
-        overflow: visible;
-        align-items: flex-start;
-        button {
-            min-width: 2em;
+    > .main {
+        .value {
+            margin: 0px;
+            min-width: 10em;
+            width: 100vw;
+            
+            padding-left: 1em;
+            padding-right: 0em;
+            padding-top: 0em;
+            padding-bottom: 0em;
+    
+            flex-grow: 1;
+            
+            background-color: transparent;
+            
+            line-height: 1.8em;
         }
-    }
-    .links {
-        margin-left: 2em;
-    }
-    .linksOpener {
-
-        /* display: none; */
-
-        /* z-index: 1;
-        
-        margin: 0px;
-
-        width: 2em;
-        height: 2em;
-
-        
-        padding: 0px;
-        font-size: 1em;
-        box-shadow: none;
-
-        scale: 0.7;
-
-        box-shadow: none !important; */
-        /* transition: scale 0.2s cubic-bezier(0, 0, 0.38, 1.55) !important; */
-
-        color: var(--slight);
-        background-color: var(--shade);
-        
-        :active {
-            animation: none;
+        .value.visible {
+            box-shadow: 
+            0px 0px 0px 0px var(--shade);
         }
-
+        .value.input { 
+            box-shadow: 
+            inset 2px 0px 0px 0px var(--shade);
+        }
+        .value.input:hover {
+            box-shadow: 
+            inset 4px 0px 0px 0px var(--shade) !important;
+        }
+        .value.input:focus {
+            box-shadow: 
+            inset 4px 0px 0px 0px var(--light) !important;
+        }
+        .options {
+            display: none;
+            overflow: visible;
+            align-items: flex-start;
+    
+            /* 
+            position: absolute;
+            transform: translateY(2em); 
+            background: var(--deep);
+            z-index: 1;
+            box-shadow: inset 0px 0px 0px 1px var(--shade);
+            */
+    
+    
+            button {
+                min-width: 2em;
+            }
+        }
+        .links {
+            margin-left: 1em;
+        }
+        .linksOpener {
+    
+            /* display: none; */
+    
+            /* z-index: 1;
+            
+            margin: 0px;
+    
+            width: 2em;
+            height: 2em;
+    
+            
+            padding: 0px;
+            font-size: 1em;
+            box-shadow: none;
+    
+            scale: 0.7;
+    
+            box-shadow: none !important; */
+            /* transition: scale 0.2s cubic-bezier(0, 0, 0.38, 1.55) !important; */
+    
+            color: var(--slight);
+            background-color: var(--shade);
+    
+            :active {
+                animation: none;
+            }
+    
+        }
+        
+        /* .linksOpener:before {
+            display: none;
+        } */
     }
     
-    /* .linksOpener:before {
-        display: none;
-    } */
 
 }
 
@@ -435,24 +454,25 @@ input:active, .clickable:active {
 
 .node.authName {
     
-    > .main > .autoResize > .value:hover {
-        box-shadow: 
-        inset 4px 0px 0px 0px color-mix(in srgb, var(--authName) 50%, rgba(0,0,0,0)) !important;
-    }
-        
-    > .main > .autoResize > .value:focus {
-        box-shadow: 
-        inset 4px 0px 0px 0px var(--authName) !important;
-    }
+    > .main {
+        .value:hover {
+            box-shadow: 
+            inset 4px 0px 0px 0px color-mix(in srgb, var(--authName) 50%, rgba(0,0,0,0)) !important;
+        }
+        .value:focus {
+            box-shadow: 
+            inset 4px 0px 0px 0px var(--authName) !important;
+        }
+        .options .actions .linksOpener {
+            color: var(--dark) !important;
+            background-color: var(--authName) !important;
+        }
+    } 
 
-    > .main > .options > .actions > .linksOpener {
-        color: var(--dark) !important;
-        background-color: var(--authName) !important;
-    }
 }
 
 .node.reference {
-    > * > .linksOpener {
+    > .main .linksOpener {
         color: var(--dark) !important;
         background-color: var(--reference) !important;
     }
