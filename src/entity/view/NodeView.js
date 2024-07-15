@@ -11,7 +11,6 @@ import autoResizedTextarea from "../../tech/gui/autoResizedTextarea"
 import * as userActions from "../../natural/userActions"
 import hearCommand from "./hearCommand"
 import Logger from "../../tech/gui/Logger"
-import { clearOriginIndicators, resetOriginIndicators, updateOriginIndicators } from "../../natural/AutoActions"
 
 
 export default class NodeView extends NodeModel {
@@ -264,8 +263,6 @@ export default class NodeView extends NodeModel {
 
         this.updateStyle()
 
-        resetOriginIndicators()
-
         return this.linkedNodeViews
 
     }
@@ -277,8 +274,6 @@ export default class NodeView extends NodeModel {
         
         //set state
         this.opened = false
-    
-        resetOriginIndicators()
     }
 
     select () {
@@ -303,8 +298,6 @@ export default class NodeView extends NodeModel {
 
         //show options
         this.showOptions()
-        
-        updateOriginIndicators()
 
     }
 
@@ -314,7 +307,6 @@ export default class NodeView extends NodeModel {
         this.selected = false
         /* this.optionSleep = true */
         this.hideOptions()
-        clearOriginIndicators()
     }
 
     plant () {

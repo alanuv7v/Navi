@@ -349,6 +349,9 @@ input:active, .clickable:active {
     > *:has(.value) > *:not(:last-child) {
         margin-right: 1em;
     }
+    > .links {
+        margin-left: 1em;
+    }
     > .main {
         .value {
             margin: 0px;
@@ -376,11 +379,11 @@ input:active, .clickable:active {
         }
         .value.input:hover {
             box-shadow: 
-            inset 4px 0px 0px 0px var(--shade) !important;
+            inset 4px 0px 0px 0px var(--shade);
         }
         .value.input:focus {
             box-shadow: 
-            inset 4px 0px 0px 0px var(--light) !important;
+            inset 4px 0px 0px 0px var(--light);
         }
         .options {
             display: none;
@@ -400,9 +403,7 @@ input:active, .clickable:active {
                 min-width: 2em;
             }
         }
-        .links {
-            margin-left: 1em;
-        }
+        
         .linksOpener {
     
             /* display: none; */
@@ -441,6 +442,15 @@ input:active, .clickable:active {
 
 }
 
+.node:has(.node.selected) {
+    > .main {
+        .value.input {
+            box-shadow: 
+            inset 2px 0px 0px 0px var(--mildshade);
+        }
+    }
+}
+
 .node.option-shown {
     /* box-shadow: inset 4px 0px 0px -2px var(--light) !important; */
     /* > .main > .linksOpener {
@@ -459,7 +469,7 @@ input:active, .clickable:active {
             box-shadow: 
             inset 4px 0px 0px 0px color-mix(in srgb, var(--authName) 50%, rgba(0,0,0,0)) !important;
         }
-        .value:focus {
+        .value.input:focus {
             box-shadow: 
             inset 4px 0px 0px 0px var(--authName) !important;
         }
