@@ -388,50 +388,64 @@ input:active, .clickable:active {
     }
     .linksOpener {
 
-        z-index: 1;
-        
-        /* margin: 0.5em 0.5em 0.5em 1em; */
-        margin: 0px;
+        /* display: none; */
 
-        /* align-self: flex-end; */
+        /* z-index: 1;
+        
+        margin: 0px;
 
         width: 2em;
         height: 2em;
 
-        color: var(--slight);
-        background-color: var(--shade);
         
         padding: 0px;
         font-size: 1em;
         box-shadow: none;
 
         scale: 0.7;
+
+        box-shadow: none !important; */
         /* transition: scale 0.2s cubic-bezier(0, 0, 0.38, 1.55) !important; */
 
-        box-shadow: none !important;
-
+        color: var(--slight);
+        background-color: var(--shade);
+        
         :active {
             animation: none;
         }
 
     }
     
-    .linksOpener:before {
+    /* .linksOpener:before {
         display: none;
-    }
+    } */
 
 }
 
 .node.option-shown {
     /* box-shadow: inset 4px 0px 0px -2px var(--light) !important; */
-    > * > * > .options {
+    /* > .main > .linksOpener {
+        display: block;
+    } */
+    > .main > .options {
         display: flex;
         flex-direction: column;
     }
 }
 
 .node.authName {
-    > * > .linksOpener {
+    
+    > .main > .autoResize > .value:hover {
+        box-shadow: 
+        inset 4px 0px 0px 0px color-mix(in srgb, var(--authName) 50%, rgba(0,0,0,0)) !important;
+    }
+        
+    > .main > .autoResize > .value:focus {
+        box-shadow: 
+        inset 4px 0px 0px 0px var(--authName) !important;
+    }
+
+    > .main > .options > .actions > .linksOpener {
         color: var(--dark) !important;
         background-color: var(--authName) !important;
     }

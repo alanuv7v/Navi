@@ -71,6 +71,14 @@ export default class NodeView extends NodeModel {
     }
 
     actionsDOM = div({class: "actions"},
+        
+        button({
+            class: "linksOpener", 
+            onclick: () => this.toggleOpen(),
+            innerText: this.links.filter(link => link[0].split("/")[1] != "_origin").length,
+            tooltip: "toggle show links"
+        }),
+
         button({onclick: () => {
             this.deselect()
         }, tooltip: "deselect node"}, "*"/* "hide options */),
@@ -156,35 +164,29 @@ export default class NodeView extends NodeModel {
         onmouseenter: (event) => this.#onHover(event),
         oncontextmenu: (event) => event.preventDefault(),
     },
-        div({class: "h-flex"},
-            button({
-                class: "linksOpener", 
-                onclick: () => this.toggleOpen(),
-                innerText: this.links.filter(link => link[0].split("/")[1] != "_origin").length,
-            }),
-            div(
-                div({class: "options"},
-                    div(
-                        input({class: "tieFrom", placeholder: "From"}),
-                        input({class: "tieTo", placeholder: "To"}),
-                    ),
-                    this.actionsDOM
+        div({class: "overlay"}),
+        div({class: "main"},
+            div({class: "options"},
+                div(
+                    input({class: "tieFrom", placeholder: "From"}),
+                    input({class: "tieTo", placeholder: "To"}),
                 ),
-                autoResizedTextarea({
-                    class: "value", 
-                    value: this.value, 
-                    onclick: (event) => this.#onclick(event), 
-                    onauxclick: (event) => this.#onauxclick(event), 
-                    onchange: (event) => {this.#onvaluechange(event)},
-                    onfocus: () => this.select(),
-                    onkeydown: (event) => this.#onkeydown(event),
-                    onselect: (event) => this.#onselect(event),
-                    onfocus: ((e) => {
-                        e.preventDefault();
-                        e.target.focus({preventScroll: true});
-                      })
-                }),
+                this.actionsDOM
             ),
+            autoResizedTextarea({
+                class: "value", 
+                value: this.value, 
+                onclick: (event) => this.#onclick(event), 
+                onauxclick: (event) => this.#onauxclick(event), 
+                onchange: (event) => {this.#onvaluechange(event)},
+                onfocus: () => this.select(),
+                onkeydown: (event) => this.#onkeydown(event),
+                onselect: (event) => this.#onselect(event),
+                onfocus: ((e) => {
+                    e.preventDefault();
+                    e.target.focus({preventScroll: true});
+                    })
+            }),
         ),
         this.linksDOM
     )
@@ -286,6 +288,9 @@ export default class NodeView extends NodeModel {
         
         //focus
         this.DOM.querySelector("textarea.value.input").focus()
+
+        //show options
+        this.showOptions()
         
         updateOriginIndicators()
 
@@ -295,7 +300,8 @@ export default class NodeView extends NodeModel {
         this.DOM.classList.remove("selected")
         appSession.selectedNode = null
         this.selected = false
-        this.optionSleep = true
+        /* this.optionSleep = true */
+        this.hideOptions()
         clearOriginIndicators()
     }
 
@@ -443,33 +449,42 @@ export default class NodeView extends NodeModel {
     }
     
     #onclick () {
+        this.toggleOptionsDisplay()
         if (!this.selected ) {
             this.select()
         }
-        if (this.optionSleep) {
+        /* if (this.optionSleep) {
             this.optionSleep = false
         } else {
-            this.toggleOptionDisplay()
+            this.toggleOptionsDisplay()
+        } */
+    }
+
+    optionSleep = false
+    optionShown = false
+    
+    toggleOptionsDisplay () {
+        //toggle the visibility of options
+        if (this.optionShown) {
+            this.hideOptions()
+        } else {
+            this.showOptions()
         }
     }
 
-    optionSleep = true
-    optionShown = false
-    
-    toggleOptionDisplay () {
-        //toggle the visibility of options
-        if (this.optionShown) {
-            this.DOM.classList.remove("option-shown")
-            this.optionShown = false
-        } else {
-            this.DOM.classList.add("option-shown")
-            this.optionShown = true
-        }
+    showOptions () {
+        this.DOM.classList.add("option-shown")
+        this.optionShown = true
+    }
+
+    hideOptions () {
+        this.DOM.classList.remove("option-shown")
+        this.optionShown = false
     }
 
     #onauxclick (event) {
         event.preventDefault()
-        this.toggleOptionDisplay()
+        this.toggleOptionsDisplay()
     }
     
     #onvaluechange (event) {
