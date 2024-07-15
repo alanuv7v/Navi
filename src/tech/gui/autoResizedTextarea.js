@@ -33,6 +33,7 @@ export default function (props) {
     
     inputTextarea.style.transition = "none" //!!!!!!
     res.style.position = "relative"
+    res.style.height = "fit-content"
     inputTextarea.style.position = "absolute"
     visibleTextarea.style.position = "relative"
     inputTextarea.style.color = "rgba(0,0,0,0)"

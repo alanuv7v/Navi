@@ -16,8 +16,6 @@ div {
 .h-flex {
     display: flex;
     flex-direction: row;
-    overflow-x: auto;
-    align-items: stretch;
 }
 
 .v-flex {
@@ -29,6 +27,7 @@ div {
 }
 
 textarea {
+    display: block;
     width: 100%;
     resize: none;
     overflow: auto; /* !! 결국 그게 되야하는데... 자동 리자이징. */
@@ -351,19 +350,32 @@ input:active, .clickable:active {
     }
     > .links {
         margin-left: 1em;
+        > .node {
+            margin-top: 1em !important;
+        }
     }
     > .main {
+        .h-flex {
+            width: 100vw;
+        }
+        .selectionIndicator {
+            width: 2px;
+            align-self: stretch;
+            background-color: red;
+        }
+        .autoResize {
+            flex-grow: 1;
+        }
         .value {
+
             margin: 0px;
             min-width: 10em;
-            width: 100vw;
+            /* width: 100vw; */
             
             padding-left: 1em;
             padding-right: 0em;
             padding-top: 0em;
             padding-bottom: 0em;
-    
-            flex-grow: 1;
             
             background-color: transparent;
             

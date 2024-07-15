@@ -184,20 +184,23 @@ export default class NodeView extends NodeModel {
                 ),
                 this.actionsDOM
             ),
-            autoResizedTextarea({
-                class: "value", 
-                value: this.value, 
-                onclick: (event) => this.#onclick(event), 
-                onauxclick: (event) => this.#onauxclick(event), 
-                onchange: (event) => {this.#onvaluechange(event)},
-                onfocus: () => this.select(),
-                onkeydown: (event) => this.#onkeydown(event),
-                onselect: (event) => this.#onselect(event),
-                onfocus: ((e) => {
-                    e.preventDefault();
-                    e.target.focus({preventScroll: true});
-                    })
-            }),
+            div({class: "h-flex"},
+                div({class: "selectionIndicator"}),
+                autoResizedTextarea({
+                    class: "value", 
+                    value: this.value, 
+                    onclick: (event) => this.#onclick(event), 
+                    onauxclick: (event) => this.#onauxclick(event), 
+                    onchange: (event) => {this.#onvaluechange(event)},
+                    onfocus: () => this.select(),
+                    onkeydown: (event) => this.#onkeydown(event),
+                    onselect: (event) => this.#onselect(event),
+                    onfocus: ((e) => {
+                        e.preventDefault();
+                        e.target.focus({preventScroll: true});
+                        })
+                }),
+            ),
         ),
         this.linksDOM
     )
