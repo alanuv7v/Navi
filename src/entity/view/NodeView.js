@@ -184,7 +184,7 @@ export default class NodeView extends NodeModel {
                 ),
                 this.actionsDOM
             ),
-            div({class: "h-flex"},
+            div({class: "valueWrap"},
                 div({class: "selectionIndicator"}),
                 autoResizedTextarea({
                     class: "value", 
