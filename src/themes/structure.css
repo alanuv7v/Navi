@@ -444,6 +444,7 @@ input:active, .clickable:active {
     
             color: var(--slight);
             background-color: var(--shade);
+            box-shadow: inset 0px 0px 0px 1px var(--mild) !important;
     
             :active {
                 animation: none;
@@ -515,6 +516,7 @@ input:active, .clickable:active {
         .options .actions .linksOpener {
             color: var(--dark) !important;
             background-color: var(--authName) !important;
+            box-shadow: none !important;
         }
     } 
 

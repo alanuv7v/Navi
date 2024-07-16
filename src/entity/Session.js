@@ -1,4 +1,4 @@
-export default class SessionData {
+export default class Session {
     
     constructor (data) {
         if (!data) return false
@@ -22,6 +22,10 @@ export default class SessionData {
         logs: [],
         lastNodeId: null
     }
+
+    get rootName () {
+        return this.temp.rootHandle?.name || this.root?.name
+    } 
 
     root = {
         DB: null,

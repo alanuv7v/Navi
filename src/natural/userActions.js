@@ -128,6 +128,7 @@ export const Root = {
     
     },
     async update_root () {
+        Logger.log("saving root, DO NOT LEAVE!")
         let res = await LocalDBManager.update()
         Logger.log("root saved!", "success")
         return res
@@ -222,6 +223,8 @@ export const Prune = {
 export const Navigate = {
     //search는 openTree와 동일해서 제외.
     async show_node_ (queryString) { //Navigate.plant로 옮길까.
+
+        Logger.log(`showing ${queryString}`)
         
         let res = (await parseQuery(queryString))
         console.log("parseQuery res: ", res)
@@ -230,7 +233,6 @@ export const Navigate = {
         
         SessionManager.saveSession()
         return res
-
 
     },
 

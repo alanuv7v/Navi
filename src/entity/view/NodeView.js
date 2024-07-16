@@ -12,27 +12,16 @@ import * as userActions from "../../natural/userActions"
 import hearCommand from "./hearCommand"
 import Logger from "../../tech/gui/Logger"
 
+import Tie from "../Tie"
 
 export default class NodeView extends NodeModel {
     
     constructor (...data) {
         super(...data)
-        this.updateStyle()
-
-        this.DOM._offsetTop = -1
-        Object.defineProperty(this.DOM, "offsetTop", {
-            get: function () {
-                return this._offsetTop
-            },
-            set: function (value) {
-                console.log("!" + value)
-                this._offsetTop = value
-                return true
-            }
-        });
     }
 
     onDomMount = () => {
+        this.updateStyle()
         Array.from(this.DOM.querySelectorAll(".autoResize"))?.forEach(d => d.autoResize())
     }
 
@@ -44,10 +33,6 @@ export default class NodeView extends NodeModel {
     linkedNodeViews = []
     
     deleteReady = false
-
-    get context () {
-        this.links.find(link => link[0] === "/context")
-    }
 
     get isReference () {
         return this.value.startsWith(">")
@@ -159,13 +144,13 @@ export default class NodeView extends NodeModel {
     )
         
     delete () {
-        let prevSiblingsIndex = this.siblingsIndex
         this.DOM.remove()
         this.deleteRecord()
         this.openedFrom.refreshData()
         this.openedFrom.updateStyle()
         this.openedFrom.open()
         try {
+            let prevSiblingsIndex = this.siblingsIndex
             this.openedFrom.linkedNodeViews.at(prevSiblingsIndex-1).select()
         } catch {
             this.openedFrom?.select()
@@ -185,21 +170,27 @@ export default class NodeView extends NodeModel {
                 div(
                     input({class: "tieFrom", placeholder: "from", onchange: (event) => {
                         //미완!!!!
+                        let prevTie = structuredClone(this.tie)
+
                         let [prevFrom, prevTo] = this.tie?.split("/")
                         if (prevTo) {
                             this.tie = event.target.value + "/" + prevTo
                         } else {
                             this.tie = event.target.value + "/"
                         }
+                        this.changeTie((new Tie(prevTie)).mirror, (new Tie(this.tie)).mirror, this.openedFrom.id)
                     }}),
                     input({class: "tieTo", placeholder: "to", onchange: (event) => {
                         //미완!!!!
+                        let prevTie = structuredClone(this.tie)
+                        
                         let [prevFrom, prevTo] = this.tie?.split("/")
                         if (prevFrom) {
                             this.tie = prevFrom + "/" + event.target.value
                         } else {
                             this.tie = "/" + event.target.value
                         }
+                        this.changeTie((new Tie(prevTie)).mirror, (new Tie(this.tie)).mirror, this.openedFrom.id)
                     }}),
                 ),
                 this.actionsDOM
@@ -256,9 +247,9 @@ export default class NodeView extends NodeModel {
                 .map((link) => {
                     let tie = link[0]
                     let res = appSession.root.getNodeById(link[1])
-                    return {tie, data: res[0]}
+                    if (tie && res) return {tie, data: res[0]}
                 })
-                .filter(link => link.data)
+                .filter(link => link)
                 .filter(link => link.data[0] != this.openedFrom?.id)
                 .filter(link => link.data[0] != this.context)
                 .filter(link => {
@@ -273,8 +264,6 @@ export default class NodeView extends NodeModel {
                     if (tie==="_origin/_value") view.originView = this
                     view.openedFrom = this
                     view.tie = tie
-                    view.DOM.querySelector(".tieFrom").value = tie.split("/")[0]
-                    view.DOM.querySelector(".tieTo").value = tie.split("/")[1]
                     this.DOM.querySelector(".links").append(view.DOM)
                     view.onDomMount()
                     return view
@@ -367,7 +356,7 @@ export default class NodeView extends NodeModel {
 
         let lastOrigin = await this.showContext()
         
-        if (!lastOrigin.isAuthname) {
+        if (lastOrigin && !lastOrigin.isAuthname) {
             i++
             lastOrigin.showAuthOrigin(i)
         } else {
@@ -455,6 +444,9 @@ export default class NodeView extends NodeModel {
 
     updateStyle () {
         try {
+            
+            this.DOM.querySelector(".tieFrom").value = this.tie.split("/")[0]
+            this.DOM.querySelector(".tieTo").value = this.tie.split("/")[1]
             
             if (this.isAuthname) {
                 this.DOM.classList.add("authName")

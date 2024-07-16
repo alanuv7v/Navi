@@ -133,8 +133,12 @@ export default class NodeModel extends NodeData {
         return this
     }
 
-    addLink (tie, nodeID) {
-        this.links.push([tie, nodeID])
+    addLink (tie, nodeID, index) {
+        if (index) {
+            this.links.splice(index, 1, [tie, nodeID])
+        } else {
+            this.links.push([tie, nodeID])
+        }
         this.updateRecord()
     }
 
@@ -151,38 +155,54 @@ export default class NodeModel extends NodeData {
 
     
     createLinkedNode (tie, value) {
-        let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
         
         let newNodeModel = new NodeModel(null, value, [])
         newNodeModel.createRecord()
         
         this.addLink(tie, newNodeModel.id)
+
+        let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
         newNodeModel.addLink(mirrorTie, this.id)
+
     }
 
     deleteLink (tie, nodeID) {
         //미완!!!!
-        let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
+        //update this
+        let prevThisLink = this.links.find(([t, n]) => t === tie && n === this.id)
+        this.links.splice(this.links.indexOf(prevThisLink), 1)
+        this.updateRecord()
         
+        //update opp
+        let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
         let newNodeModel = new NodeModel(nodeID, null, [])
         newNodeModel.refreshData()
+
         let prevMirroredLink = newNodeModel.links.find(([t, n]) => t === mirrorTie && n === this.id)
         newNodeModel.links.splice(newNodeModel.links.indexOf(prevMirroredLink), 1)
+        newNodeModel.updateRecord()
 
-        this.addLink(tie, newNodeModel.id)
-        newNodeModel.addLink(mirrorTie, this.id)
-        
     }
     
-    changeTie (tie, nodeID) {
-        //미완!!!!
-        let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
+    changeTie (prevTie, newTie, oppID) {
         
-        let newNodeModel = new NodeModel(nodeID, null, [])
-        newNodeModel.refreshData()
+        let prevTieMirrored = structuredClone(prevTie.split("/")).reverse().join("/")
+        let newTieMirrored = structuredClone(newTie.split("/")).reverse().join("/")
+
+        //update this
+        let prevThisLink = this.links.find(([t, n]) => t === prevTie && n === oppID)
+        this.links.splice(this.links.indexOf(prevThisLink), 1, [newTie, oppID])
+        this.updateRecord()
+
+        //update opp
+
+        let oppModel = new NodeModel(oppID, null, [])
+        oppModel.refreshData()
+
+        let prevMirroredLink = oppModel.links.find(([t, n]) => t === prevTieMirrored && n === this.id)
+        oppModel.links.splice(oppModel.links.indexOf(prevMirroredLink), 1, [newTieMirrored, this.id])
+        oppModel.updateRecord()
         
-        this.addLink(tie, newNodeModel.id)
-        newNodeModel.addLink(mirrorTie, this.id)
     }
 
 }

@@ -40,7 +40,7 @@ export default async function init () {
         } catch (err) {
 
             try {
-                let rootName = appSession.root.name
+                let rootName = appSession.rootName
                 UserActions.Navigate.show_node_(`@${rootName}`)
             } catch {
                 UserActions.Navigate.show_node_(`@root`)
