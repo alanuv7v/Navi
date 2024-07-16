@@ -164,6 +164,8 @@ export default class NodeModel extends NodeData {
         let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
         newNodeModel.addLink(mirrorTie, this.id)
 
+        return newNodeModel
+
     }
 
     deleteLink (tie, nodeID) {

@@ -59,6 +59,9 @@ document.addEventListener("wheel", (event) => {
 
 
 document.addEventListener("keydown", (event) => {
+    
+    if (!event.key) return
+
     let key = event.key.toLowerCase()
     if (key === "s" && event.altKey) {
         event.preventDefault()

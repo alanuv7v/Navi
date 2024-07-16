@@ -92,8 +92,9 @@ export default class NodeView extends NodeModel {
             this.showContext()
         }, tooltip: "find context"}, "^"/* "show origin" */),
         button({onclick: () => {
-            this.createBranch("")
+            let newNode = this.createBranch()
             this.open()
+            this.linkedNodeViews.find(v => v.id === newNode.id)?.select()
         }, tooltip: "create new branch"}, "+" /* "new branch" */),
         /* button({onclick: () => {
             hearCommand((queryString) => {
@@ -439,7 +440,7 @@ export default class NodeView extends NodeModel {
 
     createBranch (value) {
         if (this.isReference) return false
-        return this.createLinkedNode (this.tie || "context/", value)
+        return this.createLinkedNode (this.tie || "context/", value || "")
     }
 
     updateStyle () {
@@ -536,26 +537,7 @@ export default class NodeView extends NodeModel {
             } catch {
                 
             }
-        
-        } 
-        else if (event.key === "Backspace" && event.target.value.length <= 0) {
             
-            this.delete()
-
-        } else if (event.key === "ArrowLeft" && event.altKey) {
-            
-            event.preventDefault()
-            if (!this.openedFrom) {
-                this.showContext()
-            }
-            this.openedFrom?.select()
-
-        } else if (event.key === "ArrowRight" && event.altKey) {
-
-            event.preventDefault()
-            this.open()
-            this.linkedNodeViews[0]?.select()
-
         } else if (event.key === "ArrowUp" && event.altKey && event.shiftKey) {
 
             this.moveUp()
@@ -564,13 +546,11 @@ export default class NodeView extends NodeModel {
             
             this.moveDown()
 
-        } else if (event.key === "ArrowUp" && event.altKey) {
-
-            this.siblings[this.siblingsIndex-1]?.select()
+        } else if (event.key === "ArrowRight" && event.altKey && event.shiftKey) {
             
-        } else if (event.key === "ArrowDown" && event.altKey) {
-            
-            this.siblings[this.siblingsIndex+1]?.select()
+            let newNode = this.createBranch()
+            this.open()
+            this.linkedNodeViews.find(v => v.id === newNode.id)?.select()
 
         } else if (event.key.startsWith("Arrow") && event.target.selectionStart === event.target.selectionEnd) { 
         
@@ -589,7 +569,34 @@ export default class NodeView extends NodeModel {
             else if (event.key === "ArrowDown" && atTheBottomLine) {
                 this?.siblings[this.siblingsIndex+1]?.select()
             }
+        } else if (event.key === "Backspace" && event.target.value.length <= 0) {
+            
+            this.delete()
+            event.preventDefault()
+            
+        } else if (event.key === "ArrowUp" && event.altKey) {
+
+            this.siblings[this.siblingsIndex-1]?.select()
+            
+        } else if (event.key === "ArrowDown" && event.altKey) {
+            
+            this.siblings[this.siblingsIndex+1]?.select()
+
+        } else if (event.key === "ArrowLeft" && event.altKey) {
+            
+            event.preventDefault()
+            if (!this.openedFrom) {
+                this.showContext()
+            }
+            this.openedFrom?.select()
+
+        } else if (event.key === "ArrowRight" && event.altKey) {
+
+            event.preventDefault()
+            this.open()
+            this.linkedNodeViews[0]?.select()
         }
+            
     }
 
     #onselect (event) {

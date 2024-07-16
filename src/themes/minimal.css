@@ -52,13 +52,14 @@
     } */
 
     button, input {
-        box-shadow: inset 0px 0px 0px 1px var(--deeper);
+        box-shadow: inset 0px 0px 0px 1px var(--shade);
         border-radius: 0.5em;
         transition: background-color 0.3s ease;
     }
 
     button:hover {
         background-color: var(--shade);
+        box-shadow: inset 0px 0px 0px 1px var(--mildshade);
     }
 
     /* button:active {
@@ -67,6 +68,8 @@
 
     button:focus {
         animation: none;
+        background-color: var(--shade);
+        box-shadow: inset 0px 0px 0px 1px var(--mild);
     }
     
     button:before {

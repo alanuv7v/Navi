@@ -21,12 +21,9 @@ export default div("App", {
     },
     div("Header", {class: ""}, 
         div("QuickActions", {}, 
-            button("PickRoot", {
-                onclick: () => {
-                    new CommandsTree(userActions.Root, false)
-                }, 
-                tooltip: "Root actions"
-            }, "木 "),
+            button("Root", {
+                tooltip: "About Root"
+            }, "木"),
             button("History", {
                 tooltip: "History"
             }, "↹"),
