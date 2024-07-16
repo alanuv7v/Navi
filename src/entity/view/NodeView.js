@@ -473,6 +473,7 @@ export default class NodeView extends NodeModel {
         if (!this.selected ) {
             this.select()
         }
+        appSession.clickedNode = this
         /* if (this.optionSleep) {
             this.optionSleep = false
         } else {

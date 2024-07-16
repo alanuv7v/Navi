@@ -15,7 +15,7 @@ import BrowserDB from "../resource/BrowserDB"
 import Logger from "../tech/gui/Logger"
 
 
-export const fix = {
+export const Fix = {
     init,
     init_root_DB
 }

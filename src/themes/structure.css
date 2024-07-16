@@ -501,21 +501,13 @@ input:active, .clickable:active {
 .node.authName {
     
     > .main {
-        /* .value:hover {
-            box-shadow: 
-            inset 4px 0px 0px 0px color-mix(in srgb, var(--authName) 50%, rgba(0,0,0,0)) !important;
-        }
-        .value.input:focus {
-            box-shadow: 
-            inset 4px 0px 0px 0px var(--authName) !important;
-        } */
          
         .selectionIndicator {
             background-color: var(--authName);
         }
         .options .actions .linksOpener {
             color: var(--dark) !important;
-            background-color: var(--authName) !important;
+            background-color: var(--authName);
             box-shadow: none !important;
         }
     } 
@@ -523,13 +515,19 @@ input:active, .clickable:active {
 }
 
 .node.reference {
-    .selectionIndicator {
-        background-color: var(--reference);
-    }
-    > .main .linksOpener {
-        color: var(--dark) !important;
-        background-color: var(--reference) !important;
-    }
+    
+    > .main {
+
+        .selectionIndicator {
+            background-color: var(--reference);
+        }
+        .options .actions .linksOpener {
+            color: var(--dark) !important;
+            background-color: var(--reference) !important;
+            box-shadow: none !important;
+        }
+    } 
+
 }
 
 .node.finding-new-origin {    
