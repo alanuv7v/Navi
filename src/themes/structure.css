@@ -615,18 +615,20 @@ input:active, .clickable:active {
 }
 
 #LogsView {
+
     display: flex;
+    flex-direction: row;
+
     padding: 0px;
     width: 100%;
     overflow: hidden;
-
+    
     /* height: 100%; NEVER. */
 
     flex-grow: 1;
     
     button {
         height: fit-content;
-        margin: 0px;
         padding: 0.25em 0.5em 0.25em 0.5em ;
     }
     #logs {
@@ -637,18 +639,22 @@ input:active, .clickable:active {
         white-space: nowrap;
         word-wrap: unset;
     }
-    .options {
-        display: flex;
+    .options > *:not(:first-child) {
+        display: none;
     }
 }
 
 #LogsView.expanded {
+    flex-direction: column;
     .log {
         white-space: pre-wrap;
         word-wrap: break-word;
     }
     .options {
-        display: block;
+        align-self: flex-end;
+    }
+    .options > *:not(:first-child) {
+        display: inline-block;
     }
 }
 

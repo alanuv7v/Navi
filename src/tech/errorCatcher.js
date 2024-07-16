@@ -3,15 +3,15 @@ import Logger from "./gui/Logger";
 export default function () {
 
     window.onunhandledrejection = event => {
-        Logger.log(`UNHANDLED PROMISE REJECTION: ${event.reason}`, "error");
+        Logger.log(`${event.reason}`, "error unhandled");
     };
       
     window.onerror = function(message, source, lineNumber, colno, error) {
-        Logger.log(`UNHANDLED ERROR: ${error.stack}`, "error");
+        Logger.log(`${error.stack}`, "error unhandled");
     };
 
     window.addEventListener("error", function (errorEvent) {
-        Logger.log(`UNHANDLED ERROR: ${errorEvent.error.stack}`, "error");
+        Logger.log(`${errorEvent.error.stack}`, "error unhandled");
         return false;
      })
 

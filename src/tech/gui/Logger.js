@@ -7,6 +7,8 @@ import appSession from "../../resource/appSession"
 class Logger {
     
     expanded = false
+
+    excludeFilter = null
     
     get logs () {
         return appSession.temp.logs
@@ -45,6 +47,7 @@ class Logger {
         for (let i = 0; i < 100; i++) {
             let data = appSession.temp.logs[i];
             if (!data) break
+            if (data?.type?.split(" ")?.includes(this.excludeFilter)) break
             logViews.push(this.createLogView(data))
         }
         this.DOM.querySelector("#logs").append(...logViews)
@@ -87,7 +90,17 @@ class Logger {
             }, "<>"),
             button({
                 onclick: () => this.clear()
-            }, "Clear")
+            }, "Clear"),
+            button({
+                onclick: () => {
+                    if (this.excludeFilter === 'unhandled') {
+                        this.excludeFilter = null
+                    } else {
+                        this.excludeFilter = 'unhandled'
+                    }
+                    this.render()
+                }
+            }, "Show Unhandled Errors"),
         )
     )
 
