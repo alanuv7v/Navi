@@ -198,7 +198,7 @@ export default class NodeModel extends NodeData {
 
         let oppModel = new NodeModel(oppID, null, [])
         oppModel.refreshData()
-
+        debugger
         let prevMirroredLink = oppModel.links.find(([t, n]) => t === prevTieMirrored && n === this.id)
         oppModel.links.splice(oppModel.links.indexOf(prevMirroredLink), 1, [newTieMirrored, this.id])
         oppModel.updateRecord()
