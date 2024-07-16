@@ -14,10 +14,9 @@
  */
 @font-face {
     font-family: Borgen;
-    src: url('/public/fonts/BorgenOblique.otf') format('opentype');
+    src: url('/public/fonts/Borgen.otf') format('opentype');
     /* font-style: oblique; */
 }
-
 @font-face {
     font-family: gowun batang;
     src: url('/public/fonts/GowunBatang-Regular.ttf') format('truetype');
@@ -26,11 +25,25 @@
     font-family: suit;
     src: url('/public/fonts/SUIT-Thin.otf') format('opentype');
 }
+@font-face {
+    font-family: IBM;
+    src: url('/public/fonts/IBMPlexMono-Regular.otf') format('opentype');
+}
+@font-face {
+    font-family: NK57;
+    src: url('/public/fonts/NK57 Monospace Sc Lt.otf') format('opentype');
+}
+@font-face {
+    font-family: Bitter;
+    src: url('/public/fonts/Bitter-VariableFont_wght.otf') format('opentype');
+}
+
+
 
 #App.theme-minimal {
 
     * {
-        font-family: 'borgen', 'gowun batang', 'suit', '나눔명조', 'freemono', serif, monospace;
+        font-family: 'NK57', 'gowun batang', 'suit', '나눔명조', 'freemono',monospace;
         font-weight: 300;
     }
 
