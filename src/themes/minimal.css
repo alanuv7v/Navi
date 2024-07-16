@@ -43,9 +43,13 @@
 #App.theme-minimal {
 
     * {
-        font-family: 'NK57', 'gowun batang', 'suit', '나눔명조', 'freemono',monospace;
+        font-family: /* 'NK57',  *//* 'gowun batang', */ 'suit', 'freemono', monospace;
         font-weight: 300;
     }
+
+    /* .node .value {
+        font-family: 'gowun batang' !important;
+    } */
 
     button, input {
         box-shadow: inset 0px 0px 0px 1px var(--deeper);

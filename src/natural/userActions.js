@@ -111,9 +111,9 @@ export const Root = {
     
         console.log(`Opened root: ${appSession.root.name}`)
     
-        if (!(await rootHandle?.queryPermission()) === "granted") {
-            await rootHandle?.requestPermission()
-        } 
+        if (!(await appSession.temp.rootHandle?.queryPermission()) === "granted") {
+            await appSession.temp.rootHandle?.requestPermission()
+        }
         
         try {
             let rootName = appSession.root.name
