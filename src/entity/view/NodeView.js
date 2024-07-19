@@ -142,6 +142,7 @@ export default class NodeView extends NodeModel {
                 
         }, tooltip: "filter links"}, "()"/* "filter" */),
         button({onclick: () => {userActions.Navigate.show_node_(`#${this.id}`)}, tooltip: "plant this node"}, "."/* "plant" */),
+        button({onclick: () => this.openTreeLoop()}, "{")
     )
         
     delete () {
@@ -217,7 +218,13 @@ export default class NodeView extends NodeModel {
         this.linksDOM
     )
 
-    async open (replacers=[]) {
+    async open (replacers=[], options={}) {
+
+        const defaultOptions = {
+            softAppear: false
+        }
+
+        options = {...defaultOptions, ...options}
 
         //clear DOM
         if (this.opened) this.close()
@@ -238,8 +245,6 @@ export default class NodeView extends NodeModel {
                 let view = new NodeView(...data)
                 view.openedFrom = this
                 view.tie = "/:reference"
-                this.DOM.querySelector(".links").append(view.DOM)
-                view.onDomMount()
                 return view
             })
         } else {
@@ -259,17 +264,23 @@ export default class NodeView extends NodeModel {
                 .map(({tie, data}) => {
                     return {
                         tie,
-                        view: replacers.find(r => r.id === data[0]) || new NodeView(...data)
+                        view: replacers?.find(r => r.id === data[0]) || new NodeView(...data)
                     }
                 }).map(({tie, view}) => {
                     if (tie==="_origin/_value") view.originView = this
                     view.openedFrom = this
                     view.tie = tie
-                    this.DOM.querySelector(".links").append(view.DOM)
-                    view.onDomMount()
                     return view
                 })
         }
+
+        this.linkedNodeViews.forEach(view => {
+            if (options.softAppear) {
+                view.DOM.classList.add("appear")
+            }
+            this.DOM.querySelector(".links").append(view.DOM)
+            view.onDomMount()
+        })
 
         //set state
         this.opened = true
@@ -603,5 +614,59 @@ export default class NodeView extends NodeModel {
 
     #onselect (event) {
     }
+
+    async openTreeLoop (maxOpenCount=20, maxDepths=5, options) {
+
+        const defualtOptions = {
+            siblingOpenDelay: 1000,
+            depthOpenDelay: 1000
+        }
+
+        options = {...defualtOptions, ...options}
+        
+        if (!this.opened) await this.open(null, {softAppear: true})
+        
+        let lastDepth = this.linkedNodeViews
+        let depthCount = 0
+        let openCount = 0
+        
+        async function openDepthLoop () {
+
+            if (!lastDepth || lastDepth.length <= 0) {
+                return
+            }
+            
+            async function openViews (views) {
+                function timeout(ms) {
+                    return new Promise(resolve => setTimeout(() => resolve(ms), ms));
+                }
+                for await (let view of views) {
+                    await timeout(view.open(null, {softAppear: true}))
+                    await timeout(options.depthOpenDelay)
+                    console.log(view.value)
+                }
+                return views
+            }
+            
+            await openViews(lastDepth)
+            let depthDown = lastDepth.map(v => v.linkedNodeViews).flat()
+            
+            openCount += lastDepth.length
+            depthCount++
+            
+            if (depthCount > maxDepths || openCount > maxOpenCount) {
+                return
+            } else {
+                lastDepth = depthDown
+                openDepthLoop()
+            }
+
+            console.log({lastDepth, depthCount, maxDepths, openCount, maxOpenCount})
+        }
+
+        await openDepthLoop()
+
+    }
+
 
 }

@@ -514,10 +514,11 @@ input:active, .clickable:active {
         .selectionIndicator {
             background-color: var(--authName);
         }
-        .options .actions .linksOpener {
+        .linksOpener, .linksOpener:hover, .linksOpener:focus {
             color: var(--dark) !important;
-            background-color: var(--authName);
+            background-color: var(--authName) !important;
             box-shadow: none !important;
+            
         }
     } 
 
@@ -753,3 +754,4 @@ dialog::backdrop {
 #AboutRoot > *:not(:last-child) {
     margin-bottom: 10px;
 }
+
