@@ -505,6 +505,7 @@ export default class NodeView extends NodeModel {
 
     #onauxclick (event) {
         event.preventDefault()
+        event.stopPropagation()
         this.toggleOptionsDisplay()
     }
     

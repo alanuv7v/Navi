@@ -1,5 +1,8 @@
 import appSession from "./resource/appSession"
 import * as userActions from "./natural/userActions"
+import van from "vanjs-core"
+import refs from "./resource/DOMRefs"
+const {div, span, a, dialog, form} = van.tags
 
 //Wheel event
 document.addEventListener("wheel", (event) => {
@@ -69,3 +72,13 @@ document.addEventListener("keydown", (event) => {
         userActions.Sessions.save_session_()
     }
 })
+
+refs("ShowAbout").addEventListener("click", () => {
+    refs("AboutRoot").showModal()
+})
+
+refs("AboutRoot").addEventListener('click', (event) => {
+    if (event.target.nodeName === 'DIALOG') {
+      event.target.close();
+    }
+  });

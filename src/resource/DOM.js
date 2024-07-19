@@ -7,7 +7,7 @@ import CommandsTree from "../entity/view/CommandTree";
 import Logger from "../tech/gui/Logger";
 import { updateOriginIndicators } from "../natural/AutoActions";
 
-const tagsToUse = "div button input".split(" ")
+const tagsToUse = "div button input dialog".split(" ")
 const tag = {}
 
 tagsToUse.forEach(t => {
@@ -16,14 +16,17 @@ tagsToUse.forEach(t => {
 
 const {div, button, input} = tag
 
+import aboutDOM from "./About";
+
 export default div("App", {
         style: "font-size: 16px;"
     },
     div("Header", {class: ""}, 
         div("QuickActions", {}, 
-            button("Root", {
-                tooltip: "About Root"
+            button("ShowAbout", {
+                tooltip: "About"
             }, "木"),
+            aboutDOM,
             button("History", {
                 tooltip: "History"
             }, "↹"),
@@ -62,7 +65,11 @@ export default div("App", {
     ),
     div("Main", {}, 
         div("View", {class: ""}, 
-            div("Editor", {}, 
+            div("Editor", {oncontextmenu: (event) => {
+                event.preventDefault()
+                event.stopPropagation()
+                return false
+            }}, 
                 div("Nodes"),
                 div("", {class: "overlay"})
             )

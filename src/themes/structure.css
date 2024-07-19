@@ -1,8 +1,13 @@
 * {
     font-size: inherit;
+    font-weight: normal;
     box-sizing: border-box;
     color: var(--light);
     text-overflow: ellipsis;
+}
+
+:root {
+    background-color: var(--deep);
 }
 
 body {
@@ -91,6 +96,10 @@ textarea {
 .title {
     font-size: 2em;
     margin-bottom: 10px;
+}
+
+b {
+    font-weight: bold !important;
 }
 
 .window {
@@ -560,7 +569,7 @@ input:active, .clickable:active {
     color: var(--executable);
 }
 
-#Main {
+#Main {;
     overflow: auto;
     width: 100%;
     flex-grow: 1;
@@ -586,7 +595,7 @@ input:active, .clickable:active {
     display: block;
     position: absolute;
 
-    transform: translate(0.25em, 0.75em);
+    transform: translate(0.2em, 0.5em);
     
     content: attr(tooltip);
     padding: 0.5em;
@@ -704,4 +713,43 @@ input:active, .clickable:active {
     border-bottom: 4px dotted var(--mildshade);
     /* box-shadow: inset 2px -2px 0px 0px var(--mildshade); */
     border-bottom-left-radius: 0em;
+}
+
+
+dialog {
+    
+    position: fixed; 
+    left: 0; 
+    right: 0; 
+    top: 0; 
+    bottom: 0; 
+    margin: auto; 
+    
+    min-width: 600px;
+    width: 60vw;
+    max-height: 60vw;
+
+    overflow: auto;
+    z-index: 2;
+
+    background: var(--deep);
+
+    padding: 20px;
+    
+}
+
+dialog::backdrop {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+
+#App:has(dialog[open]) {
+    filter: blur(1px);
+}
+
+#AboutRoot > *:not(:last-child) {
+    margin-bottom: 10px;
 }

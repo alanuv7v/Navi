@@ -24,6 +24,12 @@
 @font-face {
     font-family: suit;
     src: url('/public/fonts/SUIT-Thin.otf') format('opentype');
+    font-weight: normal;
+}
+@font-face {
+    font-family: suit;
+    src: url('/public/fonts/SUIT-Light.otf') format('opentype');
+    font-weight: bold;
 }
 @font-face {
     font-family: IBM;
@@ -44,7 +50,6 @@
 
     * {
         font-family: /* 'NK57',  *//* 'gowun batang', */ 'suit', 'freemono', monospace;
-        font-weight: 300;
     }
 
     /* .node .value {
@@ -55,6 +60,7 @@
         box-shadow: inset 0px 0px 0px 1px var(--shade);
         border-radius: 0.5em;
         transition: background-color 0.3s ease;
+        font-weight: bold;
     }
 
     button:hover {
