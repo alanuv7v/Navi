@@ -142,7 +142,15 @@ export default class NodeView extends NodeModel {
                 
         }, tooltip: "filter links"}, "()"/* "filter" */),
         button({onclick: () => {userActions.Navigate.show_node_(`#${this.id}`)}, tooltip: "plant this node"}, "."/* "plant" */),
-        button({onclick: () => this.openTreeLoop()}, "{")
+        button({
+            onmousedown: () => {
+                this.openTreeLoopCancelTrigger = false
+                this.openTreeLoop(20, 5, () => this.openTreeLoopCancelTrigger)
+            }, 
+            onmouseup: () => {
+                this.openTreeLoopCancelTrigger = true
+            }
+        }, "{")
     )
         
     delete () {
@@ -615,7 +623,9 @@ export default class NodeView extends NodeModel {
     #onselect (event) {
     }
 
-    async openTreeLoop (maxOpenCount=20, maxDepths=5, options) {
+    openTreeLoopCancelTrigger = false
+
+    async openTreeLoop (maxOpenCount=20, maxDepths=5, isCanceled, options) {
 
         const defualtOptions = {
             siblingOpenDelay: 1000,
@@ -631,16 +641,13 @@ export default class NodeView extends NodeModel {
         let openCount = 0
         
         async function openDepthLoop () {
-
-            if (!lastDepth || lastDepth.length <= 0) {
-                return
-            }
             
             async function openViews (views) {
                 function timeout(ms) {
                     return new Promise(resolve => setTimeout(() => resolve(ms), ms));
                 }
                 for await (let view of views) {
+                    if (isCanceled()) break
                     await timeout(view.open(null, {softAppear: true}))
                     await timeout(options.depthOpenDelay)
                     console.log(view.value)
@@ -648,6 +655,11 @@ export default class NodeView extends NodeModel {
                 return views
             }
             
+            if (isCanceled()) return
+
+            if (!lastDepth || lastDepth.length <= 0) {
+                return
+            }
             await openViews(lastDepth)
             let depthDown = lastDepth.map(v => v.linkedNodeViews).flat()
             
