@@ -4,6 +4,7 @@
     box-sizing: border-box;
     color: var(--light);
     text-overflow: ellipsis;
+    background: transparent;
 }
 
 :root {
@@ -86,13 +87,6 @@ textarea {
     display: none;
 }
 
-.group {
-    box-shadow: inset 0px 0px 0px 1px var(--deep);
-    display: flex; 
-    flex-direction: column;
-    flex-shrink: 0;
-}
-
 .title {
     font-size: 2em;
     margin-bottom: 10px;
@@ -105,10 +99,6 @@ b {
 .window {
     overflow-x: auto;
     overflow-y: auto;
-    /* border: 1px solid var(--deep); */
-    /* flex-basis: 0; */
-    /* flex-grow: 1; */
-    box-shadow: inset 0px 0px 0px 1px var(--shade);
 }
 
 a, .link {
@@ -132,8 +122,6 @@ a:hover {
     padding: 0.5em;
     width: 100%; 
     max-height: 50%;
-    background-color: var(--dark);
-    border: 1px solid var(--deep);
     animation-name: logAppear;
     animation-duration: 2s;
     animation-iteration-count: 2;
@@ -168,36 +156,12 @@ a:hover {
 button, button:not(:hover) {
 
     position: relative;
-    
-    box-shadow: 
-    /* inset 0px 1px 2px 0px var(--mild), */ /* top */
-    /* inset 0px -3px 4px 0px var(--mild), */ /* bottom, extruded */
-    /* inset 0px -1px 0px 0px var(--mild), */ /* bottom, extruded */
-    /* inset 0px 0px 2px 1px var(--mild), */ /* border */
-    
-    /* fissure */
-    0px -1px 0px 0px var(--shade), /* top hilight */
-    0px 2px 4px 0px var(--deeper); /* casting shadow */
 
 }
 
-button:before {
-    
-    content: '';
-    position: absolute;
-    top: 0.2em;
-    left: 0.2em;
-    width: 0.3em;
-    height: 0.3em;
-    border-radius: 100%;;
-    background-color: var(--shade);
-    
-}
 
 button:hover:before {
     
-    background-color: var(--light);
-    box-shadow: 0px 0px 8px 0px var(--slight);
 }
 
 button, button:not(:hover), input, textarea, select {
@@ -215,7 +179,6 @@ button, button:not(:hover), input, textarea, select {
     
     padding: 0.25em 0.5em 0.25em 0.5em;
 
-    background-color: var(--deep);
     border: none;
     outline: none;
 
@@ -238,70 +201,9 @@ button:hover {
     color: var(--light); 
 }
 
-@keyframes active {
-    0% {    
-        box-shadow: 
-        0px -1px 0px 0px var(--shade), /* top hilight */
-        0px 4px 4px 0px var(--deeper); /* casting shadow */
-    }
-    50% {
-        box-shadow: 
-        0px -1px 1px 0px var(--shade),
-        0px 1px 1px 0px var(--deeper); /* casting shadow */
-    }
-    100% {
-        box-shadow: 
-        inset 0px 1px 1px 0px var(--dark),
-        inset 0px 1px 2px 0px var(--dark),
-        inset 0px -1px 1px 0px var(--dark),
-        0px 2px 1px 0px var(--shade); 
-    }
-}
 
 button:focus {
     color: var(--light);
-    
-    box-shadow: 
-    inset 0px 1px 1px 0px var(--dark),
-    inset 0px 1px 2px 0px var(--dark),
-    inset 0px -1px 1px 0px var(--dark),
-    0px 2px 1px 0px var(--shade); 
-    
-    animation-name: active;
-    animation-duration: 0.15s;
-    animation-iteration-count: 1;
-    /* animation-direction: alternate; */
-    animation-timing-function: ease-out;
-    
-    /* box-shadow: 
-    0px -1px 1px 0px var(--shade),
-    0px 1px 1px 0px var(--deeper); */ /* casting shadow */
-}
-
-
-
-.nothing button:focus {
-    box-shadow: 
-    0px 2px 8px 0px var(--light); /* casting shadow */
-}
-    
-/* animation-name: active;
-animation-duration: 0.2s;
-animation-iteration-count: infinite;
-animation-direction: alternate;
-animation-timing-function: ease; */
-
-/* transform: translate(0px, 2px); */
-
-input, textarea {
-    box-shadow: 0px 0px 0px 1px var(--deeper);
-}
-
-input:hover, textarea:hover, input:focus, textarea:focus, .clickable:hover {
-    /* 
-    color: var(--light) !important; */
-    background-color: var(--shade);
-
 }
 
 
@@ -372,10 +274,10 @@ input:active, .clickable:active {
         }
         .selectionIndicator {
             position: absolute;
-            width: 2px;
+            width: fit-content;
             height: 100%;
-            /* align-self: stretch; */
-            background-color: var(--shade);
+            
+            color: var(--light);
         }
         .selectionIndicator:has(+ .autoResize:hover) {
             width: 4px;
@@ -394,53 +296,15 @@ input:active, .clickable:active {
             padding-top: 0em;
             padding-bottom: 0em;
             
-            background-color: transparent;
             
             line-height: 1.8em;
-            box-shadow: 0px 0px 0px var(--shade);
         }
-        /* .value.input { 
-            box-shadow: 
-            inset 2px 0px 0px 0px var(--shade);
-        }
-        .value.input:hover {
-            box-shadow: 
-            inset 4px 0px 0px 0px var(--shade);
-        }
-        .value.input:focus {
-            box-shadow: 
-            inset 4px 0px 0px 0px var(--light);
-        } */
-        .tieInput {
-            font-size: 0.9em;
-            color: var(--mild);
-            background-color: transparent !important;
-            box-shadow: none !important;
-        }
-            
-        .tieInput:hover {
-            background-color: transparent !important;
-            box-shadow: none !important;
-        }
-        
-        .tieInput:focus {
-            background-color: transparent !important;
-            box-shadow: none !important;
-        }
-
         .options {
             display: none;
             overflow: visible;
             align-items: flex-start;
-    
-            /* 
-            position: absolute;
-            transform: translateY(2em); 
-            background: var(--deep);
-            z-index: 1;
-            box-shadow: inset 0px 0px 0px 1px var(--shade);
-            */
-    
+
+            margin: 1.5em;
     
             button {
                 min-width: 2em;
@@ -449,38 +313,13 @@ input:active, .clickable:active {
         
         .linksOpener {
     
-            /* display: none; */
-    
-            /* z-index: 1;
-            
-            margin: 0px;
-    
-            width: 2em;
-            height: 2em;
-    
-            
-            padding: 0px;
-            font-size: 1em;
-            box-shadow: none;
-    
-            scale: 0.7;
-    
-            box-shadow: none !important; */
-            /* transition: scale 0.2s cubic-bezier(0, 0, 0.38, 1.55) !important; */
-    
             color: var(--slight);
-            background-color: var(--shade);
-            box-shadow: inset 0px 0px 0px 1px var(--mild) !important;
     
             :active {
                 animation: none;
             }
     
         }
-        
-        /* .linksOpener:before {
-            display: none;
-        } */
     }
     
 
@@ -490,7 +329,6 @@ input:active, .clickable:active {
     > .main {
         .selectionIndicator {
             width: 4px;
-            background-color: var(--mildshade);
         }
     }
 }
@@ -499,16 +337,11 @@ input:active, .clickable:active {
     > .main {
         .selectionIndicator {
             width: 4px;
-            background-color: var(--authName);
         }
     }
 }
 
 .node.option-shown {
-    /* box-shadow: inset 4px 0px 0px -2px var(--light) !important; */
-    /* > .main > .linksOpener {
-        display: block;
-    } */
     > .main > .options {
         display: flex;
         flex-direction: column;
@@ -519,7 +352,6 @@ input:active, .clickable:active {
     > .main {
         .selectionIndicator {
             width: 4px;
-            background-color: var(--slight);
         }
     } 
 }
@@ -529,12 +361,9 @@ input:active, .clickable:active {
     > .main {
          
         .selectionIndicator {
-            background-color: var(--authName);
         }
         .linksOpener, .linksOpener:hover, .linksOpener:focus {
             color: var(--dark) !important;
-            background-color: var(--authName) !important;
-            box-shadow: none !important;
             
         }
     } 
@@ -546,19 +375,15 @@ input:active, .clickable:active {
     > .main {
 
         .selectionIndicator {
-            background-color: var(--reference);
         }
         .options .actions .linksOpener {
             color: var(--dark) !important;
-            background-color: var(--reference) !important;
-            box-shadow: none !important;
         }
     } 
 
 }
 
 .node.finding-new-origin {    
-    box-shadow: 0px 0px 0px 4px var(--shade);
     
 }
 
@@ -617,7 +442,6 @@ input:active, .clickable:active {
     
     content: attr(tooltip);
     padding: 0.5em;
-    background: var(--light);
     color: var(--dark);
     border-radius: 0.5em;
     z-index: 3;
@@ -691,7 +515,6 @@ input:active, .clickable:active {
 }
 
 .log:hover {
-    background-color: var(--deeper);
 }
 
 .log.error {
@@ -729,7 +552,6 @@ input:active, .clickable:active {
     z-index: 0;
     border-left: 4px dotted var(--mildshade);
     border-bottom: 4px dotted var(--mildshade);
-    /* box-shadow: inset 2px -2px 0px 0px var(--mildshade); */
     border-bottom-left-radius: 0em;
 }
 

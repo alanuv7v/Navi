@@ -14,34 +14,34 @@
  */
 @font-face {
     font-family: Borgen;
-    src: url('/public/fonts/Borgen.otf') format('opentype');
+    src: url('/fonts/Borgen.otf') format('opentype');
     /* font-style: oblique; */
 }
 @font-face {
     font-family: gowun batang;
-    src: url('/public/fonts/GowunBatang-Regular.ttf') format('truetype');
+    src: url('/fonts/GowunBatang-Regular.ttf') format('truetype');
 }
 @font-face {
     font-family: suit;
-    src: url('/public/fonts/SUIT-Thin.otf') format('opentype');
+    src: url('/fonts/SUIT-Thin.otf') format('opentype');
     font-weight: normal;
 }
 @font-face {
     font-family: suit;
-    src: url('/public/fonts/SUIT-Light.otf') format('opentype');
+    src: url('/fonts/SUIT-Light.otf') format('opentype');
     font-weight: bold;
 }
-@font-face {
+/* @font-face {
     font-family: IBM;
-    src: url('/public/fonts/IBMPlexMono-Regular.otf') format('opentype');
-}
+    src: url('/fonts/IBMPlexMono-Regular.otf') format('opentype');
+} */
 @font-face {
     font-family: NK57;
-    src: url('/public/fonts/NK57 Monospace Sc Lt.otf') format('opentype');
+    src: url('/fonts/NK57 Monospace Sc Lt.otf') format('opentype');
 }
 @font-face {
     font-family: Bitter;
-    src: url('/public/fonts/Bitter-VariableFont_wght.otf') format('opentype');
+    src: url('/fonts/Bitter-VariableFont_wght.otf') format('opentype');
 }
 
 
@@ -64,7 +64,6 @@
     }
 
     button:hover {
-        background-color: var(--shade);
         box-shadow: inset 0px 0px 0px 1px var(--mildshade);
     }
 
@@ -90,6 +89,17 @@
 
     button:focus, input:focus {
         box-shadow: inset 0px 0px 0px 1px var(--mild);
+    }
+
+        
+    input:hover, textarea:hover, input:focus, textarea:focus {
+        background-color: var(--shade);
+        box-shadow: inset 0px 0px 0px 1px var(--mildshade);
+    }
+
+    .node .value:hover, .node .value:focus {
+        background-color: transparent;
+        box-shadow: none;
     }
 
 

@@ -1,61 +1,56 @@
 
-/*   @import url('https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap');
-  @import url(//fonts.googleapis.com/earlyaccess/nanummyeongjo.css);
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;400;500;600;700&display=swap');
-
-@font-face {
-  font-family: 'BookkMyungjo-Bd';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkMyungjo-Bd.woff2')
-    format('woff2');
-  font-weight: 400;
-  font-style: normal;
-} */
-/* @font-face {
-  font-family: 'HakgyoansimSantteutbatangL';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimSantteutbatangL.woff2')
-    format('woff2');
-  font-weight: 500;
-  font-style: normal;
-}
-@font-face {
-    font-family: 'HakgyoansimBareonbatangR';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimBareonbatangR.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-} */
-/* @font-face {
-  font-family: 'SungDongMyungjo';
-  font-style: normal;
-  font-weight: 400;
-  src: url('//cdn.jsdelivr.net/korean-webfonts/1/orgs/govs/sdgu/SungDongMyungjo/SungDongMyungjoR.woff2')
-      format('woff2'),
-    url('//cdn.jsdelivr.net/korean-webfonts/1/orgs/govs/sdgu/SungDongMyungjo/SungDongMyungjoR.woff')
-      format('woff');
-}
-
-@font-face {
-  font-family: 'ChosunSm';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.1/ChosunSm.woff')
-    format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'designhouseOTFLight00';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_three@1.0/designhouseOTFLight00.woff')
-    format('woff');
-  font-weight: normal;
-  font-style: normal;
-} *//* 
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap'); */
 @import url('https://fonts.googleapis.com/css2?family=Orbit&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@keyframes active2 {
+    0% {    
+        background-color: var(--mildshade);
+    }
+    100% {
+        background-color: var(--mild);
+    }
+}
+
+/* @font-face {
+    font-family: Borgen;
+    src: url('/public/fonts/Borgen.otf') format('opentype');
+}
+ */
+@font-face {
+    font-family: Borgen;
+    src: url('/fonts/Borgen.otf') format('opentype');
+    /* font-style: oblique; */
+}
+@font-face {
+    font-family: gowun batang;
+    src: url('/fonts/GowunBatang-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: suit;
+    src: url('/fonts/SUIT-Thin.otf') format('opentype');
+    font-weight: normal;
+}
+@font-face {
+    font-family: suit;
+    src: url('/fonts/SUIT-Light.otf') format('opentype');
+    font-weight: bold;
+}
+/* @font-face {
+    font-family: IBM;
+    src: url('/fonts/IBMPlexMono-Regular.otf') format('opentype');
+} */
+@font-face {
+    font-family: NK57;
+    src: url('/fonts/NK57 Monospace Sc Lt.otf') format('opentype');
+}
+@font-face {
+    font-family: Bitter;
+    src: url('/fonts/Bitter-VariableFont_wght.ttf') format('truetype');
+}
 
 * {
     font-family: 'Orbit', 'poppins', monospace;
-    /* font-family: 'HakgyoansimBareonbatangR'; */
-    /* 제주명조는 !와 같은 특수문자가 오른쪽 공백이 커서 이상해짐. 유의할것 */
+    /* font-family: 'Bitter', monospace; */
 }

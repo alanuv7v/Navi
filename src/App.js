@@ -24,6 +24,7 @@ import appSession from "./resource/appSession"
 import * as SessionManager from "./interface/SessionManager"
 import errorCatcher from "./tech/errorCatcher"
 import Logger from "./tech/gui/Logger"
+import stringToWasm from "./tech/stringToWasm"
 
 window._debug = {
     DOM,
@@ -64,5 +65,14 @@ Logger.log("Hi, user.")
 
 init()
 
+
+import importWasm from "./tech/importWasm"
+let b = van.tags.button({onclick: async () => {
+    
+    let array = await importWasm()
+    console.log(array)
+    
+}}, "import wasm")
+DOM.append(b)
 
 export default App

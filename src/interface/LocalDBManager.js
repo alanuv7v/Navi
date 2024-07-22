@@ -7,7 +7,8 @@ export async function create(name) {
         
     const SQL = await initSqlJs(
         //{locateFile: file => `https://sql.js.org/dist/${file}`}
-        {locateFile: file => `sqlite/${file}`}
+        //{locateFile: file => `sqlite/${file}`}
+        {locateFile: file => `${file}`} //for dist
     )
 
     const DB = new SQL.Database();

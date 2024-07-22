@@ -177,34 +177,21 @@ export default class NodeView extends NodeModel {
         div({class: "overlay"}),
         div({class: "main"},
             div({class: "options"},
-                div(
-                    input({class: "tieFrom", placeholder: "from", onchange: (event) => {
-                        //미완!!!!
-                        let prevTie = structuredClone(this.tie)
-
-                        let [prevFrom, prevTo] = this.tie?.split("/")
-                        if (prevTo) {
-                            this.tie = event.target.value + "/" + prevTo
-                        } else {
-                            this.tie = event.target.value + "/"
-                        }
-                        this.changeTie((new Tie(prevTie)).mirror, (new Tie(this.tie)).mirror, this.openedFrom.id)
-                    }}),
-                    input({class: "tieTo", placeholder: "to", onchange: (event) => {
-                        //미완!!!!
-                        let prevTie = structuredClone(this.tie)
-                        
-                        let [prevFrom, prevTo] = this.tie?.split("/")
-                        if (prevFrom) {
-                            this.tie = prevFrom + "/" + event.target.value
-                        } else {
-                            this.tie = "/" + event.target.value
-                        }
-                        this.changeTie((new Tie(prevTie)).mirror, (new Tie(this.tie)).mirror, this.openedFrom.id)
-                    }}),
-                ),
                 this.actionsDOM
             ),
+            input({class: "tieInput", placeholder: "from/to", onchange: (event) => {
+                
+                let prevTie = structuredClone(this.tie)
+                this.tie = event.target
+
+                let [prevFrom, prevTo] = prevTie.split("/")
+
+                this.changeTie((new Tie(prevTie)).mirror, (new Tie(this.tie)).mirror, this.openedFrom.id)
+                
+                event.target.value = event.target.value.split("/").join(" ----- ")
+                this.DOM.querySelector(".tieInput").style.display = this.tie === "context/" ? "none" : "inline-block"
+                
+            }}),
             div({class: "valueWrap"},
                 div({class: "selectionIndicator"}),
                 autoResizedTextarea({
@@ -465,6 +452,8 @@ export default class NodeView extends NodeModel {
     updateStyle () {
         try {
             
+            this.DOM.querySelector(".tieInput").style.display = this.tie === "context/" ? "none" : "inline-block"
+
             this.DOM.querySelector(".tieFrom").value = this.tie.split("/")[0]
             this.DOM.querySelector(".tieTo").value = this.tie.split("/")[1]
             
