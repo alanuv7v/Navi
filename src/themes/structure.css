@@ -219,8 +219,6 @@ button, button:not(:hover), input, textarea, select {
     border: none;
     outline: none;
 
-    border-radius: 0.5em;
-
     margin: 0.25em;
     
     flex-shrink: 0;
@@ -228,11 +226,6 @@ button, button:not(:hover), input, textarea, select {
 
 
 }
-
-textarea {
-    border-radius: 0px;
-}
-
 
 button:hover {
     color: var(--light); 

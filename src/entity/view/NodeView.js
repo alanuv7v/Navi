@@ -176,9 +176,6 @@ export default class NodeView extends NodeModel {
     },
         div({class: "overlay"}),
         div({class: "main"},
-            div({class: "options"},
-                this.actionsDOM
-            ),
             input({class: "tieInput", placeholder: "from/to", onchange: (event) => {
                 
                 let prevTie = structuredClone(this.tie)
@@ -208,6 +205,9 @@ export default class NodeView extends NodeModel {
                         e.target.focus({preventScroll: true});
                         })
                 }),
+            ),
+            div({class: "options"},
+                this.actionsDOM
             ),
         ),
         this.linksDOM
@@ -318,6 +318,8 @@ export default class NodeView extends NodeModel {
         //show options
         this.showOptions()
 
+        this.DOM.querySelector(".tieInput").style.display = "inline-block"
+
     }
 
     deselect () {
@@ -326,6 +328,8 @@ export default class NodeView extends NodeModel {
         this.selected = false
         /* this.optionSleep = true */
         this.hideOptions()
+        
+        this.DOM.querySelector(".tieInput").style.display = this.tie === "context/" ? "none" : "inline-block"
     }
 
     plant () {
@@ -453,9 +457,7 @@ export default class NodeView extends NodeModel {
         try {
             
             this.DOM.querySelector(".tieInput").style.display = this.tie === "context/" ? "none" : "inline-block"
-
-            this.DOM.querySelector(".tieFrom").value = this.tie.split("/")[0]
-            this.DOM.querySelector(".tieTo").value = this.tie.split("/")[1]
+            this.DOM.querySelector(".tieInput").value = this.tie.split("/").join(" ----- ")
             
             if (this.isAuthname) {
                 this.DOM.classList.add("authName")
@@ -562,6 +564,32 @@ export default class NodeView extends NodeModel {
             this.open()
             this.linkedNodeViews.find(v => v.id === newNode.id)?.select()
 
+        } else if (event.key === "Backspace" && event.target.value.length <= 0) {
+            
+            this.delete()
+            event.preventDefault()
+            
+        } else if (event.key === "ArrowUp" && event.altKey) {
+
+            this.siblings[this.siblingsIndex-1]?.select()
+            
+        } else if (event.key === "ArrowDown" && event.altKey) {
+            
+            this.siblings[this.siblingsIndex+1]?.select()
+
+        } else if (event.key === "ArrowLeft" && event.altKey && event.ctrlKey) {
+            
+            event.preventDefault()
+            if (!this.openedFrom) {
+                this.showContext()
+            }
+            this.openedFrom?.select()
+
+        } else if (event.key === "ArrowRight" && event.altKey && event.ctrlKey) {
+
+            event.preventDefault()
+            if (!this.opened) this.open()
+            this.linkedNodeViews[0]?.select()
         } else if (event.key.startsWith("Arrow") && event.target.selectionStart === event.target.selectionEnd) { 
         
             let pos = event.target.selectionStart
@@ -579,33 +607,7 @@ export default class NodeView extends NodeModel {
             else if (event.key === "ArrowDown" && atTheBottomLine) {
                 this?.siblings[this.siblingsIndex+1]?.select()
             }
-        } else if (event.key === "Backspace" && event.target.value.length <= 0) {
-            
-            this.delete()
-            event.preventDefault()
-            
-        } else if (event.key === "ArrowUp" && event.altKey) {
-
-            this.siblings[this.siblingsIndex-1]?.select()
-            
-        } else if (event.key === "ArrowDown" && event.altKey) {
-            
-            this.siblings[this.siblingsIndex+1]?.select()
-
-        } else if (event.key === "ArrowLeft" && event.altKey) {
-            
-            event.preventDefault()
-            if (!this.openedFrom) {
-                this.showContext()
-            }
-            this.openedFrom?.select()
-
-        } else if (event.key === "ArrowRight" && event.altKey) {
-
-            event.preventDefault()
-            this.open()
-            this.linkedNodeViews[0]?.select()
-        }
+        } 
             
     }
 
