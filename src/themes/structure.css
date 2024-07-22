@@ -347,9 +347,6 @@ input:active, .clickable:active {
         overflow: visible;
     }
 
-    > *:has(.value) > *:not(:last-child) {
-        margin-right: 1em;
-    }
     > .links {
         margin-left: 1em;
         > .node {
@@ -680,11 +677,14 @@ input:active, .clickable:active {
     text-overflow: ellipsis;
     overflow: hidden;
     padding: 0.25em 0.5em 0.25em 0.5em ;
-    color: var(--alert);
 }
 
 .log:hover {
     background-color: var(--deeper);
+}
+
+.log.alrt {
+    color: var(--alert);
 }
 
 .log.error {

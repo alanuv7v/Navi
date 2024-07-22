@@ -102,5 +102,17 @@
         box-shadow: none;
     }
 
+    .node {
+        > .main {
+            > *:not(:last-child) {
+                margin-bottom: 0.5em
+            }
+            .tieInput {
+                padding: 0px;
+                margin-left: 0px;
+            }
+        }
+    }
+
 
 }

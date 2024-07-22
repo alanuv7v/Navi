@@ -65,14 +65,4 @@ Logger.log("Hi, user.")
 
 init()
 
-
-import importWasm from "./tech/importWasm"
-let b = van.tags.button({onclick: async () => {
-    
-    let array = await importWasm()
-    console.log(array)
-    
-}}, "import wasm")
-DOM.append(b)
-
 export default App

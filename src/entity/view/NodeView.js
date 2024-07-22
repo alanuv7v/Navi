@@ -176,17 +176,32 @@ export default class NodeView extends NodeModel {
     },
         div({class: "overlay"}),
         div({class: "main"},
-            input({class: "tieInput", placeholder: "from/to", onchange: (event) => {
+            input({class: "tieInput", placeholder: "from/to", 
+                
+                onclick: (event) => {
+                    if (this.tie === "planted") {
+                        event.target.disabled = true
+                    } else {
+                        event.target.disabled = false
+                    }
+                    event.target.value = event.target.value.split(" ----- ").join("/")
+                },
+
+                onblur: (event) => {
+                    event.target.value = event.target.value.split("/").join(" ----- ")
+                },
+
+                onchange: (event) => {
                 
                 let prevTie = structuredClone(this.tie)
-                this.tie = event.target
+                this.tie = event.target.value
 
                 let [prevFrom, prevTo] = prevTie.split("/")
 
                 this.changeTie((new Tie(prevTie)).mirror, (new Tie(this.tie)).mirror, this.openedFrom.id)
                 
                 event.target.value = event.target.value.split("/").join(" ----- ")
-                this.DOM.querySelector(".tieInput").style.display = this.tie === "context/" ? "none" : "inline-block"
+                this.showTieDefault()
                 
             }}),
             div({class: "valueWrap"},
@@ -318,7 +333,7 @@ export default class NodeView extends NodeModel {
         //show options
         this.showOptions()
 
-        this.DOM.querySelector(".tieInput").style.display = "inline-block"
+        this.showTie()
 
     }
 
@@ -329,13 +344,13 @@ export default class NodeView extends NodeModel {
         /* this.optionSleep = true */
         this.hideOptions()
         
-        this.DOM.querySelector(".tieInput").style.display = this.tie === "context/" ? "none" : "inline-block"
+        this.showTieDefault()
     }
 
     plant () {
         refs("Nodes").innerHTML = ""
         refs("Nodes").append(this.DOM)
-        this.contextView = null
+        this.tie = "planted"
         this.onDomMount()
     }
 
@@ -453,10 +468,18 @@ export default class NodeView extends NodeModel {
         return this.createLinkedNode (this.tie || "context/", value || "")
     }
 
+    showTie () {
+        this.DOM.querySelector(".tieInput").style.display = "inline-block"
+    }
+
+    showTieDefault () {
+        this.DOM.querySelector(".tieInput").style.display = this.tie === "context/" ? "none" : "inline-block"
+    }
+
     updateStyle () {
         try {
             
-            this.DOM.querySelector(".tieInput").style.display = this.tie === "context/" ? "none" : "inline-block"
+            this.showTieDefault()
             this.DOM.querySelector(".tieInput").value = this.tie.split("/").join(" ----- ")
             
             if (this.isAuthname) {
