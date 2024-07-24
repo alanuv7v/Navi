@@ -464,7 +464,7 @@ export default class NodeView extends NodeModel {
 
     createBranch (value) {
         if (this.isReference) return false
-        return this.createLinkedNode (this.tie || "context/", value || "")
+        return this.createLinkedNode ("context/", value || "")
     }
 
     showTie () {

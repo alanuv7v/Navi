@@ -1,15 +1,15 @@
-import initSqlJs from "sql.js/dist/sql-wasm"
+import initSqlJs from "sql.js";
 import { v4 as uuidv4 } from 'uuid';
 import * as FileSystem from "./FileSystem"
 import appSession from "../resource/appSession";
 
+const SQL = await initSqlJs(
+    //{locateFile: file => `https://sql.js.org/dist/${file}`}
+    //{locateFile: file => `sqlite/${file}`}
+    {locateFile: file => `${file}`} //for dist
+)
+
 export async function create(name) {
-        
-    const SQL = await initSqlJs(
-        //{locateFile: file => `https://sql.js.org/dist/${file}`}
-        //{locateFile: file => `sqlite/${file}`}
-        {locateFile: file => `${file}`} //for dist
-    )
 
     const DB = new SQL.Database();
 
@@ -37,11 +37,6 @@ export async function create(name) {
 
 
 export async function load(input) {
-
-    const SQL = await initSqlJs(
-        //{locateFile: file => `https://sql.js.org/dist/${file}`}
-        {locateFile: file => `sqlite/${file}`}
-    )
     
     let blob
 

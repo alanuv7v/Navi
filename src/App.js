@@ -65,4 +65,7 @@ Logger.log("Hi, user.")
 
 init()
 
+import parseQuery from "./tech/parseQuery"
+window.parseQuery = parseQuery
+
 export default App

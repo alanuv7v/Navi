@@ -26,28 +26,40 @@ export default async function parseQuery (input) {
     try {
 
         let querySegments = input.split("/")
-        let firstRes = simpleQuery(querySegments[0])
-        
-        if (querySegments.length === 1) return firstRes
-        let context = firstRes[0]
+        let context = simpleQuery(querySegments[0])[0]
         let contextLinks = (new NodeData(...context)).links
-        let lastSegmentLinks = contextLinks
-        let foundLinkData
         
+        let lastSegmentMatch = context
+        let lastSegmentLinks = contextLinks
+        
+        if (querySegments.length === 1) return [context]
+
+        //find nodeData for each segments
         for (let i=1; i < querySegments.length; i++) {
             let targetQuerySegment = querySegments[i]
-            let segmentMatch = lastSegmentLinks.find(link => {
+            lastSegmentLinks.forEach(link => {
                 let linkId = link[1] /* [tie, id] */
                 let linkData = simpleQuery("#" + linkId)[0]
                 let linkValue = unescape(linkData[1])
                 if (targetQuerySegment === linkValue) {
-                    console.log(linkId, linkData, linkValue, i, querySegments.length)
-                    if (i === (querySegments.length-1)) return [linkData]
                     lastSegmentLinks = JSON.parse(unescape(linkData[2]))
+                    lastSegmentMatch = linkData
                 }
             })
-            if (!segmentMatch) return false //중간에 끊김
+            console.log(lastSegmentMatch)
+            if (!lastSegmentMatch) {
+                return false
+            } 
+            else {
+                //if last segment match found, return segment match
+                if (i === (querySegments.length-1)) { 
+                    break
+                }
+            }
         }
+        
+        return [lastSegmentMatch]
+
     }
 
     catch (err) {
