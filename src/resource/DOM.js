@@ -56,7 +56,10 @@ export default div("App", {
             }),
             input("Filter", {    
                 tooltip: "Filter",
-                type: "text", placeholder: "filter", value: "*"
+                type: "text", placeholder: "filter", value: "*",
+                onchange: (event) => {
+                    appSession.globalFilter = event.target.value
+                }
             }),
         ),
         div("Commands", {},

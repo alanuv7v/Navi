@@ -268,7 +268,10 @@ export default class NodeView extends NodeModel {
                 .filter(link => link.data[0] != this.openedFrom?.id)
                 .filter(link => link.data[0] != this.context)
                 .filter(link => {
-                    return link.data[1] === this.filter || !this.filter
+                    let tie = link.tie
+                    let value = link.data[1]
+                    //return value === this.filter || !this.filter
+                    return tie === appSession.globalFilter || tie === this.filter || !this.filter
                 })
                 .map(({tie, data}) => {
                     return {
@@ -691,6 +694,10 @@ export default class NodeView extends NodeModel {
 
         await openDepthLoop()
 
+    }
+
+    lateFilter () {
+        //필터가 뒤늦게 적용됬을때 DOM 지우고 this.linkedNodeViews에서 제거
     }
 
 

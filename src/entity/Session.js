@@ -36,6 +36,7 @@ export default class Session {
     
     selectedNode = null
     #clickedNode = null
+    
     get clickedNode () {
         return this.#clickedNode
     } 
@@ -47,6 +48,8 @@ export default class Session {
     onClickedNodeChange = () => {}
     hoveredNode = null 
     copiedNode = null 
+
+    globalFilter = null
 
     settings = {
         style: {
