@@ -696,9 +696,42 @@ export default class NodeView extends NodeModel {
 
     }
 
-    lateFilter () {
-        //필터가 뒤늦게 적용됬을때 DOM 지우고 this.linkedNodeViews에서 제거
+    removeView () {
+        this.openedFrom.linkedNodeViews.splice(this.siblingsIndex, 1) 
+        this.DOM.remove()
     }
 
+    lateFilter () {
+        //필터가 뒤늦게 적용됬을때 DOM 지우고 this.linkedNodeViews에서 제거
+        let noViews = []
 
+        this.linkedNodeViews.forEach(view => {
+            let okay = [this.filter, appSession.globalFilter].includes((new Tie(view.tie)).mirror)
+            if (!okay) {
+                noViews.push(view)
+            }
+        })
+
+        noViews.forEach(view => 
+            view.removeView()
+        )
+
+    }
+
+    treeLateFilter (maxViews=50) {
+        
+        let viewCount = 0
+        
+        function loop (view) {
+            view.lateFilter()
+            for (const linkedView of view.linkedNodeViews) {
+                if (viewCount > maxViews) break
+                viewCount ++
+                loop(linkedView)
+            }
+        }
+
+        loop(this)
+
+    }
 }
