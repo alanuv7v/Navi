@@ -55,7 +55,6 @@ export default class NodeView extends NodeModel {
                 break
             }
         }
-        return res
     }
 
     get linkIndex () {
