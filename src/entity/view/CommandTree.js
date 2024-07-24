@@ -66,6 +66,15 @@ class CommandButton {
         return (typeof this.value === "function") && (this.name.slice(-1) === "_")
     }
 
+    async tryCatch (name, func) {
+        try {
+            let actionResult = await this.value()
+            Logger.log(`action result: ${actionResult}`)
+        } catch (err) {
+            Logger.log(`failed to execute ${name}. error: ${err}`)
+        }
+    }
+
     onclick = async () => {
         //execute function
 
@@ -75,7 +84,9 @@ class CommandButton {
 
         } else if (typeof this.value === "function") {
             
-            Logger.log(`executing: ${this.name}()`) 
+            Logger.log(`executing: ${() =>{
+                this.tryCatch(this.name, this.value)
+            }}()`) 
 
             if (this.requireParams) {
 
@@ -83,8 +94,7 @@ class CommandButton {
             
             } else {
 
-                let actionResult = await this.value()
-                Logger.log(`action result: ${actionResult}`)
+                this.tryCatch(this.name, this.value)
 
             }
             

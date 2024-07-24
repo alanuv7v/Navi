@@ -178,7 +178,7 @@ export default class NodeView extends NodeModel {
             input({class: "tieInput", placeholder: "from/to", 
                 
                 onclick: (event) => {
-                    if (this.tie === "planted") {
+                    if (["planted", "/:reference"].includes(this.tie)) {
                         event.target.disabled = true
                     } else {
                         event.target.disabled = false

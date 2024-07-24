@@ -20,7 +20,6 @@ document.addEventListener("wheel", (event) => {
     
     
     try {
-        console.log(navigateSiblings)
         if (navigateSiblings) {
             
             console.log(targetNodeView, targetNodeView.openedFrom)
@@ -55,7 +54,6 @@ document.addEventListener("wheel", (event) => {
     
         }
     } catch (err) {
-        console.error(err)
     }
 
 }, {passive: false})
