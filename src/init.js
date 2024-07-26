@@ -94,20 +94,20 @@ export async function initNetwork (networkDirHandle) {
             (await fileSystem.listAllFilesAndDirs(networkDirHandle))
             .find(item => {
                 return item.name === "database"
-            })
+            }).handle
         
         appSession.network.name = networkDirHandle.name || "new network"
         
         appSession.network.DB = await LocalDBManager.load(
-            await appSession.temp.network.handle.getFile()
+            await appSession.temp.network.DB.handle.getFile()
         )
 
     }
     
     try {
-        Navigate.show_node_(`@${appSession.network.name}`)
+        userActions.Navigate.show_node_(`@${appSession.network.name}`)
     } catch {
-        Navigate.show_node_(`@origin`)
+        userActions.Navigate.show_node_(`@origin`)
     }
 
     return appSession.network
