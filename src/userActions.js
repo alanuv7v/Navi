@@ -4,11 +4,13 @@ import * as LocalDBManager from "./interface/LocalDBManager"
 import parseQuery from "./utils/parseQuery"
 import NodeView from "./prototypes/view/NodeView"
 
-import { default as init, initRootDB as init_root_DB } from "./init"
+import { default as init, initRootDB as init_root_DB, initNetwork } from "./init"
 
 import * as fileSystem from "./interface/FileSystem"
 import BrowserDB from "./interface/BrowserDB"
 import Logger from "./prototypes/view/Logger"
+
+import { DateTime } from "luxon"
 
 
 export const Fix = {
@@ -61,64 +63,66 @@ export const Root = {
         const blob = new Blob([data], { type: "application/octet-stream" });
         fileSystem.downloadFile(name || "root", blob)
     },
-    async access_root() {
+    async access_root () {
+
         return await appSession.temp.rootHandle.requestPermission()
     },
+    async open_network () {
+        if (window.showDirectoryPicker) {
+            let networkDirhandle = await window.showDirectoryPicker()
+            await initNetwork(networkDirhandle)
+            SessionManager.saveSession()
+        } else {
+            this.open_network_DB()
+        }
+        return appSession.network
+    },
+    async open_network_DB () {
+        
+        let i = document.createElement('input')
+        i.type = "file"
+        i.multiple = false
+        i.click()
+
+        await (new Promise((resolve, reject) => {
+            async function onchange (event) {
+                let blob = event.target.files[0]
+                appSession.network.name = blob.name || "unknown network", 
+                appSession.network.DB = await LocalDBManager.load(blob)
+                resolve()
+            }
+            i.addEventListener("change", onchange)
+        }))
+
+        initNetwork(null)
+
+        SessionManager.saveSession()
+        
+        return appSession.network
+
+    },
     async open_root() {
+        
 
         if (window.showOpenFilePicker) {
 
             let rootHandle = (await window.showOpenFilePicker({multiple: false}))[0]
 
-            if (!(await rootHandle.queryPermission()) === "granted") {
-                await rootHandle.requestPermission()
-            }
+            if (!(await rootHandle?.queryPermission()) === "granted") {
+                await rootHandle?.requestPermission()
+            } 
 
             appSession.temp.rootHandle = rootHandle
             appSession.root.name = rootHandle.name || "root", 
             appSession.root.DB = await LocalDBManager.load(rootHandle)
 
         } else {
+            
+            await Root.open_root_oldway()
 
-            let i = document.createElement('input')
-            i.type = "file"
-            i.multiple = false
-            i.click()
-
-            await (new Promise((resolve, reject) => {
-
-                async function onchange (event) {
-                    
-                    let rootBlob = event.target.files[0]
-                    
-                    appSession.temp.rootHandle = null
-                    appSession.root.name = rootBlob.name || "root", 
-                    appSession.root.DB = await LocalDBManager.load(rootBlob)
-                    
-                    resolve()
-                
-                }
-                
-                i.addEventListener("change", onchange)
-
-            }))
-
-        }
-    
-        console.log(`Opened root: ${appSession.root.name}`)
-    
-        if (!(await appSession.temp.rootHandle?.queryPermission()) === "granted") {
-            await appSession.temp.rootHandle?.requestPermission()
         }
         
-        try {
-            let rootName = appSession.root.name
-            Navigate.show_node_(`@${rootName}`)
-        } catch {
-            Navigate.show_node_(`@root`)
-        }
-    
-        SessionManager.saveSession()
+        init_root_DB(appSession.rootHandle)
         
         return appSession.root
     
@@ -171,6 +175,17 @@ export const Root = {
         SessionManager.saveSession()
         
         return appSession.root
+    },
+    backup: {
+        async create_backup () {        
+            let version = DateTime.now().setZone("system")
+            let backupFile = fileSystem.createFile(
+                appSession.temp.networkDirHandle, 
+                appSession.root.name + version, 
+                "backup"
+            )
+            return await fileSystem.copyFile(appSession.temp.rootHandle, backupFile)
+        }  
     }
 }
 

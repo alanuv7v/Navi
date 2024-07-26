@@ -7,6 +7,8 @@ import BrowserDB from "./interface/BrowserDB"
 import * as userActions from "./userActions"
 import Logger from "./prototypes/view/Logger"
 
+import * as fileSystem from "./interface/FileSystem"
+
 export default async function init () {
 
     appSession.browserDB = BrowserDB
@@ -28,9 +30,7 @@ export default async function init () {
         appSession.copy(lastSession.data)
         console.log("Loaded last session data.")
         
-        console.log("initializing root DB...")
         await initRootDB(lastSession.data.rootHandle)
-        console.log("initialized root DB.")
 
         try {
             
@@ -61,15 +61,55 @@ export default async function init () {
 }
 
 export async function initRootDB (rootHandle) {
-   try {
+
+    console.log("initializing root DB...")
+
+    try {
         if (!(await rootHandle?.queryPermission()) === "granted") {
             await rootHandle?.requestPermission()
         } 
         appSession.root.name = rootHandle.name, 
         appSession.root.DB = await LocalDBManager.load(rootHandle)
+
+        console.log("initialized root DB.")
+
         return appSession.root.DB
-   } catch (err) {
+
+    } catch (err) {
         Logger.log(`failed to initialise root DB. error: 
 ${err}`, "error")
    }
+}
+
+export async function initNetwork (networkDirHandle) {
+
+    if (networkDirHandle) {
+            
+        if (!(await networkDirHandle?.queryPermission()) === "granted") {
+            await networkDirHandle?.requestPermission()
+        } 
+        
+        appSession.temp.network.handle = networkDirHandle
+        appSession.temp.network.DB.handle = 
+            (await fileSystem.listAllFilesAndDirs(networkDirHandle))
+            .find(item => {
+                return item.name === "database"
+            })
+        
+        appSession.network.name = networkDirHandle.name || "new network"
+        
+        appSession.network.DB = await LocalDBManager.load(
+            await appSession.temp.network.handle.getFile()
+        )
+
+    }
+    
+    try {
+        Navigate.show_node_(`@${appSession.network.name}`)
+    } catch {
+        Navigate.show_node_(`@origin`)
+    }
+
+    return appSession.network
+
 }

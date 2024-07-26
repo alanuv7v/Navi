@@ -20,8 +20,8 @@ export async function createFile(parentDirHandle, name, extension) {
 
 export async function createFolder(parentDirHandle, name) {
     try {
-        const parentDirHandle = await parentFolderHandle.getDirectoryHandle(name, { create: true });
-        return parentDirHandle
+        const newFolderHandle = await parentDirHandle.getDirectoryHandle(name, { create: true });
+        return newFolderHandle
     }
     catch (err) {
         return new Error(`Cannot create a folder(${name}) in ${parentDirHandle}`, err)
@@ -56,7 +56,11 @@ export async function listAllFilesAndDirs(dirHandle) {
     for await (let [name, handle] of dirHandle) {
         const {kind} = handle;
         if (handle.kind === 'directory') {
-            files.push({name, handle, kind, children: await listAllFilesAndDirs(handle)});
+            files.push({
+                name, 
+                handle, 
+                kind, 
+                children: await listAllFilesAndDirs(handle)});
         } else {
             files.push({name, handle, kind});
         }
@@ -74,4 +78,11 @@ export async function downloadFile (name, blob) {
     a.download = name
     a.click();
 
+}
+
+export async function copyFile (sourceHandle, destinationHandle) {
+    let sourceFile = await sourceHandle.getFile()
+    let writableStream = destinationHandle.createWritable()
+    await sourceFile.stream().pipeTo(writableStream)
+    return destinationHandle
 }

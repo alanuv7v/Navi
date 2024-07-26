@@ -13,6 +13,12 @@ export default class Session {
     
     temp = {
         handle: null,
+        network: {
+            handle: null,
+            DB: {
+                handle: null
+            }
+        },
         rootHandle: null,
         adress: "",
         seedNodeID: "",
@@ -26,6 +32,11 @@ export default class Session {
     get rootName () {
         return this.temp.rootHandle?.name || this.root?.name
     } 
+
+    network = {
+        name: null,
+        DB: null,
+    }
 
     root = {
         DB: null,

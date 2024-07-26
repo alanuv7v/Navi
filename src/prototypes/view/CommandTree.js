@@ -71,7 +71,7 @@ class CommandButton {
             let actionResult = await this.value()
             Logger.log(`action result: ${actionResult}`)
         } catch (err) {
-            Logger.log(`failed to execute ${name}. error: ${err}`)
+            Logger.log(`failed to execute ${name}. error: ${err.stack}`)
         }
     }
 
