@@ -85,7 +85,7 @@ export default class NodeView extends NodeModel {
             this.findNewOrigin()
         }, tooltip: "set new origin"}, "$"),
         button({onclick: async () => {
-            this.showAuthOrigin(0)
+            this.showAuthContext(0)
         }, tooltip: "find full context"}, "^^"/* "show authName origin" */),
         button({onclick: async () => {
             this.showContext()
@@ -376,7 +376,7 @@ export default class NodeView extends NodeModel {
         return contextView
     }
 
-    async showAuthOrigin (i) {
+    async showAuthContext (i) {
         
         if (i >= 10/* max find */) {
             return false
@@ -386,7 +386,7 @@ export default class NodeView extends NodeModel {
         
         if (lastOrigin && !lastOrigin.isAuthname) {
             i++
-            lastOrigin.showAuthOrigin(i)
+            lastOrigin.showAuthContext(i)
         } else {
             return lastOrigin
         }
