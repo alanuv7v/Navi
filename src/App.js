@@ -11,20 +11,19 @@ if ('serviceworker' in navigator) {
 
 import van from "vanjs-core"
 
-import * as userActions from "./natural/userActions"
-import init from "./natural/init"
-import CommandsTree from "./entity/view/CommandTree"
+import * as userActions from "./userActions"
+import init from "./init"
+import CommandTree from "./prototypes/view/CommandTree"
 
 //below is for debugging
 
 
-import BrowserDB from "./resource/BrowserDB"
-import DOM from "./resource/DOM"
-import appSession from "./resource/appSession"
+import BrowserDB from "./interface/BrowserDB"
+import DOM from "./DOM"
+import appSession from "./appSession"
 import * as SessionManager from "./interface/SessionManager"
-import errorCatcher from "./tech/errorCatcher"
-import Logger from "./tech/gui/Logger"
-import stringToWasm from "./tech/stringToWasm"
+import errorCatcher from "./utils/errorCatcher"
+import Logger from "./prototypes/view/Logger"
 
 window._debug = {
     DOM,
@@ -57,15 +56,12 @@ let userActionsSorted = Object.keys(userActions)
         return acc
     }, {})
 
-new CommandsTree(userActionsSorted)
+new CommandTree(userActionsSorted)
 
 errorCatcher()
 
 Logger.log("Hi, user.")
 
 init()
-
-import parseQuery from "./tech/parseQuery"
-window.parseQuery = parseQuery
 
 export default App

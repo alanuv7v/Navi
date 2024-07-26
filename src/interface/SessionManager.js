@@ -1,6 +1,6 @@
-import BrowserDB from "../resource/BrowserDB"
+import BrowserDB from "./BrowserDB"
 import { DateTime } from "luxon"
-import appSession from "../resource/appSession"
+import appSession from "../appSession"
 
 //"CRUD"
 

@@ -1,7 +1,7 @@
-import appSession from "./resource/appSession"
-import * as userActions from "./natural/userActions"
+import appSession from "./appSession"
+import * as userActions from "./userActions"
 import van from "vanjs-core"
-import refs from "./resource/DOMRefs"
+import refs from "./DOMRefs"
 const {div, span, a, dialog, form} = van.tags
 
 //Wheel event
