@@ -8,6 +8,7 @@ export default defineConfig({
     /* root: 'src', */
     publicDir: 'public',
     build: {
+        target: ['chrome120'],
         minify: "false",
         rollupOptions: {
             minify: "false",

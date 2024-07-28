@@ -1,8 +1,8 @@
 import * as SessionManager from "./interface/SessionManager"
 import appSession from "./appSession"
 import * as UserActions  from "./userActions"
-import * as LocalDBManager from "./interface/LocalDBManager"
-import BrowserDB from "./interface/BrowserDB"
+import * as LocalDBManager from "./interface/SqlDb"
+import BrowserDB from "./interface/BrowserDb"
 
 import * as userActions from "./userActions"
 import Logger from "./prototypes/view/Logger"

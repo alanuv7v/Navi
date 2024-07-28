@@ -1,4 +1,4 @@
-import BrowserDB from "./BrowserDB"
+import BrowserDB from "./BrowserDb"
 import { DateTime } from "luxon"
 import appSession from "../appSession"
 
