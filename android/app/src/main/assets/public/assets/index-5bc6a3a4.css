@@ -1,0 +1,780 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbit&display=swap');@import url('https://fonts.googleapis.com/css2?family=Overpass+Mono:wght@300..700&display=swap');@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+
+
+
+@keyframes active2 {
+    0% {    
+        background-color: var(--mildshade);
+    }
+    100% {
+        background-color: var(--mild);
+    }
+}
+/* @font-face {
+    font-family: Borgen;
+    src: url('/public/fonts/Borgen.otf') format('opentype');
+}
+ */
+@font-face {
+    font-family: Borgen;
+    src: url('/assets/Borgen-bf2272ab.otf') format('opentype');
+    /* font-style: oblique; */
+}
+@font-face {
+    font-family: gowun batang;
+    src: url('/assets/GowunBatang-Regular-466c593e.ttf') format('truetype');
+}
+@font-face {
+    font-family: suit;
+    src: url('/assets/SUIT-Thin-00b0126b.otf') format('opentype');
+    font-weight: normal;
+}
+@font-face {
+    font-family: suit;
+    src: url('/assets/SUIT-Light-d17994c1.otf') format('opentype');
+    font-weight: bold;
+}
+/* @font-face {
+    font-family: IBM;
+    src: url('/fonts/IBMPlexMono-Regular.otf') format('opentype');
+} */
+@font-face {
+    font-family: NK57;
+    src: url('/assets/NK57 Monospace Sc Lt-676b62a8.otf') format('opentype');
+}
+@font-face {
+    font-family: Bitter;
+    src: url('/assets/Bitter-VariableFont_wght-137e18d0.ttf') format('truetype');
+}
+* {
+    font-family: 'Orbit', 'poppins', monospace;
+    /* font-family: 'Bitter', monospace; */
+}:root {
+}
+
+:root {
+    --light: rgb(250 250 250);
+    --slight: rgb(214 212 212);
+    --nice: rgb(208 211 208);
+    --mild: rgb(181 185 181);
+    --mildshade: rgb(86, 86, 86);
+    --shade: rgb(37, 37, 37);
+    --deep: rgb(25 25 25);
+    --deeper: rgb(0, 0, 0);
+    --dark: rgb(0 0 0);
+    --vivid: rgba(151 200 128 1);
+    --link: rgb(153 247 225);
+    --hilight: rgb(202 231 188);
+    --active: rgba(185 156 189 0.3);
+    --executable: rgb(186 253 208);
+    
+    --authName: rgb(162 252 189);
+    --reference: rgb(180 150 250);
+    
+    --alert: rgb(252 222 90);
+    --error: rgb(255 100 121);
+    --success: rgba(151 200 128 1);
+}* {
+  font-size: inherit;
+  font-weight: normal;
+  box-sizing: border-box;
+  color: var(--light);
+  text-overflow: ellipsis;
+}
+:root {
+  background-color: var(--deep);
+}
+body {
+  margin: 0px;
+}
+div {
+  text-align: left;
+}
+.h-flex {
+  display: flex;
+  flex-direction: row;
+}
+.v-flex {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  justify-content: center;
+  align-items: center;
+}
+textarea {
+  display: block;
+  width: 100%;
+  resize: none;
+  overflow: auto; /* !! 결국 그게 되야하는데... 자동 리자이징. */
+}
+#App {
+  font-size: 14px;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--deep);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+}
+#App > * {
+  flex-shrink: 0;
+}
+::-webkit-scrollbar {
+/* the scrollbar. */
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-button {
+  display: none;
+}
+::-webkit-scrollbar-thumb {
+/* the draggable scrolling handle. */
+  background-color: var(--shade);
+  border-radius: 8px;
+  min-width: 10px;
+  min-height: 10px;
+}
+::-webkit-resizer {
+  display: none;
+}
+.group {
+  box-shadow: inset 0px 0px 0px 1px var(--deep);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.title {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+b {
+  font-weight: bold !important;
+}
+.window {
+  overflow-x: auto;
+  overflow-y: auto;
+/* border: 1px solid var(--deep); */
+/* flex-basis: 0; */
+/* flex-grow: 1; */
+  box-shadow: inset 0px 0px 0px 1px var(--shade);
+}
+a,
+.link {
+  text-decoration: none;
+  color: var(--link);
+}
+a:hover {
+  text-decoration: solid underline var(--link) 1px;
+}
+#RawEditor {
+  line-height: 2;
+  white-space: pre-wrap;
+  padding: 10px;
+  overflow: auto;
+}
+#LogPreview {
+  overflow: hidden;
+  padding: 0.5em;
+  width: 100%;
+  max-height: 50%;
+  background-color: var(--dark);
+  border: 1px solid var(--deep);
+  animation-name: logAppear;
+  animation-duration: 2s;
+  animation-iteration-count: 2;
+  animation-timing-function: ease-out;
+  overflow-y: auto;
+}
+.tabs {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#View {
+  overflow: auto;
+  width: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: column;
+}
+#Editor {
+  flex-grow: 1;
+  overflow: auto;
+}
+button,
+button:not(:hover) {
+  position: relative;
+}
+button,
+button:not(:hover),
+input,
+textarea,
+select {
+  color: var(--slight);
+  border: none;
+  outline: none;
+  transition: color 0.15s ease, transform 0.1s ease;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding: 0.25em 0.5em 0.25em 0.5em;
+  background-color: var(--deep);
+  border: none;
+  outline: none;
+  margin: 0.25em;
+  flex-shrink: 0;
+}
+button:hover {
+  color: var(--light);
+}
+button:focus {
+  color: var(--light);
+  box-shadow: inset 0px 1px 1px 0px var(--dark), inset 0px 1px 2px 0px var(--dark), inset 0px -1px 1px 0px var(--dark), 0px 2px 1px 0px var(--shade);
+  animation-name: active;
+  animation-duration: 0.15s;
+  animation-iteration-count: 1;
+/* animation-direction: alternate; */
+  animation-timing-function: ease-out;
+/* box-shadow: 
+    0px -1px 1px 0px var(--shade),
+    0px 1px 1px 0px var(--deeper); */
+/* casting shadow */
+}
+.nothing button:focus {
+  box-shadow: 0px 2px 8px 0px var(--light);
+/* casting shadow */
+}
+/* animation-name: active;
+animation-duration: 0.2s;
+animation-iteration-count: infinite;
+animation-direction: alternate;
+animation-timing-function: ease; */
+/* transform: translate(0px, 2px); */
+input,
+textarea {
+  box-shadow: 0px 0px 0px 1px var(--deeper);
+}
+input:hover,
+textarea:hover,
+input:focus,
+textarea:focus,
+.clickable:hover {
+/* 
+    color: var(--light) !important; */
+  background-color: var(--shade);
+}
+input:active,
+.clickable:active {
+  border: none;
+  outline: none;
+}
+#Header {
+  overflow-x: auto;
+}
+#Header #QuickActions {
+  display: flex;
+}
+#Header #QuickActions > * {
+  min-width: 2em;
+/* height: 2.5em; */
+/* margin: 0px; */
+}
+#Header #Commands {
+  width: fit-content;
+}
+#GoTo {
+  flex-grow: 1;
+}
+.appear {
+  animation-name: appear;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+}
+.node {
+  overflow: visible;
+}
+.node > * {
+  overflow: visible;
+}
+.node > .links {
+  margin-left: 1em;
+}
+.node > .links > .node {
+  margin-top: 1em !important;
+}
+.node > .main .valueWrap {
+  position: relative;
+}
+.node > .main .selectionIndicator {
+  position: absolute;
+  width: 2px;
+  height: 100%;
+/* align-self: stretch; */
+  background-color: var(--shade);
+}
+.node > .main .selectionIndicator:has(+ .autoResize:hover) {
+  width: 4px;
+}
+.node > .main .autoResize {
+  flex-grow: 1;
+}
+.node > .main .value {
+  margin: 0px;
+  min-width: 10em;
+  width: 100vw;
+  padding-left: 1em;
+  padding-right: 0em;
+  padding-top: 0em;
+  padding-bottom: 0em;
+  background-color: transparent;
+  line-height: 1.8em;
+  box-shadow: 0px 0px 0px var(--shade);
+}
+.node > .main .tieInput {
+  font-size: 0.9em;
+  color: var(--mild);
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+.node > .main .tieInput:hover {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+.node > .main .tieInput:focus {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+.node > .main .options {
+  display: none;
+  overflow: visible;
+  align-items: flex-start;
+/* 
+            position: absolute;
+            transform: translateY(2em); 
+            background: var(--deep);
+            z-index: 1;
+            box-shadow: inset 0px 0px 0px 1px var(--shade);
+            */
+}
+.node > .main .options button {
+  min-width: 2em;
+}
+.node > .main .linksOpener {
+/* display: none; */
+/* z-index: 1;
+            
+            margin: 0px;
+    
+            width: 2em;
+            height: 2em;
+    
+            
+            padding: 0px;
+            font-size: 1em;
+            box-shadow: none;
+    
+            scale: 0.7;
+    
+            box-shadow: none !important; */
+/* transition: scale 0.2s cubic-bezier(0, 0, 0.38, 1.55) !important; */
+  color: var(--slight);
+  background-color: var(--shade);
+  box-shadow: inset 0px 0px 0px 1px var(--mild) !important;
+}
+.node > .main .linksOpener :active {
+  animation: none;
+}
+.node:has(.node.selected):not(.authName) > .main .selectionIndicator {
+  width: 4px;
+  background-color: var(--mildshade);
+}
+.node.authName:has(.node.selected) > .main .selectionIndicator {
+  width: 4px;
+  background-color: var(--authName);
+}
+.node.option-shown > .main > .options {
+  display: flex;
+  flex-direction: column;
+}
+.node.selected > .main .selectionIndicator {
+  width: 4px;
+  background-color: var(--slight);
+}
+.node.authName > .main .selectionIndicator {
+  background-color: var(--authName);
+}
+.node.authName > .main .linksOpener,
+.node.authName > .main .linksOpener:hover,
+.node.authName > .main .linksOpener:focus {
+  color: var(--dark) !important;
+  background-color: var(--authName) !important;
+  box-shadow: none !important;
+}
+.node.reference > .main .selectionIndicator {
+  background-color: var(--reference) !important;
+}
+.node.reference > .main .options .actions .linksOpener {
+  color: var(--dark) !important;
+  background-color: var(--reference) !important;
+  box-shadow: none !important;
+}
+.node.finding-new-origin {
+  box-shadow: 0px 0px 0px 4px var(--shade);
+}
+.node.finding-new-origin::before {
+  display: block;
+  font-size: 0.75em;
+/* transform: translate(0.25em, 0.75em); */
+  content: "finding new origin..."; /* attr(tooltip); */
+  color: var(--mildshade);
+  z-index: 3;
+}
+.node.error .value {
+  color: var(--error) !important;
+}
+.Command {
+  width: fit-content;
+}
+.Command .function {
+  color: var(--executable);
+}
+#Main {
+  overflow: auto;
+  width: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+}
+#Commands {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#Commands #Logs {
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+}
+[tooltip]:hover::after {
+  display: block;
+  position: absolute;
+  transform: translate(0.2em, 0.5em);
+  content: attr(tooltip);
+  padding: 0.5em;
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 0.5em;
+  z-index: 3;
+  width: max-content;
+  height: fit-content;
+  animation-name: appear;
+  animation-duration: 0.2s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+}
+#Footer {
+  display: flex;
+  flex-direction: column-reverse;
+  overflow: hidden;
+  max-height: 50%;
+}
+#LogsView {
+  display: flex;
+  flex-direction: row;
+  padding: 0px;
+  width: 100%;
+  overflow: hidden;
+/* height: 100%; NEVER. */
+  flex-grow: 1;
+}
+#LogsView button {
+  height: fit-content;
+  padding: 0.25em 0.5em 0.25em 0.5em;
+}
+#LogsView #logs {
+  flex-grow: 1;
+  overflow: auto;
+}
+#LogsView .log {
+  white-space: pre-wrap;
+  word-wrap: unset;
+}
+#LogsView .options > *:not(:first-child) {
+  display: none;
+}
+#LogsView.expanded {
+  flex-direction: column;
+}
+#LogsView.expanded .log {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+#LogsView.expanded .options {
+  align-self: flex-end;
+}
+#LogsView.expanded .options > *:not(:first-child) {
+  display: inline-block;
+}
+.log {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 0.25em 0.5em 0.25em 0.5em;
+}
+.log:hover {
+  background-color: var(--deeper);
+}
+.log.alrt {
+  color: var(--alert);
+}
+.log.error {
+  color: var(--error);
+}
+.log.success {
+  color: var(--success);
+}
+#CommandPalette {
+  width: 100%;
+}
+#Editor {
+  position: relative;
+}
+#Editor > * {
+  padding: 1em;
+}
+#Editor > .overlay {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.originIndicator {
+  z-index: 0;
+  border-left: 4px dotted var(--mildshade);
+  border-bottom: 4px dotted var(--mildshade);
+/* box-shadow: inset 2px -2px 0px 0px var(--mildshade); */
+  border-bottom-left-radius: 0em;
+}
+dialog {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  min-width: 600px;
+  width: 60vw;
+  max-height: 60vw;
+  overflow: auto;
+  z-index: 2;
+  background: var(--deep);
+  padding: 20px;
+}
+dialog::backdrop {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+}
+#App:has(dialog[open]) {
+  filter: blur(1px);
+}
+#AboutRoot > *:not(:last-child) {
+  margin-bottom: 10px;
+}
+@-moz-keyframes active {
+  0% {
+    box-shadow: 0px -1px 0px 0px var(--shade), 0px 4px 4px 0px var(--deeper);
+/* casting shadow */
+  }
+  50% {
+    box-shadow: 0px -1px 1px 0px var(--shade), 0px 1px 1px 0px var(--deeper);
+/* casting shadow */
+  }
+  100% {
+    box-shadow: inset 0px 1px 1px 0px var(--dark), inset 0px 1px 2px 0px var(--dark), inset 0px -1px 1px 0px var(--dark), 0px 2px 1px 0px var(--shade);
+  }
+}
+@-webkit-keyframes active {
+  0% {
+    box-shadow: 0px -1px 0px 0px var(--shade), 0px 4px 4px 0px var(--deeper);
+/* casting shadow */
+  }
+  50% {
+    box-shadow: 0px -1px 1px 0px var(--shade), 0px 1px 1px 0px var(--deeper);
+/* casting shadow */
+  }
+  100% {
+    box-shadow: inset 0px 1px 1px 0px var(--dark), inset 0px 1px 2px 0px var(--dark), inset 0px -1px 1px 0px var(--dark), 0px 2px 1px 0px var(--shade);
+  }
+}
+@-o-keyframes active {
+  0% {
+    box-shadow: 0px -1px 0px 0px var(--shade), 0px 4px 4px 0px var(--deeper);
+/* casting shadow */
+  }
+  50% {
+    box-shadow: 0px -1px 1px 0px var(--shade), 0px 1px 1px 0px var(--deeper);
+/* casting shadow */
+  }
+  100% {
+    box-shadow: inset 0px 1px 1px 0px var(--dark), inset 0px 1px 2px 0px var(--dark), inset 0px -1px 1px 0px var(--dark), 0px 2px 1px 0px var(--shade);
+  }
+}
+@keyframes active {
+  0% {
+    box-shadow: 0px -1px 0px 0px var(--shade), 0px 4px 4px 0px var(--deeper);
+/* casting shadow */
+  }
+  50% {
+    box-shadow: 0px -1px 1px 0px var(--shade), 0px 1px 1px 0px var(--deeper);
+/* casting shadow */
+  }
+  100% {
+    box-shadow: inset 0px 1px 1px 0px var(--dark), inset 0px 1px 2px 0px var(--dark), inset 0px -1px 1px 0px var(--dark), 0px 2px 1px 0px var(--shade);
+  }
+}
+/* @font-face {
+    font-family: Borgen;
+    src: url('/public/fonts/Borgen.otf') format('opentype');
+}
+ */
+@font-face {
+  font-family: Borgen;
+  src: url("/assets/Borgen-bf2272ab.otf") format('opentype');
+/* font-style: oblique; */
+}
+@font-face {
+  font-family: gowun batang;
+  src: url("/assets/GowunBatang-Regular-466c593e.ttf") format('truetype');
+}
+@font-face {
+  font-family: suit;
+  src: url("/assets/SUIT-Thin-00b0126b.otf") format('opentype');
+  font-weight: normal;
+}
+@font-face {
+  font-family: suit;
+  src: url("/assets/SUIT-Light-d17994c1.otf") format('opentype');
+  font-weight: bold;
+}
+/* @font-face {
+    font-family: IBM;
+    src: url('/fonts/IBMPlexMono-Regular.otf') format('opentype');
+} */
+@font-face {
+  font-family: NK57;
+  src: url("/assets/NK57 Monospace Sc Lt-676b62a8.otf") format('opentype');
+}
+@font-face {
+  font-family: Bitter;
+  src: url("/fonts/Bitter-VariableFont_wght.otf") format('opentype');
+}
+#App.theme-minimal * {
+  font-family: /* 'NK57',  */ /* 'gowun batang', */ 'suit', 'freemono', monospace;
+}
+#App.theme-minimal button,
+#App.theme-minimal input {
+  box-shadow: inset 0px 0px 0px 1px var(--shade);
+  border-radius: 0.25em;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+#App.theme-minimal button:hover {
+  box-shadow: inset 0px 0px 0px 1px var(--mildshade);
+}
+#App.theme-minimal button:focus {
+  animation: none;
+  background-color: var(--shade);
+  box-shadow: inset 0px 0px 0px 1px var(--mild);
+}
+#App.theme-minimal button:before {
+  display: none;
+}
+#App.theme-minimal .linksOpener:hover {
+/* scale: 0.9; */
+  background-color: var(--mildshade);
+}
+#App.theme-minimal button:focus,
+#App.theme-minimal input:focus {
+  box-shadow: inset 0px 0px 0px 1px var(--mild);
+}
+#App.theme-minimal input:hover,
+#App.theme-minimal textarea:hover,
+#App.theme-minimal input:focus,
+#App.theme-minimal textarea:focus {
+  background-color: var(--shade);
+  box-shadow: inset 0px 0px 0px 1px var(--mildshade);
+}
+#App.theme-minimal .node .value:hover,
+#App.theme-minimal .node .value:focus {
+  background-color: transparent;
+  box-shadow: none;
+}
+#App.theme-minimal .node > .main > *:not(:last-child) {
+  margin-bottom: 0.5em;
+}
+#App.theme-minimal .node > .main .tieInput {
+  padding: 0px;
+  margin-left: 0px;
+}
+@-moz-keyframes active2 {
+  0% {
+    background-color: var(--mildshade);
+  }
+  100% {
+    background-color: var(--mild);
+  }
+}
+@-webkit-keyframes active2 {
+  0% {
+    background-color: var(--mildshade);
+  }
+  100% {
+    background-color: var(--mild);
+  }
+}
+@-o-keyframes active2 {
+  0% {
+    background-color: var(--mildshade);
+  }
+  100% {
+    background-color: var(--mild);
+  }
+}
+@keyframes active2 {
+  0% {
+    background-color: var(--mildshade);
+  }
+  100% {
+    background-color: var(--mild);
+  }
+}
+@keyframes logAppear{
+  0% {
+  background-color: inherit;
+  }
+  50% {
+  background-color: var(--hilight);
+  }
+  100% {
+  background-color: inherit;
+  }
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

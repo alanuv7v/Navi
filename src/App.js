@@ -18,7 +18,7 @@ import CommandTree from "./prototypes/view/CommandTree"
 //below is for debugging
 
 
-import BrowserDB from "./interface/BrowserDB"
+import BrowserDB from "./interface/BrowserDb"
 import DOM from "./DOM"
 import appSession from "./appSession"
 import * as SessionManager from "./interface/SessionManager"
