@@ -3,65 +3,63 @@
 // This file must import components from other modules
 // and merely display and organize them to show the final output to the cilent, not creating one.
 
-
-if ('serviceworker' in navigator) {
-    navigator.serviceWorker.register("./service-worker.js")
+if ("serviceworker" in navigator) {
+  navigator.serviceWorker.register("./service-worker.js");
 }
 
+import van from "vanjs-core";
 
-import van from "vanjs-core"
-
-import * as userActions from "./userActions"
-import init from "./init"
-import CommandTree from "./prototypes/view/CommandTree"
+import * as userActions from "./userActions";
+import init from "./init";
+import CommandTree from "./prototypes/view/CommandTree";
 
 //below is for debugging
 
-
-import BrowserDB from "./interface/BrowserDb"
-import DOM from "./DOM"
-import appSession from "./appSession"
-import * as SessionManager from "./interface/SessionManager"
-import errorCatcher from "./utils/errorCatcher"
-import Logger from "./prototypes/view/Logger"
+import BrowserDB from "./interface/BrowserDb";
+import DOM from "./DOM";
+import appSession from "./appSession";
+import * as BrowserSessions from "./interface/BrowserSessions";
+import errorCatcher from "./utils/errorCatcher";
+import Logger from "./prototypes/view/Logger";
 
 window._debug = {
-    DOM,
-    userActions,
-    appSession,
-    BrowserDB,
-    SessionManager,
-    Logger
-}
+  DOM,
+  userActions,
+  appSession,
+  BrowserDB,
+  BrowserSessions,
+  Logger,
+};
 
 //
 
-const App = DOM
+const App = DOM;
 
-const theme = "minimal"
-if (theme) DOM.classList.add(`theme-${theme}`)
+const theme = "minimal";
+if (theme) DOM.classList.add(`theme-${theme}`);
 
-van.add(document.body, App)
+van.add(document.body, App);
 
-let actionsOrder = "Root Edit Navigate Prune Visual Sessions Settings Fix".split(" ")
+let actionsOrder =
+  "Root Edit Navigate Prune Visual Sessions Settings Fix".split(" ");
 let userActionsSorted = Object.keys(userActions)
-    .sort((k, kk) => {
-        return (actionsOrder.indexOf(k) - actionsOrder.indexOf(kk))
-    })
-    .map(key => {
-        return [key, userActions[key]]
-    })
-    .reduce((acc, cur) => {
-        acc[cur[0]] = cur[1]
-        return acc
-    }, {})
+  .sort((k, kk) => {
+    return actionsOrder.indexOf(k) - actionsOrder.indexOf(kk);
+  })
+  .map((key) => {
+    return [key, userActions[key]];
+  })
+  .reduce((acc, cur) => {
+    acc[cur[0]] = cur[1];
+    return acc;
+  }, {});
 
-new CommandTree(userActionsSorted)
+new CommandTree(userActionsSorted);
 
-errorCatcher()
+errorCatcher();
 
-Logger.log("Hi, user.")
+Logger.log("Hi, user.");
 
-init()
+init();
 
-export default App
+export default App;

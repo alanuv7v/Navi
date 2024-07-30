@@ -1,5 +1,15 @@
 각 플랫폼에 맞춰 DB조작과 FileSystem 엑세스에 있어 다른 API를 알아서 맞춰 반환하는 인터페이스를 만드는게 관건이다.
 
+사실 무식하게 userActions에서 platform에 따른 switch case로 다 처리하는 것도 방법이다.
+근데 정말 무식해보일 것이다.
+
+그렇지만 굳이 계층이 하나 더 필요할까.
+애초에 userActions가 그 계층 아닐까. 알아서 플랫폼에 맞춰 행동하는 계층.
+아니면 뭐 행동 별로 다 각자의 js 파일로 쪼개기라도 하실? 그건 싫잖아.
+
+일단 userActions에 다 몰아넣고 쓰다보면 더러운지, 추상화할 수 있는지 눈에 보일테다.
+그때까지 몰아넣자.
+
 prototypes
     Session
         browser
@@ -18,3 +28,10 @@ prototypes
                         handle
         android
             temp //??
+
+userActions
+    create_network
+    open_network
+    update_network
+    download_network
+    create_backup
