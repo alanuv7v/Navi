@@ -10,6 +10,10 @@ export default class Session {
             this.temp[key] = value
         }
     }
+
+    get platform () {
+        return 
+    }
     
     temp = {
         handle: null,

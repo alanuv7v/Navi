@@ -12,6 +12,9 @@ import Logger from "./prototypes/view/Logger"
 
 import { DateTime } from "luxon"
 
+import { Capacitor } from '@capacitor/core';
+
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 
 export const Fix = {
     init,
@@ -54,6 +57,55 @@ export const Sessions = {
 
 export const Root = {
     async create_root_ (name) {
+
+        
+        switch (Capacitor.getPlatform()) {
+
+            case "android":
+
+                // make network dir
+                await Filesystem.mkdir({
+                    directory: Directory.Documents,
+                    recursive: false,
+                  });
+
+                //make backup dir
+                await Filesystem.mkdir({
+                    path: "backup",
+                    directory: Directory.Documents,
+                    recursive: false,
+                });
+
+                //make media dir
+                await Filesystem.mkdir({
+                    path: "media",
+                    directory: Directory.Documents,
+                    recursive: false,
+                });
+
+                //make databse file
+                await Filesystem.mkdir({
+                    path: "database",
+                    directory: Directory.Documents,
+                    recursive: false,
+                });
+      
+                //make settings.yaml file
+                await Filesystem.writeFile({
+                    path: "settings.yaml",
+                    data: 'This is a test',
+                    directory: Directory.Documents,
+                    encoding: Encoding.UTF8,
+                });
+
+                break;
+
+            case "web":
+                
+                break;
+        }
+
+
         //create the DB
         let _name = name || "root"
         let localDB = await LocalDBManager.create(_name)
@@ -62,6 +114,11 @@ export const Root = {
         const data = localDB.export();
         const blob = new Blob([data], { type: "application/octet-stream" });
         fileSystem.downloadFile(name || "root", blob)
+
+
+        let obj = await import('./say.js');
+        let say = obj.default;
+
     },
     async access_root () {
 
