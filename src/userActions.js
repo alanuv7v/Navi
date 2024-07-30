@@ -1,12 +1,12 @@
 import appSession from "./appSession"
-import * as SessionManager from "./interface/SessionManager"
+import * as SessionManager from "./interface/BrowserSessions"
 import * as LocalDBManager from "./interface/SqlDb"
 import parseQuery from "./utils/parseQuery"
 import NodeView from "./prototypes/view/NodeView"
 
 import { default as init, initRootDB as init_root_DB, initNetwork } from "./init"
 
-import * as fileSystem from "./interface/FileSystem"
+import * as fileSystem from "./interface/BrowserFileSystem"
 import BrowserDB from "./interface/BrowserDb"
 import Logger from "./prototypes/view/Logger"
 

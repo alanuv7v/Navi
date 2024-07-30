@@ -1,4 +1,4 @@
-import * as SessionManager from "./interface/SessionManager"
+import * as SessionManager from "./interface/BrowserSessions"
 import appSession from "./appSession"
 import * as UserActions  from "./userActions"
 import * as LocalDBManager from "./interface/SqlDb"
@@ -7,7 +7,7 @@ import BrowserDB from "./interface/BrowserDb"
 import * as userActions from "./userActions"
 import Logger from "./prototypes/view/Logger"
 
-import * as fileSystem from "./interface/FileSystem"
+import * as fileSystem from "./interface/BrowserFileSystem"
 
 export default async function init () {
 

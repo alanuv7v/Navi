@@ -42,7 +42,7 @@ export default div("App", {
                     t.addEventListener("change", (event) => {
                         let res = JSON.stringify((new Function(`return ${event.target.value}`))(), null, 2)
                         Logger.log(res)
-                    })    
+                    })
                 }
             }, "<>"),
             //button("RegrowTree", {}, "⟳"),
@@ -61,7 +61,6 @@ export default div("App", {
             }),
         ),
         div("Commands", {},
-            div("Logs"),
         ),
     ),
     div("Main", {}, 

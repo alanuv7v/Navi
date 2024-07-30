@@ -1,0 +1,20 @@
+각 플랫폼에 맞춰 DB조작과 FileSystem 엑세스에 있어 다른 API를 알아서 맞춰 반환하는 인터페이스를 만드는게 관건이다.
+
+prototypes
+    Session
+        browser
+            temp
+                networkHandle
+                //network dir의 핸들 하나만 깔끔하게 저장하고, 나머지 하위 핸들들은 그 핸들로부터 얻어내는게 더 깔끔하겠다.
+                //즉 networkHandle만 브라우저에 저장되고, 나머지는 앱 실행시에 찾아진다.
+            networkFileTree
+                network
+                    handle
+                    DB
+                        handle
+                    backup
+                        handle
+                    media
+                        handle
+        android
+            temp //??

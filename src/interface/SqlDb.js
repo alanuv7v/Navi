@@ -1,6 +1,6 @@
 import initSqlJs from "sql.js";
 import { v4 as uuidv4 } from 'uuid';
-import * as FileSystem from "./FileSystem"
+import * as FileSystem from "./BrowserFileSystem"
 import appSession from "../appSession";
 
 const SQL = await initSqlJs(

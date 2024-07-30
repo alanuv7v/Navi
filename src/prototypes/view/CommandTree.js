@@ -15,19 +15,19 @@ export default class CommandTree {
         
         this.data = data
         
-        refs("Logs").innerHTML = ""
+        refs("Commands").innerHTML = ""
 
         if (!isDefault) {
             let backToDefault = new CommandButton("...", () => {
-                refs("Logs").innerHTML = ""
+                refs("Commands").innerHTML = ""
                 new CommandTree({...userActions})
             })
-            refs("Logs").append(backToDefault.DOM)
+            refs("Commands").append(backToDefault.DOM)
         }
 
         for (let [key, value] of Object.entries(data)) {
             let seed = new CommandButton(key, value)
-            refs("Logs").append(seed.DOM)
+            refs("Commands").append(seed.DOM)
         }
     }
     

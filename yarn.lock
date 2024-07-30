@@ -52,12 +52,17 @@
     tslib "^2.4.0"
     xml2js "^0.5.0"
 
-"@capacitor/core@^6.1.0", "@capacitor/core@^6.1.1", "@capacitor/core@>=5.4.0":
+"@capacitor/core@^6.0.0", "@capacitor/core@^6.1.0", "@capacitor/core@^6.1.1", "@capacitor/core@>=5.4.0":
   version "6.1.1"
   resolved "https://registry.npmjs.org/@capacitor/core/-/core-6.1.1.tgz"
   integrity sha512-b1s4WDMy3Y1/owTG2/XNGCI6G5SDpF2NT1JMAgcShue13fiAuHA+Ans7Wfei6McvR0KdopAE6tMHmDAfL5PM8Q==
   dependencies:
     tslib "^2.1.0"
+
+"@capacitor/filesystem@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.npmjs.org/@capacitor/filesystem/-/filesystem-6.0.0.tgz"
+  integrity sha512-GnC4CBfky7fvG9zSV/aQnZaGs6ZJ90AaQorr53z81ArTCqcrSUeBMuCxWmvti9HrdXLhBavyA1UOjvRGObOFjg==
 
 "@electron/asar@^3.2.1", "@electron/asar@^3.2.7":
   version "3.2.10"
