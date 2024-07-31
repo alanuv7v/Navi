@@ -16,19 +16,38 @@ export default class Session {
     }
     
     temp = {
-        handle: null,
-        network: {
-            handle: null,
-            DB: {
-                handle: null
-            }
-        },
         rootHandle: null,
+
         adress: "",
         seedNodeID: "",
         lastNodeId: "",
         globalFilter: "All",
         logs: [],
+    }
+
+
+    browser = {
+        
+        temp: {
+            networkHandle: null,
+        },
+
+        networkDirectoryTree: {
+            _handle: null,
+            DB: {
+                _handle: null,
+            },
+            backup: {
+                _handle: null,
+            },
+            media: {
+                _handle: null,
+            },
+        }
+    }
+
+    android = {
+        temp: {}
     }
 
     get rootName () {
