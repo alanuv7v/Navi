@@ -13,7 +13,7 @@ import Logger from "./prototypes/view/Logger"
 import { DateTime } from "luxon"
 
 import { Capacitor } from '@capacitor/core';
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Filesystem as CapacitorFs, Directory, Encoding } from '@capacitor/filesystem';
 import write_blob from "capacitor-blob-writer";
 
 import * as yaml from "yaml"
@@ -80,20 +80,20 @@ export const Network = {
             case "android":
 
                 // make network dir
-                await Filesystem.mkdir({
+                await CapacitorFs.mkdir({
                     directory: Directory.Documents,
                     recursive: false,
                   });
 
                 //make backup dir
-                await Filesystem.mkdir({
+                await CapacitorFs.mkdir({
                     path: "backup",
                     directory: Directory.Documents,
                     recursive: false,
                 });
 
                 //make media dir
-                await Filesystem.mkdir({
+                await CapacitorFs.mkdir({
                     path: "media",
                     directory: Directory.Documents,
                     recursive: false,
@@ -110,12 +110,15 @@ export const Network = {
                 });
       
                 //make settings.yaml file
-                await Filesystem.writeFile({
+                await CapacitorFs.writeFile({
                     path: "settings.yaml",
                     data: settingsBlob,
                     directory: Directory.Documents,
                     encoding: Encoding.UTF8,
                 });
+
+                if (await CapacitorFs.checkPermissions() != 'granted') await CapacitorFs.requestPermissions()
+                
 
                 break;
 
@@ -155,9 +158,20 @@ export const Network = {
 
 
     },
-    async access_root () {
+    async access_network () {
 
-        return await appSession.temp.rootHandle.requestPermission()
+        switch (Capacitor.getPlatform()) {
+
+            case "android":
+            
+                if (await CapacitorFs.checkPermissions() != 'granted') await CapacitorFs.requestPermissions()
+                break
+            
+            case "web":
+                return await appSession.temp.rootHandle.requestPermission()
+
+        }
+        
     },
     async open_network () {
         if (window.showDirectoryPicker) {
