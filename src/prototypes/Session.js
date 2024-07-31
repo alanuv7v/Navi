@@ -26,11 +26,9 @@ export default class Session {
         rootHandle: null,
         adress: "",
         seedNodeID: "",
-        viewOptions: {
-            globalFilter: "All"
-        },
+        lastNodeId: "",
+        globalFilter: "All",
         logs: [],
-        lastNodeId: null
     }
 
     get rootName () {

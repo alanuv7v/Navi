@@ -173,15 +173,29 @@ export const Network = {
         }
         
     },
+
     async open_network () {
-        if (window.showDirectoryPicker) {
-            let networkDirhandle = await window.showDirectoryPicker()
-            await initNetwork(networkDirhandle)
-            SessionManager.saveSession()
-        } else {
-            this.open_network_DB()
+
+        switch (Capacitor.getPlatform()) {
+
+            case "android":
+            
+                if (await CapacitorFs.checkPermissions() != 'granted') await CapacitorFs.requestPermissions()
+                break
+            
+            case "web":
+
+                if (window.showDirectoryPicker) {
+                    let networkDirhandle = await window.showDirectoryPicker()
+                    await initNetwork(networkDirhandle)
+                    SessionManager.saveSession()
+                } else {
+                    this.open_network_DB()
+                }
+                return appSession.network
+                
         }
-        return appSession.network
+        
     },
     async open_network_DB () {
         

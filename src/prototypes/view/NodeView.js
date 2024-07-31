@@ -67,6 +67,29 @@ export default class NodeView extends NodeModel {
         return res
     }
 
+    get path () {
+        return [this.openedFrom ? [this.openedFrom.path, this.value] : this.value].flat().join("/")
+    }
+
+    get allSubNodes () {
+        return this.linkedNodeViews.map(view => {
+            if (view.linkedNodeViews.length > 0) {
+                return [view, ...view.allSubNodes]
+            } else {
+                return view
+            }
+        }).flat()
+    }
+
+    getAllSubNodesStats (indent=0) {
+        return this.allSubNodes.map(view => {
+            let view_ ={...view}
+            view_.linkedNodeViews = null //to prevent JSON stringfy error
+            view_.openedFrom = null //to prevent JSON stringfy error
+            return JSON.stringify(view_, null, indent)
+        })
+    }
+
     actionsDOM = div({class: "actions"},
         
         button({
