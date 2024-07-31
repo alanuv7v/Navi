@@ -16,6 +16,8 @@ import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import write_blob from "capacitor-blob-writer";
 
+import * as yaml from "yaml"
+
 
 import aboutDOM from "./prototypes/view/About"
 
@@ -64,11 +66,14 @@ export const Network = {
     async create_network_ (networkName="A Network") {
                 
         //create the DB
-        const localDB = await SqlDb.create(networkName)
+        const sqlDB = await SqlDb.create(networkName)
         
         // Export the database to an Uint8Array
-        const data = localDB.export();
-        const blob = new Blob([data], { type: "application/octet-stream" });
+        const dbData = sqlDB.export();
+        const dbBlob = new Blob([dbData], { type: "application/octet-stream" });
+
+        const defaultSettingsString = await yaml.stringify(defaultSettings)
+        const settingsBlob = new Blob([defaultSettingsString], {type: "text/plain;charset=UTF-8"});
 
         switch (Capacitor.getPlatform()) {
 
@@ -99,7 +104,7 @@ export const Network = {
                 await write_blob({
                         path: "database",
                         directory: Directory.Documents,
-                        blob: blob,
+                        blob: dbBlob,
                         fast_mode: true,
                         recursive: false,
                 });
@@ -107,7 +112,7 @@ export const Network = {
                 //make settings.yaml file
                 await Filesystem.writeFile({
                     path: "settings.yaml",
-                    data: defaultSettings,
+                    data: settingsBlob,
                     directory: Directory.Documents,
                     encoding: Encoding.UTF8,
                 });
@@ -120,26 +125,28 @@ export const Network = {
                     let rootDir = await BrowserFileSystem.showDirectoryPicker()
     
                     // make network dir
-                    let networkDir = BrowserFileSystem.createFolder(rootDir, networkName)
+                    let networkDir = await BrowserFileSystem.createFolder(rootDir, networkName)
     
                     //make backup dir
-                    BrowserFileSystem.createFolder(networkDir, "backup")
+                    await BrowserFileSystem.createFolder(networkDir, "backup")
     
                     //make media dir
-                    BrowserFileSystem.createFolder(networkDir, "media")
+                    await BrowserFileSystem.createFolder(networkDir, "media")
     
                     //make databse file
-                    let dbHandle = BrowserFileSystem.createFile(networkDir, "database")
-                    BrowserFileSystem.writeToFile(dbHandle, blob)
+                    let dbHandle = await BrowserFileSystem.createFile(networkDir, "database")
+                    await BrowserFileSystem.writeToFile(dbHandle, dbBlob)
                     
                     //make settings.yaml file
-                    let settingsHandle = BrowserFileSystem.createFile(networkDir, "settings", "yaml")
-                    const blob = new Blob([defaultSettings], {type: "text/plain;charset=UTF-8"});
-                    BrowserFileSystem.writeToFile(settingsHandle, blob)
+                    let settingsHandle = await BrowserFileSystem.createFile(networkDir, "settings", "yaml")
+                    await BrowserFileSystem.writeToFile(settingsHandle, settingsBlob)
     
                 }
                 catch (err) {
-                    BrowserFileSystem.downloadFile(networkName, blob)
+                    Logger.log(err, "warning")
+                    Logger.log("Your web platform does not support FileSystemAPI. Create your own network directory that includes 'media' and 'backup' folders, by yourself.", "warning")
+                    BrowserFileSystem.downloadFile(networkName, dbBlob)
+                    BrowserFileSystem.downloadFile("settings.yaml", settingsBlob)
                 }
 
                 break;
