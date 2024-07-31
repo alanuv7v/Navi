@@ -7,7 +7,9 @@ import BrowserDB from "./interface/BrowserDb"
 import * as userActions from "./userActions"
 import Logger from "./prototypes/view/Logger"
 
-import * as fileSystem from "./interface/BrowserFileSystem"
+import * as BrowserFileSystem from "./interface/BrowserFileSystem"
+
+import * as yaml from "yaml"
 
 export default async function init () {
 
@@ -82,24 +84,24 @@ ${err}`, "error")
 }
 
 export async function initNetwork (networkDirHandle) {
-
+    
     if (networkDirHandle) {
-            
+        
         if (!(await networkDirHandle?.queryPermission()) === "granted") {
             await networkDirHandle?.requestPermission()
         } 
-        
+
         appSession.temp.network.handle = networkDirHandle
-        appSession.temp.network.DB.handle = 
-            (await fileSystem.listAllFilesAndDirs(networkDirHandle))
-            .find(item => {
-                return item.name === "database"
-            }).handle
+        appSession.browser.networkDirectoryTree = await BrowserFileSystem.listAllFilesAndDirs(networkDirHandle)
         
-        appSession.network.name = networkDirHandle.name || "new network"
-        
+        appSession.settingsParsed = await yaml.parse(
+            await (
+                await appSession.browser.getNetworkTreeSubItem("settings.yaml").handle.getFile()
+            ).text()
+        )
+
         appSession.network.DB = await LocalDBManager.load(
-            await appSession.temp.network.DB.handle.getFile()
+            await appSession.browser.getNetworkTreeSubItem("database").handle.getFile()
         )
 
     }

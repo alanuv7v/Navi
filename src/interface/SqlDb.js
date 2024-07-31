@@ -59,7 +59,7 @@ export async function load(input) {
 }
 
 export async function update () {
-    const data = appSession.root.DB.export(); // Get Uint8Array of database contents
+    const data = appSession.network.DB.export(); // Get Uint8Array of database contents
     const blob = new Blob([data], { type: 'application/octet-stream' });
-    return await FileSystem.writeToFile(appSession.temp.rootHandle, blob)
+    return await FileSystem.writeToFile(appSession.temp.network.handle, blob)
 }

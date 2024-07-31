@@ -23,6 +23,7 @@ import aboutDOM from "./prototypes/view/About"
 
 import defaultSettings from "./defaultSettings.yaml"
 
+
 export const Fix = {
     init,
     init_root_DB
@@ -63,7 +64,7 @@ export const Sessions = {
 }
 
 export const Network = {
-    async create_network_ (networkName="A Network") {
+    async create_ (networkName="A Network") {
                 
         //create the DB
         const sqlDB = await SqlDb.create(networkName)
@@ -156,25 +157,9 @@ export const Network = {
         }
 
 
-
-    },
-    async access_network () {
-
-        switch (Capacitor.getPlatform()) {
-
-            case "android":
-            
-                if (await CapacitorFs.checkPermissions() != 'granted') await CapacitorFs.requestPermissions()
-                break
-            
-            case "web":
-                return await appSession.temp.rootHandle.requestPermission()
-
-        }
-        
     },
 
-    async open_network () {
+    async open_ () {
 
         switch (Capacitor.getPlatform()) {
 
@@ -190,14 +175,30 @@ export const Network = {
                     await initNetwork(networkDirhandle)
                     SessionManager.saveSession()
                 } else {
-                    this.open_network_DB()
+                    /* this.open_network_DB() */
                 }
                 return appSession.network
-                
+
         }
         
     },
-    async open_network_DB () {
+
+    async access () {
+
+        switch (Capacitor.getPlatform()) {
+
+            case "android":
+            
+                if (await CapacitorFs.checkPermissions() != 'granted') await CapacitorFs.requestPermissions()
+                break
+            
+            case "web":
+                return await appSession.temp.rootHandle.requestPermission()
+
+        }
+        
+    },
+    /* async open_network_DB () {
         
         let i = document.createElement('input')
         i.type = "file"
@@ -220,45 +221,31 @@ export const Network = {
         
         return appSession.network
 
-    },
-    async open_root() {
-        
+    }, */
+    async update_database () {
 
-        if (window.showOpenFilePicker) {
+        switch (Capacitor.getPlatform()) {
 
-            let rootHandle = (await window.showOpenFilePicker({multiple: false}))[0]
-
-            if (!(await rootHandle?.queryPermission()) === "granted") {
-                await rootHandle?.requestPermission()
-            } 
-
-            appSession.temp.rootHandle = rootHandle
-            appSession.root.name = rootHandle.name || "root", 
-            appSession.root.DB = await SqlDb.load(rootHandle)
-
-        } else {
+            //실시간 transaction이 되므로 안드로이드는 할 게 없다.
+            /* case "android":
+                break */
             
-            await Network.open_root_oldway()
+            case "web":
+
+                Logger.log("saving root, DO NOT LEAVE!")
+                let res = await SqlDb.update()
+                Logger.log("root saved!", "success")
+                return res
 
         }
-        
-        init_root_DB(appSession.rootHandle)
-        
-        return appSession.root
-    
+
     },
-    async update_root () {
-        Logger.log("saving root, DO NOT LEAVE!")
-        let res = await SqlDb.update()
-        Logger.log("root saved!", "success")
-        return res
-    },
-    async download_root () {
-        const data = await appSession.root.DB.export()
+    /* async download_network_DB () {
+        const data = await appSession.network.DB.export()
         const blob = new Blob([data], { type: "application/octet-stream" });
-        return await BrowserFileSystem.downloadFile(appSession.root.name, blob)
-    },
-    async open_root_oldway () {
+        return await BrowserFileSystem.downloadFile(appSession.network.name, blob)
+    }, */
+    /* async open_root_oldway () {
         
         let i = document.createElement('input')
         i.type = "file"
@@ -295,7 +282,7 @@ export const Network = {
         SessionManager.saveSession()
         
         return appSession.root
-    },
+    }, */
     backup: {
         async create_backup () {        
             let version = DateTime.now().setZone("system")

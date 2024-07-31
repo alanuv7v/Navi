@@ -1,3 +1,5 @@
+import * as BrowserFileSystem from "../interface/BrowserFileSystem"
+
 export default class Session {
     
     constructor (data) {
@@ -9,10 +11,6 @@ export default class Session {
         for (let [key, value] of Object.entries(data)) {
             this.temp[key] = value
         }
-    }
-
-    get platform () {
-        return 
     }
     
     temp = {
@@ -31,31 +29,31 @@ export default class Session {
         temp: {
             networkHandle: null,
         },
+        
+        networkDirectoryTree: null,
 
-        networkDirectoryTree: {
-            _handle: null,
-            DB: {
-                _handle: null,
-            },
-            backup: {
-                _handle: null,
-            },
-            media: {
-                _handle: null,
-            },
-        }
+        getNetworkTreeSubItem (path) {
+
+            return BrowserFileSystem.getSubItemByPath(
+                this.networkDirectoryTree,
+                path
+            )
+
+        },
+
+
     }
 
     android = {
         temp: {}
     }
 
-    get rootName () {
-        return this.temp.rootHandle?.name || this.root?.name
-    } 
+    settingsParsed = null
 
     network = {
-        name: null,
+        get name () {
+            return this.settingsParsed["network name"]
+        },
         DB: null,
     }
 

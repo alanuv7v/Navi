@@ -54,6 +54,9 @@ class CommandButton {
         }
         else if (typeof value === "function") {
             button.classList.add("function")
+            if (this.requireParams) {
+                button.classList.add("requireParams")
+            }
         }
 
     }

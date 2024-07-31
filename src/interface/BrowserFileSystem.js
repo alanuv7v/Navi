@@ -60,13 +60,26 @@ export async function listAllFilesAndDirs(dirHandle) {
                 name, 
                 handle, 
                 kind, 
-                children: await listAllFilesAndDirs(handle)});
+                children: await listAllFilesAndDirs(handle)
+            });
         } else {
             files.push({name, handle, kind});
         }
     }
     return files;
 }
+
+export function getSubItemByPath (tree, path) {
+    let pathSegments = path.split("/")
+    let lastHandle
+    for (let i = 0; i < pathSegments.length; i++) {
+        const seg = pathSegments[i];
+        lastHandle = tree.children.find(c => c.name === seg)
+        if (i === pathSegments.length-1) break
+    }
+    return lastHandle
+}
+
 
 export async function downloadFile (name, blob) {
     
