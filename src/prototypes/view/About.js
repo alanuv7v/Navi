@@ -1,7 +1,12 @@
 import van from "vanjs-core"
 const {div, a, b, dialog, br} = van.tags
 
-const aboutDOM = dialog({id: "AboutRoot"}, 
+export default dialog({id: "AboutRoot",
+    onclick: (event) => {
+        if (event.target.nodeName === 'DIALOG') {
+            event.target.close();
+        }
+    }}, 
     div({class: "title"}, "Root 木"),
     div(b("You are the context.")),
     div({innerHTML: `<b>Root</b> allows you to create and navigate a private network of data easily.
@@ -9,5 +14,3 @@ const aboutDOM = dialog({id: "AboutRoot"},
         Be a center of what you store. You are the context.
         for more details, visit <a href="https://github.com/alanuv7v/Root" target="blank">the github repo</a>.`})
 )
-
-export default aboutDOM

@@ -70,13 +70,3 @@ document.addEventListener("keydown", (event) => {
         userActions.Sessions.save_session_()
     }
 })
-
-refs("ShowAbout").addEventListener("click", () => {
-    refs("AboutRoot").showModal()
-})
-
-refs("AboutRoot").addEventListener('click', (event) => {
-    if (event.target.nodeName === 'DIALOG') {
-      event.target.close();
-    }
-  });

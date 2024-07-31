@@ -52,14 +52,14 @@
     tslib "^2.4.0"
     xml2js "^0.5.0"
 
-"@capacitor/core@^6.0.0", "@capacitor/core@^6.1.0", "@capacitor/core@^6.1.1", "@capacitor/core@>=5.4.0":
+"@capacitor/core@^6.0.0", "@capacitor/core@^6.1.0", "@capacitor/core@^6.1.1", "@capacitor/core@>=3.0.0", "@capacitor/core@>=5.4.0":
   version "6.1.1"
   resolved "https://registry.npmjs.org/@capacitor/core/-/core-6.1.1.tgz"
   integrity sha512-b1s4WDMy3Y1/owTG2/XNGCI6G5SDpF2NT1JMAgcShue13fiAuHA+Ans7Wfei6McvR0KdopAE6tMHmDAfL5PM8Q==
   dependencies:
     tslib "^2.1.0"
 
-"@capacitor/filesystem@^6.0.0":
+"@capacitor/filesystem@^6.0.0", "@capacitor/filesystem@>=1.0.0":
   version "6.0.0"
   resolved "https://registry.npmjs.org/@capacitor/filesystem/-/filesystem-6.0.0.tgz"
   integrity sha512-GnC4CBfky7fvG9zSV/aQnZaGs6ZJ90AaQorr53z81ArTCqcrSUeBMuCxWmvti9HrdXLhBavyA1UOjvRGObOFjg==
@@ -644,6 +644,11 @@ call-bind@^1.0.2, call-bind@^1.0.5, call-bind@^1.0.6, call-bind@^1.0.7:
     function-bind "^1.1.2"
     get-intrinsic "^1.2.4"
     set-function-length "^1.2.1"
+
+capacitor-blob-writer@^1.1.17:
+  version "1.1.17"
+  resolved "https://registry.npmjs.org/capacitor-blob-writer/-/capacitor-blob-writer-1.1.17.tgz"
+  integrity sha512-IixJbl0k4NQ+aPo+UbDvHJxztnaGymVMCkYoHKTjj3F3KDTsMEl5iK7fEZkQ5jhQabe8YJKW0wTGu6Qm/RmXrw==
 
 capacitor@^0.5.6:
   version "0.5.6"

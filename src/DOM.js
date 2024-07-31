@@ -14,22 +14,19 @@ tagsToUse.forEach(t => {
 
 const {div, button, input} = tag
 
-import aboutDOM from "./prototypes/view/About";
-
 export default div("App", {
-        style: "font-size: 16px;"
-    },
-    div("Header", {class: ""}, 
-        div("QuickActions", {}, 
-            button("ShowAbout", {
-                tooltip: "About"
-            }, "木"),
-            aboutDOM,
-            button("History", {
-                tooltip: "History"
-            }, "↹"),
-            button("GoBack", {
-                tooltip: "Go Back"
+    style: "font-size: 16px;"
+},
+div("Header", {class: ""}, 
+div("QuickActions", {}, 
+        button("*", {
+            tooltip: "Open Network"
+        }, "*"),
+        button("History", {
+            tooltip: "History"
+        }, "↹"),
+        button("GoBack", {
+            tooltip: "Go Back"
             }, "◁"),
             button("GoForth", {
                 tooltip: "Go Forth"

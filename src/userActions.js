@@ -13,8 +13,13 @@ import Logger from "./prototypes/view/Logger"
 import { DateTime } from "luxon"
 
 import { Capacitor } from '@capacitor/core';
-
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import write_blob from "capacitor-blob-writer";
+
+
+import aboutDOM from "./prototypes/view/About"
+
+import defaultSettings from "./defaultSettings.yaml"
 
 export const Fix = {
     init,
@@ -84,16 +89,19 @@ export const Root = {
                 });
 
                 //make databse file
-                await Filesystem.mkdir({
-                    path: "database",
-                    directory: Directory.Documents,
-                    recursive: false,
+                //used a capacitor plugin to write a binary instead of base64 encoded text
+                await write_blob({
+                        path: "database",
+                        directory: Directory.Documents,
+                        blob: my_video_blob,
+                        fast_mode: true,
+                        recursive: false,
                 });
       
                 //make settings.yaml file
                 await Filesystem.writeFile({
                     path: "settings.yaml",
-                    data: 'This is a test',
+                    data: defaultSettings,
                     directory: Directory.Documents,
                     encoding: Encoding.UTF8,
                 });
@@ -114,10 +122,6 @@ export const Root = {
         const data = localDB.export();
         const blob = new Blob([data], { type: "application/octet-stream" });
         fileSystem.downloadFile(name || "root", blob)
-
-
-        let obj = await import('./say.js');
-        let say = obj.default;
 
     },
     async access_root () {
@@ -344,5 +348,20 @@ export const Settings = {
     },
     async clear_indexedDB () {
         return await indexedDB.deleteDatabase("Root")
+    }
+}
+
+
+export const Help = {
+    About () {
+        return aboutDOM.showModal()
+    },
+    Docs () {
+        let a = document.createElement("a")
+        a.href = "" //docs 주소
+        a.click()
+    },
+    asfd () {
+        console.log(defaultSettings)
     }
 }

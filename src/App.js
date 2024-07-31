@@ -41,7 +41,7 @@ if (theme) DOM.classList.add(`theme-${theme}`);
 van.add(document.body, App);
 
 let actionsOrder =
-  "Root Edit Navigate Prune Visual Sessions Settings Fix".split(" ");
+  "Root Edit Navigate Prune Visual Sessions Settings Fix Help".split(" ");
 let userActionsSorted = Object.keys(userActions)
   .sort((k, kk) => {
     return actionsOrder.indexOf(k) - actionsOrder.indexOf(kk);
