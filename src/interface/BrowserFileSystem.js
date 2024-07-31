@@ -8,7 +8,7 @@ export async function showDirectoryPicker() {
 }
 
 export async function createFile(parentDirHandle, name, extension) {
-    const fileName = `${name}.${extension}`
+    const fileName = extension ? `${name}.${extension}` : name
     try {
         const fileHandle = await parentDirHandle.getFileHandle(fileName, { create: true });
         return fileHandle

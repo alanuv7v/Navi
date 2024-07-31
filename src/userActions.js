@@ -1,12 +1,12 @@
 import appSession from "./appSession"
 import * as SessionManager from "./interface/BrowserSessions"
-import * as LocalDBManager from "./interface/SqlDb"
+import * as SqlDb from "./interface/SqlDb"
 import parseQuery from "./utils/parseQuery"
 import NodeView from "./prototypes/view/NodeView"
 
 import { default as init, initRootDB as init_root_DB, initNetwork } from "./init"
 
-import * as fileSystem from "./interface/BrowserFileSystem"
+import * as BrowserFileSystem from "./interface/BrowserFileSystem"
 import BrowserDB from "./interface/BrowserDb"
 import Logger from "./prototypes/view/Logger"
 
@@ -60,10 +60,16 @@ export const Sessions = {
     }
 }
 
-export const Root = {
-    async create_root_ (name) {
-
+export const Network = {
+    async create_network_ (networkName="A Network") {
+                
+        //create the DB
+        const localDB = await SqlDb.create(networkName)
         
+        // Export the database to an Uint8Array
+        const data = localDB.export();
+        const blob = new Blob([data], { type: "application/octet-stream" });
+
         switch (Capacitor.getPlatform()) {
 
             case "android":
@@ -93,7 +99,7 @@ export const Root = {
                 await write_blob({
                         path: "database",
                         directory: Directory.Documents,
-                        blob: my_video_blob,
+                        blob: blob,
                         fast_mode: true,
                         recursive: false,
                 });
@@ -109,19 +115,37 @@ export const Root = {
                 break;
 
             case "web":
-                
+
+                try {
+                    let rootDir = await BrowserFileSystem.showDirectoryPicker()
+    
+                    // make network dir
+                    let networkDir = BrowserFileSystem.createFolder(rootDir, networkName)
+    
+                    //make backup dir
+                    BrowserFileSystem.createFolder(networkDir, "backup")
+    
+                    //make media dir
+                    BrowserFileSystem.createFolder(networkDir, "media")
+    
+                    //make databse file
+                    let dbHandle = BrowserFileSystem.createFile(networkDir, "database")
+                    BrowserFileSystem.writeToFile(dbHandle, blob)
+                    
+                    //make settings.yaml file
+                    let settingsHandle = BrowserFileSystem.createFile(networkDir, "settings", "yaml")
+                    const blob = new Blob([defaultSettings], {type: "text/plain;charset=UTF-8"});
+                    BrowserFileSystem.writeToFile(settingsHandle, blob)
+    
+                }
+                catch (err) {
+                    BrowserFileSystem.downloadFile(networkName, blob)
+                }
+
                 break;
         }
 
 
-        //create the DB
-        let _name = name || "root"
-        let localDB = await LocalDBManager.create(_name)
-        
-        // Export the database to an Uint8Array
-        const data = localDB.export();
-        const blob = new Blob([data], { type: "application/octet-stream" });
-        fileSystem.downloadFile(name || "root", blob)
 
     },
     async access_root () {
@@ -149,7 +173,7 @@ export const Root = {
             async function onchange (event) {
                 let blob = event.target.files[0]
                 appSession.network.name = blob.name || "unknown network", 
-                appSession.network.DB = await LocalDBManager.load(blob)
+                appSession.network.DB = await SqlDb.load(blob)
                 resolve()
             }
             i.addEventListener("change", onchange)
@@ -175,11 +199,11 @@ export const Root = {
 
             appSession.temp.rootHandle = rootHandle
             appSession.root.name = rootHandle.name || "root", 
-            appSession.root.DB = await LocalDBManager.load(rootHandle)
+            appSession.root.DB = await SqlDb.load(rootHandle)
 
         } else {
             
-            await Root.open_root_oldway()
+            await Network.open_root_oldway()
 
         }
         
@@ -190,14 +214,14 @@ export const Root = {
     },
     async update_root () {
         Logger.log("saving root, DO NOT LEAVE!")
-        let res = await LocalDBManager.update()
+        let res = await SqlDb.update()
         Logger.log("root saved!", "success")
         return res
     },
     async download_root () {
         const data = await appSession.root.DB.export()
         const blob = new Blob([data], { type: "application/octet-stream" });
-        return await fileSystem.downloadFile(appSession.root.name, blob)
+        return await BrowserFileSystem.downloadFile(appSession.root.name, blob)
     },
     async open_root_oldway () {
         
@@ -214,7 +238,7 @@ export const Root = {
                 
                 appSession.temp.rootHandle = null
                 appSession.root.name = rootBlob.name || "root", 
-                appSession.root.DB = await LocalDBManager.load(rootBlob)
+                appSession.root.DB = await SqlDb.load(rootBlob)
                 
                 resolve()
             
@@ -240,12 +264,12 @@ export const Root = {
     backup: {
         async create_backup () {        
             let version = DateTime.now().setZone("system")
-            let backupFile = fileSystem.createFile(
+            let backupFile = BrowserFileSystem.createFile(
                 appSession.temp.networkDirHandle, 
                 appSession.root.name + version, 
                 "backup"
             )
-            return await fileSystem.copyFile(appSession.temp.rootHandle, backupFile)
+            return await BrowserFileSystem.copyFile(appSession.temp.rootHandle, backupFile)
         }  
     }
 }
