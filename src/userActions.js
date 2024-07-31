@@ -24,6 +24,7 @@ import aboutDOM from "./prototypes/view/About"
 import defaultSettings from "./defaultSettings.yaml"
 
 
+
 export const Fix = {
     init,
     init_root_DB
