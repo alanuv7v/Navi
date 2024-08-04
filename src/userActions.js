@@ -234,9 +234,11 @@ export const Network = {
             
             case "web":
 
-                Logger.log("saving root, DO NOT LEAVE!")
+            
+
+                Logger.log("Saving the database, DO NOT LEAVE!")
                 let res = await SqlDb.update()
-                Logger.log("root saved!", "success")
+                Logger.log("The database is saved!", "success")
                 return res
 
         }

@@ -66,7 +66,7 @@ document.addEventListener("keydown", (event) => {
     let key = event.key.toLowerCase()
     if (key === "s" && event.altKey) {
         event.preventDefault()
-        userActions.Network.update_root()
+        userActions.Network.update_database()
         userActions.Sessions.save_session_()
     }
 })

@@ -1,6 +1,6 @@
 import initSqlJs from "sql.js";
 import { v4 as uuidv4 } from 'uuid';
-import * as FileSystem from "./BrowserFileSystem"
+import * as BrowserFileSystem from "./BrowserFileSystem"
 import appSession from "../appSession";
 
 const SQL = await initSqlJs(
@@ -59,7 +59,8 @@ export async function load(input) {
 }
 
 export async function update () {
-    const data = appSession.network.DB.export(); // Get Uint8Array of database contents
+    console.log(appSession.network.DB, appSession.network.DB.exec('select * from nodes')[0].values)
+    const data = await appSession.network.DB.export(); // Get Uint8Array of database contents
     const blob = new Blob([data], { type: 'application/octet-stream' });
-    return await FileSystem.writeToFile(appSession.temp.browser.networkHandle, blob)
+    return await BrowserFileSystem.writeToFile(appSession.browser.getNetworkTreeSubItem("database").handle, blob)
 }
