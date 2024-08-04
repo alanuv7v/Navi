@@ -1,4 +1,4 @@
-import NodeData from "../static/NodeData"
+import NodeData from "../data/NodeData"
 import appSession from '../../appSession';
 import { escape } from "../../utils/escapeSqlQuery"
 import Logger from "../view/Logger";

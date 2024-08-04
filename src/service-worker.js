@@ -6,6 +6,6 @@ const APP_STATIC_RESOURCES = [
     "/themes/fontFetcher.css",
     "/themes/space.css",
     "/themes/space-animations.css",
-    "/static/Root_16.png",
+    "/data/Root_16.png",
     "/App.js",
   ];

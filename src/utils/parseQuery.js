@@ -1,6 +1,6 @@
 import appSession from "../appSession"
 import Logger from "../prototypes/view/Logger"
-import NodeData from "../prototypes/static/NodeData"
+import NodeData from "../prototypes/data/NodeData"
 import { unescape } from "./escapeSqlQuery"
 
 function simpleQuery (input) {

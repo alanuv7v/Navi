@@ -1,4 +1,4 @@
-import RootData from "../static/RootData"
+import RootData from "../data/RootData"
 
 export default class RootModel extends RootData {
 
