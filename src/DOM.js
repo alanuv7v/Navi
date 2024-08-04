@@ -77,5 +77,6 @@ div("QuickActions", {},
         Logger.DOM,
         input("CommandPalette"),
     ),
+    div("Overlay")
 )
 

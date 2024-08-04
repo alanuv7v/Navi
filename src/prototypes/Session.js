@@ -14,8 +14,9 @@ export default class Session {
     }
     
     temp = {
-        rootHandle: null,
-
+        browser: {
+            networkHandle: null,
+        },
         adress: "",
         seedNodeID: "",
         lastNodeId: "",
@@ -25,10 +26,6 @@ export default class Session {
 
 
     browser = {
-        
-        temp: {
-            networkHandle: null,
-        },
         
         networkDirectoryTree: null,
 
@@ -52,16 +49,16 @@ export default class Session {
 
     network = {
         get name () {
-            return this.settingsParsed["network name"]
+            try {
+                return this.settingsParsed["network name"]
+            }
+            catch {
+                return "unknown"
+            }
         },
         DB: null,
-    }
-
-    root = {
-        DB: null,
-        name: null,
-        getNodeById: (id) => this.root.DB.exec(`SELECT * FROM nodes WHERE id='${id}'`)[0].values,
-        getNodeByValue: (value) => this.root.DB.exec(`SELECT * FROM nodes WHERE value='${value}'`)[0].values
+        getNodeById: (id) => this.network.DB.exec(`SELECT * FROM nodes WHERE id='${id}'`)[0].values,
+        getNodeByValue: (value) => this.network.DB.exec(`SELECT * FROM nodes WHERE value='${value}'`)[0].values
     }
     
     selectedNode = null

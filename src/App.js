@@ -22,6 +22,7 @@ import * as BrowserSessions from "./interface/BrowserSessions";
 import errorCatcher from "./utils/errorCatcher";
 import Logger from "./prototypes/view/Logger";
 import { Capacitor } from "@capacitor/core";
+import parseQuery from "./utils/parseQuery";
 
 window._debug = {
   DOM,
@@ -30,7 +31,8 @@ window._debug = {
   BrowserDB,
   BrowserSessions,
   Logger,
-  Capacitor
+  Capacitor,
+  parseQuery,
 };
 
 //

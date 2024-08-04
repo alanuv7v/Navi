@@ -4,7 +4,7 @@ import * as SqlDb from "./interface/SqlDb"
 import parseQuery from "./utils/parseQuery"
 import NodeView from "./prototypes/view/NodeView"
 
-import { default as init, initRootDB as init_root_DB, initNetwork } from "./init"
+import { default as init, initNetwork as init_root_DB, initNetwork } from "./init"
 
 import * as BrowserFileSystem from "./interface/BrowserFileSystem"
 import BrowserDB from "./interface/BrowserDb"
@@ -22,6 +22,7 @@ import * as yaml from "yaml"
 import aboutDOM from "./prototypes/view/About"
 
 import defaultSettings from "./defaultSettings.yaml"
+import refs from "./DOMRefs"
 
 
 
@@ -194,7 +195,7 @@ export const Network = {
                 break
             
             case "web":
-                return await appSession.temp.rootHandle.requestPermission()
+                return await appSession.temp.browser.networkHandle.requestPermission()
 
         }
         
@@ -241,58 +242,15 @@ export const Network = {
         }
 
     },
-    /* async download_network_DB () {
-        const data = await appSession.network.DB.export()
-        const blob = new Blob([data], { type: "application/octet-stream" });
-        return await BrowserFileSystem.downloadFile(appSession.network.name, blob)
-    }, */
-    /* async open_root_oldway () {
-        
-        let i = document.createElement('input')
-        i.type = "file"
-        i.multiple = false
-        i.click()
-
-        await (new Promise((resolve, reject) => {
-
-            async function onchange (event) {
-                
-                let rootBlob = event.target.files[0]
-                
-                appSession.temp.rootHandle = null
-                appSession.root.name = rootBlob.name || "root", 
-                appSession.root.DB = await SqlDb.load(rootBlob)
-                
-                resolve()
-            
-            }
-            
-            i.addEventListener("change", onchange)
-
-        }))
-    
-        console.log(`Opened root: ${appSession.root.name}`)
-    
-        try {
-            let rootName = appSession.root.name
-            Navigate.show_node_(`@${rootName}`)
-        } catch {
-            Navigate.show_node_(`@root`)
-        }
-    
-        SessionManager.saveSession()
-        
-        return appSession.root
-    }, */
     backup: {
         async create_backup () {        
             let version = DateTime.now().setZone("system")
             let backupFile = BrowserFileSystem.createFile(
                 appSession.temp.networkDirHandle, 
-                appSession.root.name + version, 
+                appSession.network.name + version, 
                 "backup"
             )
-            return await BrowserFileSystem.copyFile(appSession.temp.rootHandle, backupFile)
+            return await BrowserFileSystem.copyFile(appSession.temp.browser.networkHandle, backupFile)
         }  
     }
 }
@@ -401,6 +359,7 @@ export const Settings = {
 
 export const Help = {
     About () {
+        refs("Overlay").append(aboutDOM)
         return aboutDOM.showModal()
     },
     Docs () {

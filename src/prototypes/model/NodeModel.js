@@ -22,7 +22,7 @@ export default class NodeModel extends NodeData {
 
     get authNameConflict () {
         try {
-            if (appSession.root.DB.exec(`SELECT * FROM nodes WHERE value='${this.value}' AND NOT id='${this.id}'`)[0]?.values.length > 0) return true
+            if (appSession.network.DB.exec(`SELECT * FROM nodes WHERE value='${this.value}' AND NOT id='${this.id}'`)[0]?.values.length > 0) return true
             else return false
         }
         catch {
@@ -44,13 +44,13 @@ export default class NodeModel extends NodeData {
         if (this.isAuthname && this.authNameConflict) {
             return false
         } 
-        return appSession.root.DB.exec(`INSERT INTO nodes VALUES (${
+        return appSession.network.DB.exec(`INSERT INTO nodes VALUES (${
             ["id", "value", "links"].map(s => `'${typeof this[s] === "string" ? this[s] : JSON.stringify(this[s])}'`).join(", ")
         })`)
     }
 
     readRecord () {
-        return appSession.root.DB.exec(
+        return appSession.network.DB.exec(
             `SELECT * FROM nodes WHERE id='${this.id}';`
         )
     }
@@ -68,7 +68,7 @@ export default class NodeModel extends NodeData {
                 })
                 .join(", ")
         } WHERE id='${this.id}';`)
-        return appSession.root.DB.exec(
+        return appSession.network.DB.exec(
             `UPDATE nodes SET ${
                 ["value", "links"]
                     .map(s => {
@@ -92,7 +92,7 @@ export default class NodeModel extends NodeData {
             return {
                 tie: l[0],
                 id: l[1],
-                value: appSession.root.DB.exec(
+                value: appSession.network.DB.exec(
                     `SELECT value FROM nodes WHERE id='${l[1]}'`
                 )[0]?.values?.at(0)?.at(0) || "unknown"
             }
@@ -104,14 +104,14 @@ export default class NodeModel extends NodeData {
             // remove this node from other nodes data
             for (let link of this.links) { //remove mirror links
                 let oppID = link[1]
-                let oppData = appSession.root.DB.exec(
+                let oppData = appSession.network.DB.exec(
                     `SELECT * FROM nodes WHERE id='${oppID}'`
                 )[0].values[0]
                 let model = new NodeModel(...oppData)
                 model.forget(this.id)
                 console.log(oppID, oppData, model)
             }
-            return appSession.root.DB.exec(`DELETE FROM nodes WHERE id='${this.id}'`)
+            return appSession.network.DB.exec(`DELETE FROM nodes WHERE id='${this.id}'`)
         } catch (err) {
             Logger.log(err, "error")    
         }

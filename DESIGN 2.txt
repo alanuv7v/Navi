@@ -35,3 +35,40 @@ userActions
     update_network
     download_network
     create_backup
+
+
+
+
+시적으로 이름 짓기
+
+
+Navi
+
+    NodeVisual
+        get isIsolated ()
+        mirror ()
+        
+    Mind
+        get isIsolated ()
+        enter ()
+
+    Psyche
+
+    Soul
+
+    leap ()
+
+    respond ()
+    
+    reactions
+        love
+
+
+
+    connect ()
+
+    Connection
+
+    visual
+        modes
+            zen

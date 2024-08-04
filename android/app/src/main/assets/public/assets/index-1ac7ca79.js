@@ -12796,7 +12796,7 @@ async function initNetwork(networkDirHandle) {
     if (!await networkDirHandle?.queryPermission() === "granted") {
       await networkDirHandle?.requestPermission();
     }
-    appSession.temp.network.handle = networkDirHandle;
+    appSession.temp.browser.networkHandle = networkDirHandle;
     appSession.temp.network.DB.handle = (await listAllFilesAndDirs(networkDirHandle)).find((item) => {
       return item.name === "database";
     }).handle;

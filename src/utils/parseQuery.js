@@ -13,15 +13,17 @@ function simpleQuery (input) {
         "#": `id='${mid}'`
     }
 
-    return (appSession.root.DB.exec(
+    return appSession.network.DB.exec(
         `SELECT * FROM nodes WHERE ${
             conditionMatches[startLetter] || `value='${input}'`
         }`
-    ))[0]?.values
+    )[0]?.values
 
 }
 
 export default async function parseQuery (input) {
+
+    debugger
     
     try {
 

@@ -71,10 +71,10 @@ export async function listAllFilesAndDirs(dirHandle) {
 
 export function getSubItemByPath (tree, path) {
     let pathSegments = path.split("/")
-    let lastHandle
+    let lastHandle = {children: tree}
     for (let i = 0; i < pathSegments.length; i++) {
         const seg = pathSegments[i];
-        lastHandle = tree.children.find(c => c.name === seg)
+        lastHandle = lastHandle.children.find(c => c.name === seg)
         if (i === pathSegments.length-1) break
     }
     return lastHandle

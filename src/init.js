@@ -13,8 +13,6 @@ import * as yaml from "yaml"
 
 export default async function init () {
 
-    appSession.browserDB = BrowserDB
-
     let defaultSettings = appSession.settings
     try {
         appSession.settings = {...defaultSettings, ...JSON.parse((await BrowserDB.settings.get("lastUsed")).data)}
@@ -32,20 +30,15 @@ export default async function init () {
         appSession.copy(lastSession.data)
         console.log("Loaded last session data.")
         
-        await initRootDB(lastSession.data.rootHandle)
+        await initNetwork(lastSession.data.browser.networkHandle)
 
         try {
             
-            await userActions.Navigate.show_node_("#" + appSession.temp.lastNodeId)
+        await userActions.Navigate.show_node_("#" + appSession.temp.lastNodeId)
 
         } catch (err) {
 
-            try {
-                let rootName = appSession.rootName
-                UserActions.Navigate.show_node_(`@${rootName}`)
-            } catch {
-                UserActions.Navigate.show_node_(`@root`)
-            }
+            UserActions.Navigate.show_node_(`@${appSession.network.name}`)
             
         }
 
@@ -62,37 +55,16 @@ export default async function init () {
 
 }
 
-export async function initRootDB (rootHandle) {
-
-    console.log("initializing root DB...")
-
-    try {
-        if (!(await rootHandle?.queryPermission()) === "granted") {
-            await rootHandle?.requestPermission()
-        } 
-        appSession.root.name = rootHandle.name, 
-        appSession.root.DB = await LocalDBManager.load(rootHandle)
-
-        console.log("initialized root DB.")
-
-        return appSession.root.DB
-
-    } catch (err) {
-        Logger.log(`failed to initialise root DB. error: 
-${err}`, "error")
-   }
-}
-
-export async function initNetwork (networkDirHandle) {
+export async function initNetwork (networkHandle) {
     
-    if (networkDirHandle) {
+    if (networkHandle) {
         
-        if (!(await networkDirHandle?.queryPermission()) === "granted") {
-            await networkDirHandle?.requestPermission()
+        if (!(await networkHandle?.queryPermission()) === "granted") {
+            await networkHandle?.requestPermission()
         } 
 
-        appSession.temp.network.handle = networkDirHandle
-        appSession.browser.networkDirectoryTree = await BrowserFileSystem.listAllFilesAndDirs(networkDirHandle)
+        appSession.temp.browser.networkHandle = networkHandle
+        appSession.browser.networkDirectoryTree = await BrowserFileSystem.listAllFilesAndDirs(networkHandle)
         
         appSession.settingsParsed = await yaml.parse(
             await (

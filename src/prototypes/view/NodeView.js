@@ -282,7 +282,7 @@ export default class NodeView extends NodeModel {
             this.linkedNodeViews = this.links
                 .map((link) => {
                     let tie = link[0]
-                    let res = appSession.root.getNodeById(link[1])
+                    let res = appSession.network.getNodeById(link[1])
                     if (tie && res) return {tie, data: res[0]}
                 })
                 .filter(link => link)
