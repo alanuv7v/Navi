@@ -194,38 +194,43 @@ export default class NodeView extends NodeModel {
         onmouseenter: (event) => this.#onHover(event),
         oncontextmenu: (event) => event.preventDefault(),
     },
-        div({class: "overlay"}),
+        div({class: "overlay"},
+        ),
         div({class: "main"},
-            input({class: "tieInput", placeholder: "from/to", 
+            
+            div({class: "selectionIndicator"}),
+            
+            div(
                 
-                onclick: (event) => {
-                    if (["planted", "/:reference"].includes(this.tie)) {
-                        event.target.disabled = true
-                    } else {
-                        event.target.disabled = false
-                    }
-                    event.target.value = event.target.value.split(" ----- ").join("/")
-                },
+                input({class: "tieInput", placeholder: "from/to", 
+                    
+                    onclick: (event) => {
+                        if (["planted", "/:reference"].includes(this.tie)) {
+                            event.target.disabled = true
+                        } else {
+                            event.target.disabled = false
+                        }
+                        event.target.value = event.target.value.split(" ----- ").join("/")
+                    },
 
-                onblur: (event) => {
+                    onblur: (event) => {
+                        event.target.value = event.target.value.split("/").join(" ----- ")
+                    },
+
+                    onchange: (event) => {
+                    
+                    let prevTie = structuredClone(this.tie)
+                    this.tie = event.target.value
+
+                    let [prevFrom, prevTo] = prevTie.split("/")
+
+                    this.changeTie((new Tie(prevTie)).mirror, (new Tie(this.tie)).mirror, this.openedFrom.id)
+                    
                     event.target.value = event.target.value.split("/").join(" ----- ")
-                },
-
-                onchange: (event) => {
-                
-                let prevTie = structuredClone(this.tie)
-                this.tie = event.target.value
-
-                let [prevFrom, prevTo] = prevTie.split("/")
-
-                this.changeTie((new Tie(prevTie)).mirror, (new Tie(this.tie)).mirror, this.openedFrom.id)
-                
-                event.target.value = event.target.value.split("/").join(" ----- ")
-                this.showTieDefault()
-                
-            }}),
-            div({class: "valueWrap"},
-                div({class: "selectionIndicator"}),
+                    this.showTieDefault()
+                    
+                }}),
+                    
                 autoResizedTextarea({
                     class: "value", 
                     value: this.value, 
@@ -240,10 +245,12 @@ export default class NodeView extends NodeModel {
                         e.target.focus({preventScroll: true});
                         })
                 }),
-            ),
-            div({class: "options"},
-                this.actionsDOM
-            ),
+
+                div({class: "options"},
+                    this.actionsDOM
+                ),
+                
+            )
         ),
         this.linksDOM
     )

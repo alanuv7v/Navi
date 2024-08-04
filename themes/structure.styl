@@ -4,7 +4,7 @@
     box-sizing: border-box;
     color: var(--light);
     text-overflow: ellipsis;
-    
+
     font-family: 'Orbit', 'poppins', monospace;
 }
 
@@ -330,28 +330,46 @@ input:active, .clickable:active {
     }
 
     > .links {
-        margin-left: 1em;
-        > .node {
+        
+        box-shadow: inset 2px 0px 0px 0px var(--shade);
+        padding-left: 1em;
+        
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        /* > .node {
             margin-top: 1em !important;
-        }
+        } */
     }
+    /*
+    > .links:has(.node.selected) {
+        box-shadow: inset 2px 0px 0px 0px var(--mildshade);
+    }*/
+
     > .main {
         /* .h-flex {
             width: 100vw;
         } */
-        .valueWrap {
-            position: relative;
-        }
+        position: relative;
+        box-shadow: inset 4px 0px 0px 0px var(--shade)
+        
+
         .selectionIndicator {
-            position: absolute;
-            width: 2px;
-            height: 100%;
+            position: absolute; 
+            width: 0.5em
             /* align-self: stretch; */
             background-color: var(--shade);
         }
+
+        > * {
+            margin-left: 0.5em
+        }
+
         .selectionIndicator:has(+ .autoResize:hover) {
             width: 4px;
         }
+        
         .autoResize {
             flex-grow: 1;
         }
@@ -360,11 +378,6 @@ input:active, .clickable:active {
             margin: 0px;
             min-width: 10em;
             width: 100vw;
-            
-            padding-left: 1em;
-            padding-right: 0em;
-            padding-top: 0em;
-            padding-bottom: 0em;
             
             background-color: transparent;
             
@@ -384,6 +397,7 @@ input:active, .clickable:active {
             inset 4px 0px 0px 0px var(--light);
         } */
         .tieInput {
+            margin: 0px;
             font-size: 0.9em;
             color: var(--mild);
             background-color: transparent !important;

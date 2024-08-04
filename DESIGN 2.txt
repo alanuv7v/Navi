@@ -72,3 +72,42 @@ Navi
     visual
         modes
             zen
+
+
+
+새로운 스키마
+
+NodeData
+    id
+    key
+    value
+    links
+
+
+My Cats
+    Jane
+        age: 8
+        sex: female
+        hair: short
+        color: black, white
+    Dork
+        age: 4
+        sex: male
+        hair: short
+        color: grey
+
+My Cats
+    
+    **Jane**
+        desc...
+        age: 8
+        sex: female
+        hair: short
+        color: black, white
+    
+    **Dork**
+        desc...
+        age: 4
+        sex: male
+        hair: short
+        color: grey
