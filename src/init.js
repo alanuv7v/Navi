@@ -1,4 +1,4 @@
-import * as SessionManager from "./interface/BrowserSessions"
+import * as BrowserSessions from "./interface/BrowserSessions"
 import appSession from "./appSession"
 import * as UserActions  from "./userActions"
 import * as LocalDBManager from "./interface/SqlDb"
@@ -22,7 +22,7 @@ export default async function init () {
     userActions.Visual.set_size()
 
     //init appSession
-    let lastSession = await SessionManager.getLastSession()
+    let lastSession = await BrowserSessions.getLastSession()
     console.log("lastSession: ", lastSession)
 
     if (lastSession?.data) {
@@ -30,7 +30,7 @@ export default async function init () {
         appSession.copy(lastSession.data)
         console.log("Loaded last session data.")
         
-        await initNetwork(lastSession.data.browser.networkHandle)
+        await initAppSession()
 
         try {
             
@@ -38,14 +38,14 @@ export default async function init () {
 
         } catch (err) {
 
-            UserActions.Navigate.show_node_(`@${appSession.network.name}`)
+            UserActions.Navigate.show_node_(`${appSession.settingsParsed.entry}`)
             
         }
 
     } else {
 
         console.log("Could not copy last session data. The last session data is corrupted or does not exist.")
-        await SessionManager.saveSession()
+        await BrowserSessions.saveSession()
         console.log("Created new app session with empty data.")
 
     }
@@ -55,34 +55,26 @@ export default async function init () {
 
 }
 
-export async function initNetwork (networkHandle) {
+export async function initAppSession () {
     
-    if (networkHandle) {
-        
-        if (!(await networkHandle?.queryPermission()) === "granted") {
-            await networkHandle?.requestPermission()
-        } 
-
-        appSession.temp.browser.networkHandle = networkHandle
-        appSession.browser.networkDirectoryTree = await BrowserFileSystem.listAllFilesAndDirs(networkHandle)
-        
-        appSession.settingsParsed = await yaml.parse(
-            await (
-                await appSession.browser.getNetworkTreeSubItem("settings.yaml").handle.getFile()
-            ).text()
-        )
-
-        appSession.network.DB = await LocalDBManager.load(
-            await appSession.browser.getNetworkTreeSubItem("database").handle.getFile()
-        )
-
-    }
+    if (!(await appSession.temp.browser.networkHandle?.queryPermission()) === "granted") {
+        await appSession.temp.browser.networkHandle?.requestPermission()
+    } 
+    appSession.browser.networkDirectoryTree = await BrowserFileSystem.listAllFilesAndDirs(
+        appSession.temp.browser.networkHandle
+    )
     
-    try {
-        userActions.Navigate.show_node_(`@${appSession.network.name}`)
-    } catch {
-        userActions.Navigate.show_node_(`@origin`)
-    }
+    appSession.settingsParsed = await yaml.parse(
+        await (
+            await appSession.browser.getNetworkTreeSubItem("settings.yaml").handle.getFile()
+        ).text()
+    )
+
+    appSession.network.DB = await LocalDBManager.load(
+        await appSession.browser.getNetworkTreeSubItem("database").handle.getFile()
+    )
+
+    BrowserSessions.saveSession()
 
     return appSession.network
 

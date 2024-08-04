@@ -22,8 +22,6 @@ function simpleQuery (input) {
 }
 
 export default async function parseQuery (input) {
-
-    debugger
     
     try {
 

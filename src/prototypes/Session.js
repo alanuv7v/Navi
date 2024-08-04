@@ -50,7 +50,7 @@ export default class Session {
     network = {
         get name () {
             try {
-                return this.settingsParsed["network name"]
+                return this.settingsParsed["name"]
             }
             catch {
                 return "unknown"

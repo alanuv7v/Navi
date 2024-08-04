@@ -4,7 +4,7 @@ import * as SqlDb from "./interface/SqlDb"
 import parseQuery from "./utils/parseQuery"
 import NodeView from "./prototypes/view/NodeView"
 
-import { default as init, initNetwork as init_root_DB, initNetwork } from "./init"
+import { default as init, initAppSession as init_root_DB, initAppSession } from "./init"
 
 import * as BrowserFileSystem from "./interface/BrowserFileSystem"
 import BrowserDB from "./interface/BrowserDb"
@@ -174,7 +174,7 @@ export const Network = {
 
                 if (window.showDirectoryPicker) {
                     let networkDirhandle = await window.showDirectoryPicker()
-                    await initNetwork(networkDirhandle)
+                    await initAppSession(networkDirhandle)
                     SessionManager.saveSession()
                 } else {
                     /* this.open_network_DB() */
