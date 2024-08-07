@@ -28,7 +28,7 @@ export default class NodeView extends NodeModel {
     opened = false
     filter = null
     openedFrom = null //NodeView that opened this node
-    tie = ""
+    tie = []
     linkedNodeViews = []
     
     deleteReady = false
@@ -244,20 +244,19 @@ export default class NodeView extends NodeModel {
                     
                 }}),
                     
-                autoResizedTextarea({
+                new autoResizedTextarea({
                     class: "value", 
                     value: this.value, 
-                    onclick: (event) => this.#onclick(event), 
+                    onclick: (event) => this.#onclick(), 
                     onauxclick: (event) => this.#onauxclick(event), 
                     onchange: (event) => {this.#onvaluechange(event)},
-                    onfocus: () => this.select(),
                     onkeydown: (event) => this.#onkeydown(event),
                     onselect: (event) => this.#onselect(event),
                     onfocus: ((e) => {
                         e.preventDefault();
                         e.target.focus({preventScroll: true});
-                        })
-                }),
+                    })
+                }).DOM,
 
                 div({class: "options"},
                     this.actionsDOM
@@ -287,7 +286,7 @@ export default class NodeView extends NodeModel {
         } 
 
         //reset links DOM
-        this.DOM.querySelector(".links").innerHTML = ""
+        this.linksDOM.innerHTML = ""
 
         if (this.isReference) {
             console.log(await parseQuery(this.referenceQuery))

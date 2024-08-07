@@ -1,11 +1,10 @@
 //@ts-check
 import NodeData, { link, tie } from "../data/NodeData"
-import appSession from '../../appSession';
+import appSession from '../../appSession'
 import { escape } from "../../utils/escapeSqlQuery"
 import Logger from "../view/Logger";
 
 import { NodeDataRaw } from "../data/NodeData";
-import Tie from "../Tie";
 
 export default class NodeModel extends NodeData {
 
@@ -15,7 +14,7 @@ export default class NodeModel extends NodeData {
 
     get context () {
         let originLink = this.links.find(link => link.tie[0] === "context")
-        if (originLink) return originLink[1]
+        if (originLink) return originLink.id
         else return null
     }
 
@@ -51,7 +50,7 @@ export default class NodeModel extends NodeData {
     updateRecord () {
         if (this.isAuthname && this.authNameConflict) {
             return false
-        } 
+        }
         console.log(`UPDATE nodes SET ${
             ["value", "links"]
                 .map(s => {
