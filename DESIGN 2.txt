@@ -1,0 +1,115 @@
+각 플랫폼에 맞춰 DB조작과 FileSystem 엑세스에 있어 다른 API를 알아서 맞춰 반환하는 인터페이스를 만드는게 관건이다.
+
+사실 무식하게 userActions에서 platform에 따른 switch case로 다 처리하는 것도 방법이다.
+근데 정말 무식해보일 것이다.
+
+그렇지만 굳이 계층이 하나 더 필요할까.
+애초에 userActions가 그 계층 아닐까. 알아서 플랫폼에 맞춰 행동하는 계층.
+아니면 뭐 행동 별로 다 각자의 js 파일로 쪼개기라도 하실? 그건 싫잖아.
+
+일단 userActions에 다 몰아넣고 쓰다보면 더러운지, 추상화할 수 있는지 눈에 보일테다.
+그때까지 몰아넣자.
+
+prototypes
+    Session
+        browser
+            temp
+                networkHandle
+                //network dir의 핸들 하나만 깔끔하게 저장하고, 나머지 하위 핸들들은 그 핸들로부터 얻어내는게 더 깔끔하겠다.
+                //즉 networkHandle만 브라우저에 저장되고, 나머지는 앱 실행시에 찾아진다.
+            networkFileTree
+                network
+                    handle
+                    DB
+                        handle
+                    backup
+                        handle
+                    media
+                        handle
+        android
+            temp //??
+
+userActions
+    create_network
+    open_network
+    update_network
+    download_network
+    create_backup
+
+
+
+
+시적으로 이름 짓기
+
+
+Navi
+
+    NodeVisual
+        get isIsolated ()
+        mirror ()
+        
+    Mind
+        get isIsolated ()
+        enter ()
+
+    Psyche
+
+    Soul
+
+    leap ()
+
+    respond ()
+    
+    reactions
+        love
+
+
+
+    connect ()
+
+    Connection
+
+    visual
+        modes
+            zen
+
+
+
+새로운 스키마
+
+NodeData
+    id
+    key
+    value
+    links
+
+
+My Cats
+    Jane
+        age: 8
+        sex: female
+        hair: short
+        color: black, white
+    Dork
+        age: 4
+        sex: male
+        hair: short
+        color: grey
+
+My Cats
+    
+    **Jane**
+        desc...
+        age: 8
+        sex: female
+        hair: short
+        color: black, white
+    
+    **Dork**
+        desc...
+        age: 4
+        sex: male
+        hair: short
+        color: grey
+
+asf

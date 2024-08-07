@@ -1,0 +1,10 @@
+let a = 100000
+for (let i = 0; i < 10; i++) {
+    if (typeof a != "number") throw new Error("!")
+    await timeout(2000)
+    console.log("2000")
+}
+
+setTimeout(() => {
+    a = ""
+}, 5000);

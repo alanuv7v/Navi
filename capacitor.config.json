@@ -1,0 +1,25 @@
+{
+  "appId": "com.example.app",
+  "appName": "Wired",
+  "webDir": "dist",
+  "server": {
+      "androidScheme": "https"
+  },
+  "plugins": {
+      "CapacitorSQLite": {
+          "iosDatabaseLocation": "Library/CapacitorDatabase",
+          "iosIsEncryption": true,
+          "iosKeychainPrefix": "Wired",
+          "iosBiometric": {
+              "biometricAuth": false,
+              "biometricTitle": "Biometric login for Wired app sqlite database management"
+          },
+          "androidIsEncryption": true,
+          "androidBiometric": {
+              "biometricAuth": false,
+              "biometricTitle": "Biometric login for Wired app sqlite database management",
+              "biometricSubTitle": "Log-in using your biometric"
+          }
+      }
+  }
+}

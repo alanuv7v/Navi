@@ -1,36 +1,38 @@
+
 import { defineConfig } from 'vite';
 import ViteYaml from '@modyfi/vite-plugin-yaml';
+import wasm from "vite-plugin-wasm";
+import path from "path"
 
 export default defineConfig({
-    //root: 'src',
-    server: {
-        headers: {
-            'Cross-Origin-Embedder-Policy': 'require-corp',
-            'Cross-Origin-Opener-Policy': 'same-origin',
+    /* root: 'src', */
+    publicDir: 'public',
+    build: {
+        target: ['chrome120'],
+        minify: "false",
+        rollupOptions: {
+            minify: "false",
+            
         }
     },
     plugins: [
         ViteYaml(), 
+        wasm(),
     ],
 });
 
 /* export default defineConfig({
     root: 'src',
+    publicDir: 'public',
     build: {
+        minify: "false",
         rollupOptions: {
-            input: 'index.html'
-        }
-    },
-    server: {
-        headers: {
-            'Cross-Origin-Embedder-Policy': 'require-corp',
-            'Cross-Origin-Opener-Policy': 'same-origin',
-        },
-        serve: {
-            './icons' : 'icons'
+            minify: "false"
         }
     },
     plugins: [
-    ViteYaml(), 
+        ViteYaml(), 
+        wasm(),
+        viteSingleFile(),
     ],
 }); */

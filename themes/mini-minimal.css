@@ -1,0 +1,550 @@
+:root {
+    --light: rgba(225, 245, 231, 1);
+    --slight: rgba(197, 218, 203, 1);
+    --nice: rgb(211, 214, 211);
+    --mild: rgb(181, 185, 181);
+    --mildshade: rgb(109, 109, 109);
+    --shade: rgb(85, 85, 85);
+    --deep: rgb(48, 48, 48);
+    --dark: rgba(0, 0, 0, 1);
+    --vivid: rgba(151, 200, 128, 1);
+    --link: rgb(153, 247, 225);
+    --hilight: rgba(99, 99, 253, 0.3);
+    --alert: rgba(255, 0, 0, 0.3);
+    --executable: rgb(186, 253, 208);
+    --authName: rgb(162, 252, 189);
+    --back: rgb(252, 198, 162);
+    --error: rgb(248, 16, 47);
+}
+
+    
+* {
+    font-size: 16px;
+    box-sizing: border-box;
+    color: var(--light);
+    text-overflow: ellipsis;
+}
+*:focus {
+}
+
+body {
+    margin: 0px;
+}
+
+div {
+    text-align: left;
+}
+
+.h-flex {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    align-items: stretch;
+}
+
+.v-flex {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+textarea {
+    width: 100%;
+    resize: none;
+    overflow: auto; /* !! 결국 그게 되야하는데... 자동 리자이징. */
+}
+
+#App {
+
+    width: 100vw;
+    height: 100vh;
+
+    background-color: var(--mild);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    
+    position: relative;
+
+}
+#App > * {
+    flex-shrink: 0;
+}
+button, button:not(:hover) {
+
+    color: var(--deep);    
+
+}
+
+textarea {
+    border-radius: 0px;
+}
+
+
+
+input, textarea, select {
+    
+    color: var(--deep);    
+    box-shadow: 
+    inset 0px 0px 0px 1px var(--shade),
+    inset 0px -1px 0px 0px var(--nice), /* bottom hilight */
+    inset 0px 4px 4px 0px var(--deep) /* inner casted shadow */
+    ;
+
+}
+
+input:hover, textarea:hover, .clickable:hover {
+    
+    background-color: var(--slight);
+    
+    box-shadow: 
+    inset 0px 0px 0px 2px var(--light),
+    inset 0px 4px 4px 0px var(--mild),
+    0px 0px 8px 0px var(--light);
+
+}
+
+
+
+input:focus, .clickable:focus {
+    background-color: var(--light); 
+    box-shadow: 
+    inset 0px 0px 0px 2px var(--light),
+    inset 0px 4px 4px 0px var(--mild),
+    0px 0px 8px 0px var(--light);
+    
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+	height: 14px;
+}
+::-webkit-scrollbar-thumb {
+	background-color: var(--shade);
+    border-radius: 1em;
+    min-height: 50px;
+}
+.group {
+    box-shadow: inset 0px 0px 0px 1px var(--deep);
+    display: flex; 
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.title {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.window {
+    overflow-x: auto;
+    overflow-y: auto;
+    /* border: 1px solid var(--deep); */
+    /* flex-basis: 0; */
+    /* flex-grow: 1; */
+    box-shadow: inset 0px 0px 0px 1px var(--deep);
+    padding: 0.5em;
+}
+
+a, .link {
+    text-decoration: none;
+    color: var(--link)
+}
+
+a:hover {
+    text-decoration: solid underline var(--link) 1px;
+}
+
+#RawEditor {
+    line-height: 2;
+    white-space: pre-wrap;
+    padding: 10px;
+    overflow: auto;
+}
+
+#LogPreview {
+    overflow: hidden;
+    padding: 0.5em;
+    width: 100%; 
+    max-height: 50%;
+    background-color: var(--dark);
+    border: 1px solid var(--deep);
+    animation-name: logAppear;
+    animation-duration: 2s;
+    animation-iteration-count: 2;
+    animation-timing-function: ease-out;
+    overflow-y: auto;
+}
+
+
+.tabs {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#View {
+    overflow: auto;
+    width: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: column;
+
+}
+#Editor {
+    flex-grow: 1;
+    padding: 1em;
+    overflow: auto;
+}
+
+
+
+button, button:not(:hover) {
+
+    color: var(--deep);    
+
+}
+button, button:not(:hover), input, textarea, select {
+
+
+    border: none;
+    outline: none;
+
+    transition: all 0.2s ease;
+
+    padding-top: 4px;
+    padding-bottom: 4px;
+    
+    padding: 0.5em 0.5em 0.5em 0.5em;
+
+    background-color: var(--mild);
+    border: none;
+    outline: none;
+
+    border-radius: 1em;
+
+    margin: 0.2em;
+    
+    flex-shrink: 0;
+
+    box-shadow: 
+    /* inset 0px 1px 2px 0px var(--mild), */ /* top */
+    /* inset 0px -3px 4px 0px var(--mild), */ /* bottom, extruded */
+    /* inset 0px -1px 0px 0px var(--mild), */ /* bottom, extruded */
+    /* inset 0px 0px 2px 1px var(--mild), */ /* border */
+    0px -1px 0px 0px var(--nice), /* top hilight */
+    0px 3px 2px 0px var(--shade); /* casting shadow */
+
+}
+
+textarea {
+    border-radius: 0px;
+}
+
+
+button:hover {
+    color: var(--light); 
+    box-shadow: 
+    inset 0px 1px 0px 0px var(--light), 
+    inset 0px -3px 0px 0px var(--light),
+    inset 0px 0px 0px 1px var(--mild),
+    0px 1px 8px 0px var(--light);
+}
+
+button:active {
+    box-shadow: 
+    inset 0px 2px 0px 0px var(--light), 
+    inset 0px -1px 0px 0px var(--light),
+    inset 0px 0px 1px 1px var(--mild),
+    0px 1px 8px 0px var(--light);
+}
+
+
+input, textarea, select {
+    
+    color: var(--deep);    
+    box-shadow: 
+    inset 0px -1px 0px 0px var(--nice), /* bottom hilight */
+    inset 0px 4px 4px 0px var(--deep) /* inner casted shadow */
+    ;
+
+}
+
+input:hover, textarea:hover, .clickable:hover {
+    
+    color: var(--deep);
+    background-color: var(--slight);
+    
+    box-shadow: 
+    inset 0px 0px 0px 2px var(--light),
+    inset 0px 4px 4px 0px var(--mild),
+    0px 0px 8px 0px var(--light);
+
+}
+
+
+
+input:focus, .clickable:focus {
+    background-color: var(--light); 
+    color: var(--deep);
+    box-shadow: 
+    inset 0px 0px 0px 2px var(--light),
+    inset 0px 4px 4px 0px var(--mild),
+    0px 0px 8px 0px var(--light);
+    
+}
+
+
+
+#Header {
+
+    padding: 0px;
+
+    display: flex; 
+    flex-direction: row; 
+    align-items: center;
+
+    > * {
+        margin: 0px;
+    }
+
+    button, button:not(:hover), input, textarea, select {
+
+        border-radius: 0px;
+
+        transition: all 0.2s ease;
+
+        padding-top: 4px;
+        padding-bottom: 4px;
+        
+        padding: 0.5em 0.5em 0.5em 0.5em;
+
+        background-color: transparent;
+        border: none;
+        outline: none;
+        
+        flex-shrink: 0;
+        margin-top: 1px;
+        margin-bottom: 1px;
+
+        box-shadow: 
+        inset 0px 0px 1px 1px var(--shade), 
+
+    }
+
+
+
+    button:hover {
+        color: var(--light); 
+        box-shadow: 
+        inset 0px 0px 2px 0px var(--shade), 
+        inset 0px -3px 0px 0px var(--light);
+    }
+
+    button:active {
+        box-shadow: 
+        inset 0px 0px 2px 0px var(--shade), 
+        inset 0px 1px 0px 0px var(--light), 
+        inset 0px -1px 0px 0px var(--light);
+    }
+
+
+    button:focus {
+        color: var(--light); 
+    }
+
+
+    input, textarea, select {
+        
+        color: var(--deep);    
+        box-shadow: 
+        inset 0px 0px 0px 1px var(--shade),
+        inset 0px -1px 0px 0px var(--nice), /* bottom hilight */
+        inset 0px 4px 4px 0px var(--deep) /* inner casted shadow */
+        ;
+
+    }
+
+    input:hover, textarea:hover, .clickable:hover {
+        
+        color: var(--deep);
+        background-color: var(--slight);
+        
+        box-shadow: 
+        inset 0px 0px 0px 2px var(--light),
+        inset 0px 4px 4px 0px var(--mild),
+        0px 0px 8px 0px var(--light);
+
+    }
+
+
+
+    input:focus, .clickable:focus {
+        background-color: var(--light); 
+        color: var(--deep);
+        box-shadow: 
+        inset 0px 0px 0px 2px var(--light),
+        inset 0px 4px 4px 0px var(--mild),
+        0px 0px 8px 0px var(--light);
+        
+    }
+
+}
+#Header > * {
+    min-width: 3em;
+    height: 2.5em;
+}
+
+#PickRoot {
+}
+
+#GoTo {
+    flex-grow: 1;
+}
+
+.appear {
+    animation-name: appear;
+    animation-duration: 0.3s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+}
+
+.node {
+    
+    transition: all 0.3s ease;
+    padding: 0px 10px 0px 10px;
+    
+
+    > *:has(.value) > *:not(:last-child) {
+        margin-right: 1em;
+    }
+    .value {
+        margin: 0px;
+        min-width: 30em;
+        padding-left: 1em;
+        flex-grow: 1;
+        transition: all 0.3s ease;
+        box-shadow: inset 0px 0px 0px 0px var(--deep) !important;
+
+        line-height: 1.8em;
+
+    }
+    .value:hover {
+        box-shadow: inset 2px 0px 0px 0px var(--deep) !important;
+    }
+    .value:focus {
+        box-shadow: 
+        inset 4px 0px 0px 0px var(--light) !important;
+    }
+    .options {
+        display: none;
+        overflow-x: auto;
+        align-items: flex-start;
+        button {
+            min-width: 3em;
+            min-height: 2.5em;
+        }
+    }
+    .links {
+        margin-left: 1em;
+    }
+    .linksOpener {
+        
+        margin: 0.5em 0.5em 0.5em 1em;
+
+        align-self: flex-end;
+        width: 2em;
+        height: 2em;
+        background-color: var(--light);
+        color: var(--dark);
+        padding: 0px;
+        font-size: 1em;
+        box-shadow: none;
+
+        scale: 0.8;
+        transition: scale 0.15s cubic-bezier(0, 0, 0.28, 2.1);
+    }
+    .linksOpener:hover {
+        scale: 1;
+    }
+}
+
+.node.selected {
+    /* box-shadow: inset 4px 0px 0px -2px var(--light) !important; */
+    > .options {
+        display: flex;
+        flex-flow: wrap;
+    }
+}
+
+.node.authName {
+    > * > .autoResize > .value {
+    }
+    > * > .linksOpener {
+        background-color: var(--authName)
+    }
+}
+
+.node.error .value {
+    color: var(--error) !important;
+}
+
+#Footer {
+    max-height: 50%;
+    display: flex;
+    overflow: auto;
+}
+
+
+.Command {
+    width: fit-content;
+}
+
+.Command .function { 
+    color: var(--executable);
+}
+
+#Main {
+    overflow: auto;
+    width: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+}
+
+#Commands {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    #Logs {
+        width: 100%;
+        flex-grow: 1;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+}
+
+[tooltip]:hover::after {
+
+    display: block;
+    position: absolute;
+    transform: translate(0em, 1em);
+    content: attr(tooltip);
+    padding: 0.5em;
+    background: var(--light);
+    color: var(--dark);
+    border-radius: 0.5em;
+    z-index: 2;
+
+    animation-name: appear;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+
+}

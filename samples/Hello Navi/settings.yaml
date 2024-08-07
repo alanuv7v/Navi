@@ -1,0 +1,4 @@
+name: Hello Navi
+entry: "@Hello Navi"
+visual:
+  fontSize: 10

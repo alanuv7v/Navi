@@ -1,0 +1,458 @@
+1.
+
+src
+    entities
+        data
+            Node
+            Session
+        interface
+            Node
+            Session
+        userInterface
+            Node
+            Session
+    interfaces
+        sessionManager XXX
+    tech
+        fileSystem
+        nestedObj XXX object-path(npm) OOO
+    resource
+        appSession
+        DB
+        DOM
+        DOMRefs
+    App
+
+
+
+2.
+
+src
+    entities
+        static
+            NodeData
+                id: uuid
+                key: String
+                value: String?
+                parent: Node
+                relations: Array: {tie: String, node: Node}
+            SessionData
+                name
+                root: Node
+                seed: Node
+                lastCopiedNode: Node
+        visual
+            Node
+                DOM
+                depth: Int
+                selected: Bool
+                grown: Bool
+                filter: String
+                render()
+                grow()
+                shrink()
+                plant()
+                
+            Session
+        final
+            Node
+            
+                mirrorLink()
+                isLink()
+                getPath()
+                getPathString()
+
+                
+                /*이건 그냥 UserAction에 떠넘기는게 맞는것같다.
+                Node 객체는 이 정도 추상적인 인터페이스까진 제공 안해도 될것 같다.
+                
+                이건 UI 만들면서 하나씩 추가해도 된다.
+                moveUp()
+                moveDown()
+                depthUp()
+                depthDown()
+                copy()
+                paste()
+                toggleGrow()
+                setFilter()
+                setKey()
+                setValue()
+                addTie()
+                deleteTie()
+                
+                */
+            Session
+                
+    interfaces
+        sessionManager XXX
+    tech
+        fileSystem
+        nestedObj XXX object-path(npm) OOO
+    resource
+        appSession
+        DB
+        DOM
+        DOMRefs
+    App
+
+
+
+3.
+src
+    entity
+        static
+            NodeData
+                id: uuid
+                key: String
+                value: String?
+                parent: Node
+                relations: Array: {tie: String, node: Node}
+            SessionData
+                name
+                root: Node
+                seed: Node
+                copiedNode: Node
+        visual
+            Node
+                DOM
+                depth: Int
+                selected: Bool
+                grown: Bool
+                filter: String
+                render()
+                grow()
+                shrink()
+        auto
+            Node
+                constructor(nodeData, nodeVisual)
+                mirrorLink()
+                isLink()
+                getPath()
+                getPathString()
+            Session
+    tech
+        fileSystem
+        nestedObj XXX  object-path(npm) OOO
+    resource
+        appSession: SessionData
+        DB
+        DOM
+        DOMRefs
+    natural
+        userActions
+        init
+    App
+
+
+
+
+...
+entity
+    data
+    logic
+    facade
+
+Node
+    data
+        id
+        key
+        value
+        parent
+    logic
+        isLink()
+        render()
+            this.data.key 어쩌구
+            
+    visual
+        if (this.logic.isLink()) this.visual.DOM.querySelector("#key").style.color = "skyblue"
+
+userActions
+    db.update(node.data.id, node.data)
+
+
+
+4.
+src
+    entity
+        static
+            NodeData: class? interface? class with type validator???
+                id: uuid
+                key: String
+                value: String?
+                origin: NodeData.id(외래키)
+                relations: Array of {tie: String, node: NodeData.id(외래키)}
+            SessionData
+                name: String
+                srcRootData: RootData
+                modifiedNodes: Array of NodeData that are changed by NodeView instances
+                nodeViews: Array of NodeView
+                rootNode: Node
+                seedNode: Node
+                copiedNode: Node
+                adress: Array of path, from rootNode to thisNode
+                history: Array of path, every nodes visited in order
+            RootData: sql.js DB
+                root: NodeData or NodeData.id
+                nodes: NodeData
+            TreeData: Array of NodeView(serialized)
+            DocumentData
+        model
+            NodeModel extends NodeData
+                constructor(data)
+                mirrorLink()
+                isLink()
+                getPath()
+                getPathString()
+            DocumentModel
+        view
+            NodeView extends NodeModel
+                constructor(data, visual)
+                data
+                DOM
+                selected: Bool
+                grown: Bool
+                filter: String //filter relations to show by their ties
+                render()
+                    render its DOM by its key, value, parent, relations, selected, grown, and filter
+                grow()
+                    this.grown = false
+                    this.render()
+                shrink()
+                    this.grown = true
+                    this.render()
+                copy()
+                paste()
+    tech
+        fileSystem
+        nestedObj XXX  object-path(npm) OOO
+        sql.js
+        dbSystem (sql.js 추상화 인터페이스)
+				    class DB
+						class Table
+	              where()
+		            equals()
+								
+            function validate(db, sql, options)
+    resource
+        appSession: SessionData
+        browserDB
+            initData
+                lastRootDB
+                lastSeed
+                lastTree: TreeData
+        DOM
+        DOMRefs
+    natural
+        userActions
+            saveChanges()
+                appSession.editor.modifiedNodes foreach {
+                    appSession.srcRootData 에 저장
+                    fileSystem 활용하여 유저의 스토리지에 영구 저장
+                }
+        init
+    App
+
+
+
+SQL로 노드액션, 유저액션 구현해보기. 
+
+Node.grow() 
+let relations = SELECT relations FROM allNodes WHERE id EQUALS ${this.id}
+relations.forEach(r => 
+
+let relatedNodeData = SELECT * FROM allNodes WHERE r.id
+
+)
+
+MVC 패턴에 대한 나의 생각:
+컨트롤러가 굳이 필요할까.
+간단한 엔티티라면 모델 수준의 추상화는 클래스의 메소드명으로 충분하다.
+그 안에 들어있는 로직이 컨트롤러나 다름없다.
+만약 static 데이터에 대해 매우 복잡한 조작이 이루어진다면 컨트롤러가 따로 필요할 것이다.
+그러나 그 정도로 복잡한 조작을 해야한다면, 애초에 tech를 잘못 선택했다고 봐야할듯.
+그리고 그런 복잡한 조작은 interface 계층에서 진작 추상화하는걸로.
+
+
+
+
+할일
+1. sql.js 이용해보기
+2. nestedObj 퇴역
+3. 모듈 재정의
+
+
+sql.js 안되면 브라우저 업데이트 해볼것
+
+
+
+5.
+결국 의존성 순서로 모듈들을 분류해야 함을 깨달음.
+엔티티(사실상 MVC의 View와 같은듯) <- 유즈케이스(UserActions) <- 기술(저레벨 함수와 객체) <- 리소스(DB 그 자체, 파일 등).
+
+그러나 엔티티와 기술의 구분이 과연 가능할것인가.
+엔티티는 실제 코드로 존재할 수가 있는가. 개념으로만 있어야 하는게 아닌가. 그럼 기술과 다를게 있나.
+
+
+actions
+tech
+resources
+
+
+input = userActions, init
+processors = NodeModel, NodeView
+resource = DB, cache, localFiles
+output = DOM, DOM refs
+static = NodeData, SessionData...?
+
+
+
+추상성 관계
+App
+	auto = init
+	input = userActions
+    prototype
+        records = entity/static
+            NodeRecord //file
+            SessionRecord //file
+            NodeViewRecord //file
+            NodeMetadataRecord //file
+        recordActions
+            node //file
+            sessions //file
+                create()
+                save()
+                load()
+                delete()
+                logAll()
+                deleteAll()
+        volatile
+            NodeView //file
+            DOM
+        volatileActions
+            node //file
+                open()
+                close()
+                filter()
+        utils = 타 프로세서들 중간에서 사용되는 것, 레코드나 뷰 아웃풋을 그 자체로는 내지않고.
+            parseQuery
+    realisation = 실제 유저에게 주어진 앱
+        appSession = sessionOutput = visual, audio = static DOM = 최종 아웃풋의 장. 레퍼런스용.
+            recordReady
+                root: prototype/records/root
+                actions
+                    root
+                    seed
+            volatile
+                seed
+                DOM
+                DOMRefs
+	
+
+Static, Model, View
+Record, Instant
+Permanent, Volatile
+Session
+Prototype, Realisation
+Class, Instance
+
+
+Record
+    Node
+        Main
+        View
+        Metadata
+
+    ViewActions
+    RecordActions
+
+
+Node
+    Record
+        Main
+        View
+        Metadata
+    Session
+        View
+
+Record
+    Main
+        Node
+        Session
+    View
+        Node
+    
+결국 깨달음은
+모든걸 용도에 따라 분리할 수는 없단거다.
+꼭 분리해야 할 것만 분리하자.
+예를 들어 NodeRecordData와 나머지(NodeSessionData, NodeRecordActions, NodeViewActions...)를 묶은것으로.
+
+
+
+
+...
+
+과연 세션 데이터를 조작하는 모델(RootModel.js)은 어디 저장해야 하는가?
+appSession 안?
+
+씨발.
+
+순수함수로 만들어서 prototype에 넣어야 하나?
+세션 데이터를 상속받는 또 다른 객체로 만들어서 appSession에 인스턴스를 저장해야 하나?
+
+씨발!
+
+
+6.
+
+App
+	auto
+        init
+	input
+        userActions
+    prototypes
+        record = entity/static
+            NodeRecord //file
+            SessionRecord //file
+            NodeViewRecord //file
+            NodeMetadataRecord //file
+        recordActions
+            node //file
+            sessions //file
+                create()
+                save()
+                load()
+                delete()
+                logAll()
+                deleteAll()
+        temp
+            node
+                DOM
+                opened
+                filter
+        tempActions
+            node
+                open()
+                close()
+                filter()
+            session
+                copy()
+        utils = 타 프로세서들 중간에서 사용되는 것, 레코드나 뷰 아웃풋을 그 자체로는 내지않고.
+            parseQuery
+    instances = 실제 유저에게 주어진 앱. = appSession
+        temp
+            root
+            seed
+            DOM
+        tempActions
+            root
+            seed
+            getDomRef //만들어진 DOM에 의존하므로 realisation에 넣자
+
+saveSession() {
+    BrowserDB.sessions.put(
+        {
+            id: "asfdsaf",
+            data: appSession.data
+        }
+    )
+}
