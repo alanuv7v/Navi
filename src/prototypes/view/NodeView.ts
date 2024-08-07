@@ -11,11 +11,11 @@ import autoResizedTextarea from "./autoResizedTextarea"
 
 import * as userActions from "../../userActions"
 
-import Tie from "../Tie"
+import { link, NodeDataRaw, tie } from "../data/NodeData"
 
 export default class NodeView extends NodeModel {
     
-    constructor (...data) {
+    constructor (...data:NodeDataRaw) {
         super(...data)
     }
 
@@ -24,12 +24,13 @@ export default class NodeView extends NodeModel {
         Array.from(this.DOM.querySelectorAll(".autoResize"))?.forEach(d => d.autoResize())
     }
 
-    selected = false
-    opened = false
-    filter = null
-    openedFrom = null //NodeView that opened this node
-    tie = []
-    linkedNodeViews = []
+    filter:string|undefined //query statement
+    planted:boolean = false
+    selected:boolean = false
+    opened:boolean = false
+    openedFrom: NodeView|undefined //NodeView that opened this node
+    tie:tie|undefined
+    linkedNodeViews: Array<NodeView> = []
     
     deleteReady = false
 
@@ -53,11 +54,12 @@ export default class NodeView extends NodeModel {
         return this.value.slice(1)
     }
     
-    get siblings () {
-        return this.openedFrom.linkedNodeViews
+    get siblings ():Array<NodeView>|undefined {
+        return this.openedFrom?.linkedNodeViews
     }
 
-    get siblingsIndex () {
+    get siblingsIndex ():number|undefined {
+        if (!this.siblings) return 
         let res
         for (let i = 0; i < this.siblings.length; i++) {
             let s = this.siblings[i]
@@ -66,13 +68,15 @@ export default class NodeView extends NodeModel {
                 break
             }
         }
+        return res
     }
 
     get linkIndex () {
+        if (!this.openedFrom) return 
         let res
         for (let i = 0; i < this.openedFrom.links.length; i++) {
-            let l = this.openedFrom.links[i]
-            if (this.tie === l[0] && this.id === l[1]) {
+            let link = this.openedFrom.links[i]
+            if (this.tie === link.tie && this.id === link.id) {
                 res = i
                 break
             }
@@ -80,11 +84,11 @@ export default class NodeView extends NodeModel {
         return res
     }
 
-    get path () {
+    get path ():string {
         return [this.openedFrom ? [this.openedFrom.path, this.value] : this.value].flat().join("/")
     }
 
-    get allSubNodes () {
+    get allSubNodes ():Array<NodeView> {
         return this.linkedNodeViews.map(view => {
             if (view.linkedNodeViews.length > 0) {
                 return [view, ...view.allSubNodes]
@@ -97,8 +101,8 @@ export default class NodeView extends NodeModel {
     getAllSubNodesStats (indent=0) {
         return this.allSubNodes.map(view => {
             let view_ ={...view}
-            view_.linkedNodeViews = null //to prevent JSON stringfy error
-            view_.openedFrom = null //to prevent JSON stringfy error
+            view_.linkedNodeViews = [] //to prevent JSON stringfy error
+            view_.openedFrom = undefined //to prevent JSON stringfy error
             return JSON.stringify(view_, null, indent)
         })
     }
@@ -108,7 +112,7 @@ export default class NodeView extends NodeModel {
         button({
             class: "linksOpener", 
             onclick: () => this.toggleOpen(),
-            innerText: this.links.filter(link => link[0].split("/")[1] != "_origin").length,
+            innerText: .length, //TODO
             tooltip: "toggle show links"
         }),
 
@@ -189,6 +193,7 @@ export default class NodeView extends NodeModel {
     delete () {
         this.DOM.remove()
         this.deleteRecord()
+        if (!this.openedFrom) return
         this.openedFrom.refreshData()
         this.openedFrom.updateStyle()
         this.openedFrom.open()
@@ -267,7 +272,33 @@ export default class NodeView extends NodeModel {
         this.linksDOM
     )
 
-    async open (replacers=[], options={}) {
+    listLinkedDataToOpen (): Array<{tie: tie, data: NodeDataRaw}> {
+        
+        if (this.isReference) {
+            return [
+                {tie: ["reference", ""], id: this.referenceQuery}
+            ]
+        } else {
+            //append linkedNodeViews to links DOM
+            return this.links
+            .map((link) => {
+                let tie = link.tie
+                let res = appSession.network.getNodeById(link.id)
+                if (tie && res) return {tie, data: res[0]}
+            })
+            .filter(link => link != undefined)
+            .filter(link => link.data[0] != this.openedFrom?.id)
+            .filter(link => link.data[0] != this.context)
+            /* .filter(link => {
+                let tie = link.tie
+                //let key = link.data[1]
+                //return key === this.filter || !this.filter
+                return tie === appSession.globalFilter || tie === this.filter || !this.filter
+            }) */
+        }
+    }
+
+    async open (replacers:Array<NodeView>=[], options={}) {
 
         const defaultOptions = {
             softAppear: false
@@ -298,28 +329,13 @@ export default class NodeView extends NodeModel {
             })
         } else {
             //append linkedNodeViews to links DOM
-            this.linkedNodeViews = this.links
-                .map((link) => {
-                    let tie = link[0]
-                    let res = appSession.network.getNodeById(link[1])
-                    if (tie && res) return {tie, data: res[0]}
-                })
-                .filter(link => link)
-                .filter(link => link.data[0] != this.openedFrom?.id)
-                .filter(link => link.data[0] != this.context)
-                .filter(link => {
-                    let tie = link.tie
-                    let value = link.data[1]
-                    //return value === this.filter || !this.filter
-                    return tie === appSession.globalFilter || tie === this.filter || !this.filter
-                })
+            this.linkedNodeViews = this.listLinkedDataToOpen()
                 .map(({tie, data}) => {
                     return {
                         tie,
                         view: replacers?.find(r => r.id === data[0]) || new NodeView(...data)
                     }
                 }).map(({tie, view}) => {
-                    if (tie==="_origin/_value") view.originView = this
                     view.openedFrom = this
                     view.tie = tie
                     return view
@@ -346,7 +362,7 @@ export default class NodeView extends NodeModel {
     close () {
 
         //empty DOM
-        this.DOM.querySelector(".links").innerHTML = ""
+        this.linksDOM.innerHTML = ""
         
         //set state
         this.opened = false
@@ -370,7 +386,8 @@ export default class NodeView extends NodeModel {
         appSession.temp.lastNodeId = this.id
         
         //focus
-        this.DOM.querySelector("textarea.value.input").focus()
+        //@ts-ignore
+        this.DOM.querySelector("textarea.value.input")!.focus()
 
         //show options
         this.showOptions()
@@ -392,7 +409,7 @@ export default class NodeView extends NodeModel {
     plant () {
         refs("Nodes").innerHTML = ""
         refs("Nodes").append(this.DOM)
-        this.tie = "planted"
+        this.planted = true
         this.onDomMount()
     }
 
@@ -434,6 +451,7 @@ export default class NodeView extends NodeModel {
     }
 
     moveLinkIndex (toAdd) {
+        if (!this.openedFrom) return
         if (toAdd === 0) return false
         let toSwapWith = this.siblings[this.siblingsIndex + toAdd]
         console.log(toSwapWith.value)
@@ -446,6 +464,7 @@ export default class NodeView extends NodeModel {
     }
 
     moveUp () {
+        if (!this.openedFrom) return
         //move perm data
         let res = this.moveLinkIndex(-1)
         //move temp data
@@ -459,6 +478,7 @@ export default class NodeView extends NodeModel {
     }
 
     moveDown () {
+        if (!this.openedFrom) return
         //move data
         let res = this.moveLinkIndex(1)
         //move temp data
@@ -490,11 +510,7 @@ export default class NodeView extends NodeModel {
         let newModel = new NodeModel(newOriginId)
         newModel.refreshData()
         newModel.addLink(this.tie, this.id)
-        this.openedFrom.links.splice(this.linkIndex, 1)
-        this.openedFrom.updateRecord()
-        //move temp data
-        this.openedFrom.linkedNodeViews.splice(this.siblingsIndex, 1)
-        this.openedFrom.open()
+        
         //move DOM
         if (!newOriginView) return
         newOriginView.refreshData()
@@ -503,6 +519,14 @@ export default class NodeView extends NodeModel {
         appSession.onClickedNodeChange = () => {}
         this.DOM.classList.remove("finding-new-origin")
         this.select()
+
+        if (!this.openedFrom) return true
+        this.openedFrom.links.splice(this.linkIndex, 1)
+        this.openedFrom.updateRecord()
+        //move temp data
+        this.openedFrom.linkedNodeViews.splice(this.siblingsIndex, 1)
+        this.openedFrom.open()
+        return true
     }
 
     createBranch (value) {
@@ -606,13 +630,11 @@ export default class NodeView extends NodeModel {
 
         if (event.key === "Enter" && event.altKey) {
             
-            event.preventDefault()
-            try {
+            if (this.openedFrom) {
+                event.preventDefault()
                 this.openedFrom.createBranch()
                 this.openedFrom.open()
                 this.openedFrom.linkedNodeViews.slice(-1)[0]?.select()
-            } catch {
-                
             }
             
         } else if (event.key === "ArrowUp" && event.altKey && event.shiftKey) {
@@ -737,8 +759,8 @@ export default class NodeView extends NodeModel {
     }
 
     removeView () {
-        this.openedFrom.linkedNodeViews.splice(this.siblingsIndex, 1) 
         this.DOM.remove()
+        if (this.openedFrom) this.openedFrom.linkedNodeViews.splice(this.siblingsIndex, 1) 
     }
 
     lateFilter () {

@@ -2,12 +2,11 @@ import * as BrowserFileSystem from "../interface/BrowserFileSystem"
 
 export default class Session {
     
-    constructor (data) {
-        if (!data) return false
-        this.copy(data)
+    constructor (tempData:Object) {
+        this.overrideTempData(tempData)
     }
 
-    copy (data) {
+    overrideTempData (data:Object) {
         for (let [key, value] of Object.entries(data)) {
             this.temp[key] = value
         }
