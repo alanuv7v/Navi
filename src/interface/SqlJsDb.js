@@ -17,7 +17,9 @@ export async function create(name) {
     DB.run(`
     CREATE TABLE nodes (
         id CHAR(32),
+        key TEXT,
         value TEXT NOT NULL,
+        valueType TEXT NOT NULL,
         links TEXT
     );
     `); //id와 origin은 나중에 CHAR()로 바꾸고 길이제한 걸고 uuid로 변경
@@ -36,7 +38,7 @@ export async function create(name) {
 }
 
 
-export async function load(input) {
+export async function blobToDb(input) {
     
     let blob
 

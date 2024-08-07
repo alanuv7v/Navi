@@ -1,6 +1,6 @@
 import Dexie from "dexie";
 
-const BrowserDB = new Dexie("Root");
+const BrowserDB = new Dexie("Navi");
 
 BrowserDB.version(1).stores({
   sessions: `

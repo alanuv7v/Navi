@@ -1,7 +1,7 @@
 import * as BrowserSessions from "./interface/BrowserSessions"
 import appSession from "./appSession"
 import * as UserActions  from "./userActions"
-import * as LocalDBManager from "./interface/SqlDb"
+import * as LocalDBManager from "./interface/SqlJsDb"
 import BrowserDB from "./interface/BrowserDb"
 
 import * as userActions from "./userActions"
@@ -70,7 +70,7 @@ export async function initAppSession () {
         ).text()
     )
 
-    appSession.network.DB = await LocalDBManager.load(
+    appSession.network.DB = await LocalDBManager.blobToDb(
         await appSession.browser.getNetworkTreeSubItem("database").handle.getFile()
     )
 

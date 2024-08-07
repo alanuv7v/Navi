@@ -1,6 +1,7 @@
+//@ts-check
 import appSession from "./appSession"
 import * as SessionManager from "./interface/BrowserSessions"
-import * as SqlDb from "./interface/SqlDb"
+import * as SqlDb from "./interface/SqlJsDb"
 import parseQuery from "./utils/parseQuery"
 import NodeView from "./prototypes/view/NodeView"
 
@@ -58,7 +59,7 @@ export const Sessions = {
         return res
     },
     async load_session_ (id) {
-        return await SessionManager.loadSession(id || "lastUsed")
+        return await SessionManager.getSession(id || "lastUsed")
     },
     async clear_session () {
         return await SessionManager.clearAllSessions()
@@ -84,6 +85,7 @@ export const Network = {
 
                 // make network dir
                 await CapacitorFs.mkdir({
+                    path: Directory.Documents,
                     directory: Directory.Documents,
                     recursive: false,
                   });
@@ -120,7 +122,7 @@ export const Network = {
                     encoding: Encoding.UTF8,
                 });
 
-                if (await CapacitorFs.checkPermissions() != 'granted') await CapacitorFs.requestPermissions()
+                if ((await CapacitorFs.checkPermissions()).publicStorage != 'granted') await CapacitorFs.requestPermissions()
                 
 
                 break;
@@ -167,13 +169,13 @@ export const Network = {
 
             case "android":
             
-                if (await CapacitorFs.checkPermissions() != 'granted') await CapacitorFs.requestPermissions()
+                if ((await CapacitorFs.checkPermissions()).publicStorage != 'granted') await CapacitorFs.requestPermissions()
                 break
             
             case "web":
 
-                if (window.showDirectoryPicker) {
-                    let networkDirhandle = await window.showDirectoryPicker()
+                if (window?.showDirectoryPicker) {
+                    let networkDirhandle = await window?.showDirectoryPicker()
                     await initAppSession(networkDirhandle)
                     SessionManager.saveSession()
                 } else {
@@ -191,7 +193,7 @@ export const Network = {
 
             case "android":
             
-                if (await CapacitorFs.checkPermissions() != 'granted') await CapacitorFs.requestPermissions()
+                if ((await CapacitorFs.checkPermissions()).publicStorage != 'granted') await CapacitorFs.requestPermissions()
                 break
             
             case "web":
@@ -258,29 +260,7 @@ export const Network = {
 }
 
 export const Edit = {
-    copy_node: () => {
-        appSession.copiedNode = appSession.selectedNode
-        return appSession.copiedNode
-    },
-    paste_node: () => {
-        appSession.copiedNode.changeParent(appSession.selectedNode)
-        return appSession.selectedNode
-    },
-    add_linked_node: (key, value) => {
-        appSession.selectedNode.addChild(key, value)
-        return appSession.selectedNode
-    },
-    delete_node: () => {
-        return appSession.selectedNode.delete()
-    },
-    change_order: (change) => {
-        appSession.selectedNode.changeOrder(change)
-        return appSession.selectedNode
-    },
-    link: (queryString) => {
-        new Query(queryString)
-        return appSession.selectedNode.linkTo(tieID, endIndex, nodeID)
-    }
+    //NodeView의 일부 메소드 가져올것.
 }
 
 export const Prune = {
@@ -307,8 +287,11 @@ export const Navigate = {
         
         let res = (await parseQuery(queryString))
         console.log("parseQuery res: ", res)
-        let nodeView = new NodeView(...res[0])
-        nodeView.plant()
+
+         if (res) {
+            new NodeView(...res[0])
+                .plant()
+        }
         
         SessionManager.saveSession()
         return res

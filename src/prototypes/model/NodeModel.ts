@@ -1,23 +1,26 @@
-import NodeData from "../data/NodeData"
+//@ts-check
+import NodeData, { link, tie } from "../data/NodeData"
 import appSession from '../../appSession';
 import { escape } from "../../utils/escapeSqlQuery"
 import Logger from "../view/Logger";
 
+import { NodeDataRaw } from "../data/NodeData";
+import Tie from "../Tie";
+
 export default class NodeModel extends NodeData {
 
-    constructor (...data) {
+    constructor (...data: NodeDataRaw) {
         super(...data)
-        //should sync all these with the LocalDB automatically
     }
 
     get context () {
-        let originLink = this.links.find(link => link[0].split("/")[1] === "context")
+        let originLink = this.links.find(link => link.tie[0] === "context")
         if (originLink) return originLink[1]
         else return null
     }
 
     get isAuthname () {
-        return this.value[0] === "@"
+        return this.key[0] === "@"
     }
 
     get authNameConflict () {
@@ -28,16 +31,6 @@ export default class NodeModel extends NodeData {
         catch {
             return false
         }
-    }
-    
-    getAdress () {
-        let originPath = this?.originNode?.path()
-        if (originPath) return [...originPath, this.value]
-        else return [this.value]
-    }
-    
-    getAdressString () {
-        return this.getAdress().join("/")
     }
     
     createRecord () {
@@ -81,7 +74,7 @@ export default class NodeModel extends NodeData {
         )
     }
 
-    forget (id) {
+    forget (id: string) {
         let aliveLinks = this.links.filter(l => l[1] != id)
         this.links = aliveLinks
         return this.updateRecord()
@@ -104,9 +97,9 @@ export default class NodeModel extends NodeData {
             // remove this node from other nodes data
             for (let link of this.links) { //remove mirror links
                 let oppID = link[1]
-                let oppData = appSession.network.DB.exec(
+                let oppData: NodeDataRaw = Object.assign(NodeData, appSession.network.DB.exec(
                     `SELECT * FROM nodes WHERE id='${oppID}'`
-                )[0].values[0]
+                )[0].values[0])
                 let model = new NodeModel(...oppData)
                 model.forget(this.id)
                 console.log(oppID, oppData, model)
@@ -133,55 +126,53 @@ export default class NodeModel extends NodeData {
         return this
     }
 
-    addLink (tie, nodeID, index) {
-        if (index) {
-            this.links.splice(index, 1, [tie, nodeID])
+    addLink (tie: tie, id: string, insertIndex?: number) {
+        if (insertIndex) {
+            this.links.splice(insertIndex, 1, {tie, id})
         } else {
-            this.links.push([tie, nodeID])
+            this.links.push({tie, id})
         }
         this.updateRecord()
     }
 
-    linkTo (tie, nodeID) {
-
-        let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
+    linkTo (tie: tie, id: string) {
         
-        let newNodeModel = new NodeModel(nodeID, null, [])
+        let newNodeModel = new NodeModel(id)
         newNodeModel.refreshData()
-        
         this.addLink(tie, newNodeModel.id)
-        newNodeModel.addLink(mirrorTie, this.id)
+        let mirrorLink = tie.reverse() as tie
+        newNodeModel.addLink(mirrorLink, this.id)
     }
 
     
-    createLinkedNode (tie, value) {
+    createLinkedNode (tie: tie, value: string) {
         
-        let newNodeModel = new NodeModel(null, value, [])
+        let newNodeModel = new NodeModel()
         newNodeModel.createRecord()
         
         this.addLink(tie, newNodeModel.id)
 
-        let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
+        let mirrorTie = tie.reverse() as tie
         newNodeModel.addLink(mirrorTie, this.id)
 
         return newNodeModel
 
     }
 
-    deleteLink (tie, nodeID) {
+    unLink (tie: tie, id: string) {
         //미완!!!!
         //update this
-        let prevThisLink = this.links.find(([t, n]) => t === tie && n === this.id)
-        this.links.splice(this.links.indexOf(prevThisLink), 1)
+        let prevThisLink = this.links.find(link => link.tie === tie && link.id === this.id)
+        this.links.splice(this.links.indexOf(prevThisLink!), 1)
         this.updateRecord()
         
         //update opp
-        let mirrorTie = structuredClone(tie.split("/")).reverse().join("/")
-        let newNodeModel = new NodeModel(nodeID, null, [])
+        let mirrorTie = tie.toReversed() as tie
+        let newNodeModel = new NodeModel(id)
         newNodeModel.refreshData()
 
-        let prevMirroredLink = newNodeModel.links.find(([t, n]) => t === mirrorTie && n === this.id)
-        newNodeModel.links.splice(newNodeModel.links.indexOf(prevMirroredLink), 1)
+        let prevMirroredLink = this.links.find(link => link.tie === mirrorTie && link.id === this.id)
+        newNodeModel.links.splice(newNodeModel.links.indexOf(prevMirroredLink!), 1)
         newNodeModel.updateRecord()
 
     }

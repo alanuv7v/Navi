@@ -7,9 +7,16 @@ Bug Fix:
 Database:
     ☐ NodeData 새로운 스키마 적용 (+key, valuetype)
     ☐ valueType에 따른 다양한 value display 적용.
+    ☐ links를 아예 전부 별개의 DB에 저장할지 고민중. 그냥 링크관계 하나를 한 행에 넣는거다. 스키마는 idA, idB, endA, endB.
+        이 방식의 이점은 뭐가있을까.
+        ...
+        솔직히 잘 모르겠다. 
+        링크들을 솎아내는 작업을 JS가 아닌 WASM으로 돌아가는 웹어셈블리에 넘김으로써 조금은 더 편해질 수도 있겠지. 
+        솔직히 큰 이익은 없을것 같다.
 
 Features:
     ☐ yaml WYSIWIG 에디터 내장, 설정 및 템플릿 수정용
+    ☐ Media Preview.
     Templates:
         ☐ yaml로 템플릿 검증 기능
     Privacy:

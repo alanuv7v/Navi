@@ -1,4 +1,4 @@
-
+//@ts-check
 
 // This is the final product.
 
@@ -26,6 +26,7 @@ import Logger from "./prototypes/view/Logger";
 import { Capacitor } from "@capacitor/core";
 import parseQuery from "./utils/parseQuery";
 
+//@ts-ignore
 window._debug = {
   DOM,
   userActions,

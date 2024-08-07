@@ -1,3 +1,4 @@
+//@ts-check
 import appSession from "../../appSession"
 import NodeModel from "../model/NodeModel"
 import refs from "../../DOMRefs"
@@ -31,6 +32,18 @@ export default class NodeView extends NodeModel {
     linkedNodeViews = []
     
     deleteReady = false
+
+    
+    
+    getAdress () {
+        let originPath = this?.openedFrom?.path()
+        if (originPath) return [...originPath, this.value]
+        else return [this.value]
+    }
+    
+    getAdressString () {
+        return this.getAdress().join("/")
+    }
 
     get isReference () {
         return this.value.startsWith(">")
