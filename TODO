@@ -1,0 +1,30 @@
+Code:
+    ☐ 타입스크립트로 전환?
+
+Bug Fix:
+    
+
+Database:
+    ☐ NodeData 새로운 스키마 적용 (+key, valuetype)
+    ☐ valueType에 따른 다양한 value display 적용.
+
+Features:
+    ☐ yaml WYSIWIG 에디터 내장, 설정 및 템플릿 수정용
+    Templates:
+        ☐ yaml로 템플릿 검증 기능
+    Privacy:
+        ☐ 노드 잠금 기능 (읽기, 수정, 삭제, 미러링크 생성)
+
+Cross-Platform:
+    Dababase:
+        ☐ userAction 업데이트
+        ☐ NodeModel 업데이트
+    편의성:
+
+Collaboration:
+    ☐ CRUD API 만들기 (get, create, update, delete)
+
+Marketing:
+    ☐ Rename more entities and actions, make em "POETIC"
+    ☐ 로고 만들기
+    ☐ 제대로 된 README 만들기
