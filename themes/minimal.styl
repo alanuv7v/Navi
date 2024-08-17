@@ -68,13 +68,13 @@
 
 @keyframes active {
     0% {    
-        box-shadow: inset 0px 0px 0px 1px var(--mildshade);
+        box-shadow: inset 0px 0px 0px 1px var(--mild);
     }
     50% {
-        box-shadow: inset 0px 0px 0px 2px var(--mild);
+        box-shadow: inset 0px 0px 0px 2px var(--nice);
     }
     100% {
-        box-shadow: inset 0px 0px 0px 1px var(--mildshade);
+        box-shadow: inset 0px 0px 0px 1px var(--mild);
     }
 }
 
@@ -103,14 +103,15 @@
         box-shadow: inset 0px 0px 0px 1px var(--mild);
     }
 
-    button:focus {
-        animation: active 0.3s ease-out;
+    button:focus, input:focus {
         background: var(--shade);
         box-shadow: inset 0px 0px 0px 1px var(--mild);
     }
 
     button:active {
-        scale: 0.95
+        /* scale: 0.95 */
+        transition: none;
+        box-shadow: inset 0px 0px 0px 2px var(--nice);
     }
 
     

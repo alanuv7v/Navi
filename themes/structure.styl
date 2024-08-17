@@ -33,6 +33,11 @@ div {
     align-items: center;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+    transition: background-color 0s 600000s, color 0s 600000s !important;
+}
+
 textarea {
     display: block;
     width: 100%;
@@ -532,11 +537,14 @@ input:active, .clickable:active {
     position: absolute;
 
     transform: translate(0.2em, 0.5em);
+
+    background: var(--shade);
+    color: var(--light);
     
     content: attr(tooltip);
     padding: 0.5em;
-    background: var(--light);
-    color: var(--dark);
+
+
     border-radius: 0.5em;
     z-index: 3;
 
