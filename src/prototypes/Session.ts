@@ -1,9 +1,12 @@
 import * as BrowserFileSystem from "../interface/BrowserFileSystem"
 
+import { SqlJsDb } from "../interface/SqlJsDb"
+import NodeView from "./view/NodeView"
+
 export default class Session {
     
-    constructor (tempData:Object) {
-        this.overrideTempData(tempData)
+    constructor (tempData?:Object) {
+        if (tempData) this.overrideTempData(tempData)
     }
 
     overrideTempData (data:Object) {
@@ -14,22 +17,20 @@ export default class Session {
     
     temp = {
         browser: {
-            networkHandle: null,
+            networkHandle: undefined as FileSystemHandle | undefined,
         },
-        adress: "",
-        seedNodeID: "",
-        lastNodeId: "",
-        globalFilter: "All",
-        logs: [],
+        adress: "" as string,
+        seedNodeID: "" as string,
+        lastNodeId: "" as string,
+        globalFilter: "All" as string,
+        logs: [] as Array<any>,
     }
-
 
     browser = {
         
-        networkDirectoryTree: null,
+        networkDirectoryTree: undefined,
 
-        getNetworkTreeSubItem (path) {
-
+        getNetworkTreeSubItem (path: string) {
             return BrowserFileSystem.getSubItemByPath(
                 this.networkDirectoryTree,
                 path
@@ -44,24 +45,31 @@ export default class Session {
         temp: {}
     }
 
-    settingsParsed = null
+    settingsParsed: Object | undefined = undefined 
 
-    network = {
-        get name () {
-            try {
-                return this.settingsParsed["name"]
-            }
-            catch {
-                return "unknown"
-            }
-        },
-        DB: null,
-        getNodeById: (id) => this.network.DB.exec(`SELECT * FROM nodes WHERE id='${id}'`)[0].values,
-        getNodeByValue: (value) => this.network.DB.exec(`SELECT * FROM nodes WHERE value='${value}'`)[0].values
-    }
+    network = ((session: Session) => {
+
+        return {
+            get name () : string {
+                if (session.settingsParsed) {
+                    return session.settingsParsed["name"]
+                }
+                else {
+                    return "unknown"
+                }
+            },
+            DB: undefined as SqlJsDb | undefined,
+            getNodeById: (id) => this.network.DB!.exec(`SELECT * FROM nodes WHERE id='${id}'`)[0].values,
+            getNodeByValue: (value) => this.network.DB!.exec(`SELECT * FROM nodes WHERE value='${value}'`)[0].values
+        }
+
+    })(this) //outer this를 가져오기 위한 개고생
     
-    selectedNode = null
-    #clickedNode = null
+    selectedNode: NodeView | undefined
+    hoveredNode: NodeView | undefined
+    copiedNode: NodeView | undefined
+
+    #clickedNode: NodeView | undefined
     
     get clickedNode () {
         return this.#clickedNode
@@ -69,21 +77,19 @@ export default class Session {
     set clickedNode (value) {
         this.#clickedNode = value 
         this.onClickedNodeChange(value)
-        return true
     }
-    onClickedNodeChange = () => {}
-    hoveredNode = null 
-    copiedNode = null 
 
-    globalFilter = null
+    onClickedNodeChange: Function = () => {}
+
+    globalFilter: string|undefined
 
     settings = {
         style: {
-            fontSize: 16
+            fontSize: 16 as number
         },
-        autosave: true,
-        autosaveInterval: 10*1000,
-        autosaveIntervalId: null
+        autosave: true as boolean,
+        autosaveInterval: 10*1000 as number,
+        autosaveIntervalId: -1 as number
     }
 
     

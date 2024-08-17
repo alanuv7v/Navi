@@ -3,13 +3,11 @@ import appSession from "./appSession"
 import * as UserActions  from "./userActions"
 import * as LocalDBManager from "./interface/SqlJsDb"
 import BrowserDB from "./interface/BrowserDb"
-
 import * as userActions from "./userActions"
 import Logger from "./prototypes/view/Logger"
-
 import * as BrowserFileSystem from "./interface/BrowserFileSystem"
-
 import * as yaml from "yaml"
+import { Capacitor } from "@capacitor/core";
 
 export default async function init () {
 
@@ -56,26 +54,34 @@ export default async function init () {
 }
 
 export async function initAppSession () {
+
+    switch (Capacitor.getPlatform()) {
+
+        case "web":
+
+        if (!appSession.temp.browser.networkHandle) break
+            
+            if (!(await appSession.temp.browser.networkHandle?.queryPermission()) === "granted") {
+                await appSession.temp.browser.networkHandle?.requestPermission()
+            } 
+            appSession.browser.networkDirectoryTree = await BrowserFileSystem.listAllFilesAndDirs(
+                appSession.temp.browser.networkHandle
+            )
+            
+            appSession.settingsParsed = await yaml.parse(
+                await (
+                    await appSession.browser.getNetworkTreeSubItem("settings.yaml").handle.getFile()
+                ).text()
+            )
+
+            appSession.network.DB = await LocalDBManager.blobToDb(
+                await appSession.browser.getNetworkTreeSubItem("database").handle.getFile()
+            )
+
+            BrowserSessions.saveSession()
+    }
     
-    if (!(await appSession.temp.browser.networkHandle?.queryPermission()) === "granted") {
-        await appSession.temp.browser.networkHandle?.requestPermission()
-    } 
-    appSession.browser.networkDirectoryTree = await BrowserFileSystem.listAllFilesAndDirs(
-        appSession.temp.browser.networkHandle
-    )
-    
-    appSession.settingsParsed = await yaml.parse(
-        await (
-            await appSession.browser.getNetworkTreeSubItem("settings.yaml").handle.getFile()
-        ).text()
-    )
 
-    appSession.network.DB = await LocalDBManager.blobToDb(
-        await appSession.browser.getNetworkTreeSubItem("database").handle.getFile()
-    )
-
-    BrowserSessions.saveSession()
-
-    return appSession.network
+    return appSession
 
 }

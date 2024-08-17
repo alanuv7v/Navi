@@ -175,8 +175,8 @@ export const Network = {
             case "web":
 
                 if (window?.showDirectoryPicker) {
-                    let networkDirhandle = await window?.showDirectoryPicker()
-                    await initAppSession(networkDirhandle)
+                    appSession.temp.browser.networkHandle = await window.showDirectoryPicker()
+                    await initAppSession()
                     SessionManager.saveSession()
                 } else {
                     /* this.open_network_DB() */
@@ -259,26 +259,6 @@ export const Network = {
     }
 }
 
-export const Edit = {
-    //NodeView의 일부 메소드 가져올것.
-}
-
-export const Prune = {
-
-    toggle_open: () => {
-        if (appSession.selectedNode.opened) {
-            appSession.selectedNode.close()
-        } else {
-            appSession.selectedNode.open()
-        }
-        return appSession.selectedNode
-    },
-
-    global_filter: (key) => {
-    }
-
-}
-
 export const Navigate = {
     //search는 openTree와 동일해서 제외.
     async show_node_ (queryString) { //Navigate.plant로 옮길까.
@@ -304,6 +284,27 @@ export const Navigate = {
         next_adress: () => {
         },
     },
+
+}
+
+
+export const Edit = {
+    //NodeView의 일부 메소드 가져올것.
+}
+
+export const Prune = {
+
+    toggle_open: () => {
+        if (appSession.selectedNode.opened) {
+            appSession.selectedNode.close()
+        } else {
+            appSession.selectedNode.open()
+        }
+        return appSession.selectedNode
+    },
+
+    global_filter: (key) => {
+    }
 
 }
 

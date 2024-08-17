@@ -3,13 +3,18 @@ import { v4 as uuidv4 } from 'uuid';
 import * as BrowserFileSystem from "./BrowserFileSystem"
 import appSession from "../appSession";
 
+export type SqlJsDb = {
+    exec: (input: string) => Array<any>,
+    export: () => Uint8Array
+}
+
 const SQL = await initSqlJs(
     //{locateFile: file => `https://sql.js.org/dist/${file}`}
     //{locateFile: file => `sqlite/${file}`}
     {locateFile: file => `${file}`} //for dist
 )
 
-export async function create(name) {
+export async function create(name: string): Promise<SqlJsDb> {
 
     const DB = new SQL.Database();
 
@@ -18,8 +23,8 @@ export async function create(name) {
     CREATE TABLE nodes (
         id CHAR(32),
         key TEXT,
-        value TEXT NOT NULL,
-        valueType TEXT NOT NULL,
+        value TEXT,
+        valueType TEXT,
         links TEXT
     );
     `); //id와 origin은 나중에 CHAR()로 바꾸고 길이제한 걸고 uuid로 변경
@@ -29,6 +34,8 @@ export async function create(name) {
     INSERT INTO nodes VALUES (
         '${uuidv4().replaceAll("-", "")}',
         '${`@${name}`}',
+        null,
+        null,
         '${JSON.stringify([])}'
     );`)
 
@@ -47,8 +54,8 @@ export async function blobToDb(input) {
         blob = input
 
     } else if (input instanceof FileSystemFileHandle) {  
-
-        await input.requestPermission()
+        // @ts-expect-error
+        await input?.requestPermission()
         let file = await input.getFile();
         blob = new Blob([file], { type: file.type })
         
@@ -61,6 +68,7 @@ export async function blobToDb(input) {
 }
 
 export async function update () {
+    if (!appSession.network.DB) return false
     console.log(appSession.network.DB, appSession.network.DB.exec('select * from nodes')[0].values)
     const data = await appSession.network.DB.export(); // Get Uint8Array of database contents
     const blob = new Blob([data], { type: 'application/octet-stream' });

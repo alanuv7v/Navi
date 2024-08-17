@@ -5,13 +5,13 @@ import refs from "../../DOMRefs"
 import parseQuery from "../../utils/parseQuery"
 
 import van from "vanjs-core"
-const {div, span, button, textarea, input, a} = van.tags
+const {div, button, input} = van.tags
 
 import autoResizedTextarea from "./autoResizedTextarea"
 
 import * as userActions from "../../userActions"
 
-import { link, NodeDataRaw, tie } from "../data/NodeData"
+import { NodeDataRaw, tie } from "../data/NodeData"
 
 export default class NodeView extends NodeModel {
     
@@ -21,7 +21,7 @@ export default class NodeView extends NodeModel {
 
     onDomMount = () => {
         this.updateStyle()
-        Array.from(this.DOM.querySelectorAll(".autoResize"))?.forEach(d => d.autoResize())
+        this.valueInput.autoResize()
     }
 
     filter:string|undefined //query statement
@@ -33,11 +33,10 @@ export default class NodeView extends NodeModel {
     linkedNodeViews: Array<NodeView> = []
     
     deleteReady = false
-
     
     
     getAdress () {
-        let originPath = this?.openedFrom?.path()
+        let originPath = this?.openedFrom?.path
         if (originPath) return [...originPath, this.value]
         else return [this.value]
     }
@@ -107,12 +106,32 @@ export default class NodeView extends NodeModel {
         })
     }
 
+    
+    delete () {
+        
+        this.DOM.remove()
+        this.deleteRecord()
+
+        if (!this.openedFrom) return
+        let prevId = this.openedFrom?.linkedNodeViews[this.siblingsIndex as number -1].id
+        this.openedFrom.refreshData()
+        this.openedFrom.updateStyle()
+        this.openedFrom.open()
+        
+        if (prevId) {
+            this.openedFrom.linkedNodeViews.find(v => v.id === prevId)?.select()
+        } else {
+            this.openedFrom?.select()
+        }
+    }
+
+    
     actionsDOM = div({class: "actions"},
         
         button({
             class: "linksOpener", 
             onclick: () => this.toggleOpen(),
-            innerText: .length, //TODO
+            innerText: this.listLinkedDataToOpen().length, //TODO
             tooltip: "toggle show links"
         }),
 
@@ -130,20 +149,10 @@ export default class NodeView extends NodeModel {
         }, tooltip: "find context"}, "^"/* "show origin" */),
         button({onclick: () => {
             let newNode = this.createBranch()
+            if (!newNode) return false //this node is a reference node
             this.open()
             this.linkedNodeViews.find(v => v.id === newNode.id)?.select()
         }, tooltip: "create new branch"}, "+" /* "new branch" */),
-        /* button({onclick: () => {
-            hearCommand((queryString) => {
-                try {
-                    let targetNodeId = parseQuery(queryString)[0].id
-                    this.linkTo(this.tie, targetNodeId)
-                    this.open()
-                } catch (err) {
-                    Logger.log(`failed to link "${queryString}"`, "error")
-                }
-            })
-        }, tooltip: "create new link"}, "~"), */ //replaced by creating a link with value=">(queryString)"
         button({onclick: (e) => {
             console.log(this)
             if (this.deleteReady) {
@@ -189,23 +198,52 @@ export default class NodeView extends NodeModel {
             }
         }, "{")
     )
-        
-    delete () {
-        this.DOM.remove()
-        this.deleteRecord()
-        if (!this.openedFrom) return
-        this.openedFrom.refreshData()
-        this.openedFrom.updateStyle()
-        this.openedFrom.open()
-        try {
-            let prevSiblingsIndex = this.siblingsIndex
-            this.openedFrom.linkedNodeViews.at(prevSiblingsIndex-1).select()
-        } catch {
-            this.openedFrom?.select()
-        }
-    }
 
     linksDOM = div({class: "links"})
+
+    valueInput: autoResizedTextarea = new autoResizedTextarea({
+        class: "value", 
+        value: this.value, 
+        onclick: (event) => this.#onclick(), 
+        onauxclick: (event) => this.#onauxclick(event), 
+        onchange: (event) => {this.#onvaluechange(event)},
+        onkeydown: (event) => this.#onkeydown(event),
+        onselect: (event) => this.#onselect(event),
+        onfocus: ((e) => {
+            e.preventDefault();
+            e.target.focus({preventScroll: true});
+        })
+    })
+
+    tieDOM = input({class: "tieInput", placeholder: "from/to", 
+        
+        onclick: (event) => {
+            if (this.planted || this.isReference) {
+                event.target.disabled = true
+            } else {
+                event.target.disabled = false
+            }
+            event.target.value = event.target.value.split(" ----- ").join("/")
+        },
+
+        onblur: (event) => {
+            event.target.value = event.target.value.split("/").join(" ----- ")
+        },
+
+        onchange: (event) => {
+
+            if (!this.openedFrom || this.planted || this.isReference) return false
+            
+            let prevTie = structuredClone(this.tie) 
+            let newTie = event.target.value.split("/")
+
+            this.changeTie(prevTie!.toReversed() as tie, newTie.toReversed() as tie, this.openedFrom!.id)
+            
+            event.target.value = event.target.value.split("/").join(" ----- ")
+            this.showTieDefault()
+            
+        }
+    })
 
     DOM = div({
         class: "node", 
@@ -220,48 +258,9 @@ export default class NodeView extends NodeModel {
             
             div(
                 
-                input({class: "tieInput", placeholder: "from/to", 
-                    
-                    onclick: (event) => {
-                        if (["planted", "/:reference"].includes(this.tie)) {
-                            event.target.disabled = true
-                        } else {
-                            event.target.disabled = false
-                        }
-                        event.target.value = event.target.value.split(" ----- ").join("/")
-                    },
+                this.tieDOM, 
 
-                    onblur: (event) => {
-                        event.target.value = event.target.value.split("/").join(" ----- ")
-                    },
-
-                    onchange: (event) => {
-                    
-                    let prevTie = structuredClone(this.tie)
-                    this.tie = event.target.value
-
-                    let [prevFrom, prevTo] = prevTie.split("/")
-
-                    this.changeTie((new Tie(prevTie)).mirror, (new Tie(this.tie)).mirror, this.openedFrom.id)
-                    
-                    event.target.value = event.target.value.split("/").join(" ----- ")
-                    this.showTieDefault()
-                    
-                }}),
-                    
-                new autoResizedTextarea({
-                    class: "value", 
-                    value: this.value, 
-                    onclick: (event) => this.#onclick(), 
-                    onauxclick: (event) => this.#onauxclick(event), 
-                    onchange: (event) => {this.#onvaluechange(event)},
-                    onkeydown: (event) => this.#onkeydown(event),
-                    onselect: (event) => this.#onselect(event),
-                    onfocus: ((e) => {
-                        e.preventDefault();
-                        e.target.focus({preventScroll: true});
-                    })
-                }).DOM,
+                this.valueInput.DOM,
 
                 div({class: "options"},
                     this.actionsDOM
@@ -275,9 +274,9 @@ export default class NodeView extends NodeModel {
     listLinkedDataToOpen (): Array<{tie: tie, data: NodeDataRaw}> {
         
         if (this.isReference) {
-            return [
-                {tie: ["reference", ""], id: this.referenceQuery}
-            ]
+            return parseQuery(this.referenceQuery).map(data => [
+                {tie: ["reference", ""], data}
+            ])
         } else {
             //append linkedNodeViews to links DOM
             return this.links
@@ -288,7 +287,6 @@ export default class NodeView extends NodeModel {
             })
             .filter(link => link != undefined)
             .filter(link => link.data[0] != this.openedFrom?.id)
-            .filter(link => link.data[0] != this.context)
             /* .filter(link => {
                 let tie = link.tie
                 //let key = link.data[1]
@@ -308,45 +306,27 @@ export default class NodeView extends NodeModel {
 
         //clear DOM
         if (this.opened) this.close()
-
-        if (this.isReference) {
-            this.linkedNodeViews = parseQuery(this.referenceQuery)
-        } else if (!this.links || this.links.length < 1) {
-            // return if no links
-            return
-        } 
-
         //reset links DOM
         this.linksDOM.innerHTML = ""
 
-        if (this.isReference) {
-            console.log(await parseQuery(this.referenceQuery))
-            this.linkedNodeViews = (await parseQuery(this.referenceQuery)).map(data => {
-                let view = new NodeView(...data)
+        this.linkedNodeViews = this.listLinkedDataToOpen()
+            .map(({tie, data}) => {
+                return {
+                    tie,
+                    view: replacers?.find(r => r.id === data[0]) || new NodeView(...data)
+                }
+            }).map(({tie, view}) => {
                 view.openedFrom = this
-                view.tie = "/:reference"
+                view.tie = tie
                 return view
             })
-        } else {
-            //append linkedNodeViews to links DOM
-            this.linkedNodeViews = this.listLinkedDataToOpen()
-                .map(({tie, data}) => {
-                    return {
-                        tie,
-                        view: replacers?.find(r => r.id === data[0]) || new NodeView(...data)
-                    }
-                }).map(({tie, view}) => {
-                    view.openedFrom = this
-                    view.tie = tie
-                    return view
-                })
-        }
 
         this.linkedNodeViews.forEach(view => {
+            //@ts-expect-error
             if (options.softAppear) {
                 view.DOM.classList.add("appear")
             }
-            this.DOM.querySelector(".links").append(view.DOM)
+            this.linksDOM.append(view.DOM)
             view.onDomMount()
         })
 
@@ -398,7 +378,7 @@ export default class NodeView extends NodeModel {
 
     deselect () {
         this.DOM.classList.remove("selected")
-        appSession.selectedNode = null
+        appSession.selectedNode = undefined
         this.selected = false
         /* this.optionSleep = true */
         this.hideOptions()
@@ -451,20 +431,23 @@ export default class NodeView extends NodeModel {
     }
 
     moveLinkIndex (toAdd) {
-        if (!this.openedFrom) return
+        
+        if (!this.openedFrom || !this.siblings || !this.siblingsIndex || !this.tie) return
+
         if (toAdd === 0) return false
         let toSwapWith = this.siblings[this.siblingsIndex + toAdd]
         console.log(toSwapWith.value)
         let targetIndex = toSwapWith?.linkIndex
         if (!targetIndex || targetIndex < -1 || targetIndex > this.openedFrom.links.length) return false
         this.openedFrom.links.splice(this.linkIndex, 1) //delete pre-existing self
-        this.openedFrom.links.splice(targetIndex, 0, [this.tie, this.id]) //insert self
+        this.openedFrom.links.splice(targetIndex, 0, {tie: this.tie, id: this.id}) //insert self
         console.log(this.openedFrom.links)
         this.openedFrom.updateRecord()
+
     }
 
     moveUp () {
-        if (!this.openedFrom) return
+        if (!this.openedFrom || !this.siblings || !this.siblingsIndex || !this.tie) return
         //move perm data
         let res = this.moveLinkIndex(-1)
         //move temp data
@@ -472,13 +455,13 @@ export default class NodeView extends NodeModel {
         this.openedFrom.linkedNodeViews.splice(prevSiblingsIndex, 1) //delete pre-existing self
         this.openedFrom.linkedNodeViews.splice(prevSiblingsIndex - 1, 0, this) //insert self
         //move DOM
-        this.DOM.parentNode.insertBefore(this.DOM, this.DOM.previousSibling)
+        this.DOM.parentNode!.insertBefore(this.DOM, this.DOM.previousSibling)
         this.select()
         return res
     }
 
     moveDown () {
-        if (!this.openedFrom) return
+        if (!this.openedFrom || !this.siblingsIndex) return
         //move data
         let res = this.moveLinkIndex(1)
         //move temp data
@@ -486,10 +469,10 @@ export default class NodeView extends NodeModel {
         this.openedFrom.linkedNodeViews.splice(prevSiblingsIndex, 1) //delete pre-existing self
         this.openedFrom.linkedNodeViews.splice(prevSiblingsIndex + 1, 0, this) //insert self
         //move DOM
-        if (this.DOM.nextSibling.nextSibling) {
-            this.DOM.parentNode.insertBefore(this.DOM, this.DOM.nextSibling.nextSibling) 
+        if (this.DOM.nextSibling) {
+            this.DOM.parentNode!.insertBefore(this.DOM, this.DOM.nextSibling.nextSibling) 
         } else {
-            this.DOM.parentNode.insertBefore(this.DOM, null) //to the end
+            this.DOM.parentNode!.insertBefore(this.DOM, null) //to the end
         }
 
         this.select()
@@ -509,7 +492,7 @@ export default class NodeView extends NodeModel {
         //move data
         let newModel = new NodeModel(newOriginId)
         newModel.refreshData()
-        newModel.addLink(this.tie, this.id)
+        newModel.addLink(this.tie!, this.id)
         
         //move DOM
         if (!newOriginView) return
@@ -524,29 +507,29 @@ export default class NodeView extends NodeModel {
         this.openedFrom.links.splice(this.linkIndex, 1)
         this.openedFrom.updateRecord()
         //move temp data
-        this.openedFrom.linkedNodeViews.splice(this.siblingsIndex, 1)
+        this.openedFrom.linkedNodeViews.splice(this.siblingsIndex!, 1)
         this.openedFrom.open()
         return true
     }
 
-    createBranch (value) {
+    createBranch () {
         if (this.isReference) return false
-        return this.createLinkedNode ("context/", value || "")
+        return this.createLinkedNode (["context", ""])
     }
 
     showTie () {
-        this.DOM.querySelector(".tieInput").style.display = "inline-block"
+        this.tieDOM.style.display = "inline-block"
     }
 
     showTieDefault () {
-        this.DOM.querySelector(".tieInput").style.display = this.tie === "context/" ? "none" : "inline-block"
+        this.tieDOM.style.display = this.tie![0] === "context" ? "none" : "inline-block"
     }
 
     updateStyle () {
         try {
             
             this.showTieDefault()
-            this.DOM.querySelector(".tieInput").value = this.tie.split("/").join(" ----- ")
+            this.tieDOM.value = this.tie!.join(" ----- ")
             
             if (this.isAuthname) {
                 this.DOM.classList.add("authName")
@@ -560,7 +543,8 @@ export default class NodeView extends NodeModel {
                 this.DOM.classList.remove("reference")
             }
 
-            this.DOM.querySelector(".linksOpener").innerText = this.links.filter(link => link[0].split("/")[1] != "context").length
+            let linksOpener: HTMLButtonElement = this.DOM.querySelector(".linksOpener")!
+            linksOpener.innerText = String(this.links.filter(link => link[0].split("/")[1] != "context").length)
 
         } catch (err) {
             console.error(err)
@@ -648,6 +632,7 @@ export default class NodeView extends NodeModel {
         } else if (event.key === "ArrowRight" && event.altKey && event.shiftKey) {
             
             let newNode = this.createBranch()
+            if (!newNode) return false
             this.open()
             this.linkedNodeViews.find(v => v.id === newNode.id)?.select()
 
@@ -658,10 +643,12 @@ export default class NodeView extends NodeModel {
             
         } else if (event.key === "ArrowUp" && event.altKey) {
 
+            if (!this.siblings || !this.siblingsIndex) return false
             this.siblings[this.siblingsIndex-1]?.select()
             
         } else if (event.key === "ArrowDown" && event.altKey) {
             
+            if (!this.siblings || !this.siblingsIndex) return false
             this.siblings[this.siblingsIndex+1]?.select()
 
         } else if (event.key === "ArrowLeft" && event.altKey && event.ctrlKey) {
@@ -689,9 +676,11 @@ export default class NodeView extends NodeModel {
             console.log(pos, lines, lastLineStart, atTheTopLine, atTheBottomLine)
             
             if (event.key === "ArrowUp" && atTheTopLine) {
+                if (!this.siblings || !this.siblingsIndex) return false
                 this?.siblings[this.siblingsIndex-1]?.select()
             }
             else if (event.key === "ArrowDown" && atTheBottomLine) {
+                if (!this.siblings || !this.siblingsIndex) return false
                 this?.siblings[this.siblingsIndex+1]?.select()
             }
         } 
@@ -703,7 +692,7 @@ export default class NodeView extends NodeModel {
 
     openTreeLoopCancelTrigger = false
 
-    async openTreeLoop (maxOpenCount=20, maxDepths=5, isCanceled, options) {
+    async openTreeLoop (maxOpenCount=20, maxDepths=5, isCanceled, options?) {
 
         const defualtOptions = {
             siblingOpenDelay: 1000,
@@ -712,7 +701,7 @@ export default class NodeView extends NodeModel {
 
         options = {...defualtOptions, ...options}
         
-        if (!this.opened) await this.open(null, {softAppear: true})
+        if (!this.opened) await this.open(undefined, {softAppear: true})
         
         let lastDepth = this.linkedNodeViews
         let depthCount = 0
@@ -760,24 +749,12 @@ export default class NodeView extends NodeModel {
 
     removeView () {
         this.DOM.remove()
-        if (this.openedFrom) this.openedFrom.linkedNodeViews.splice(this.siblingsIndex, 1) 
+        if (!this.openedFrom || !this.siblings || !this.siblingsIndex) return false
+        this.openedFrom.linkedNodeViews.splice(this.siblingsIndex, 1) 
     }
 
     lateFilter () {
         //필터가 뒤늦게 적용됬을때 DOM 지우고 this.linkedNodeViews에서 제거
-        let noViews = []
-
-        this.linkedNodeViews.forEach(view => {
-            let okay = [this.filter, appSession.globalFilter].includes((new Tie(view.tie)).mirror)
-            if (!okay) {
-                noViews.push(view)
-            }
-        })
-
-        noViews.forEach(view => 
-            view.removeView()
-        )
-
     }
 
     treeLateFilter (maxViews=50) {
