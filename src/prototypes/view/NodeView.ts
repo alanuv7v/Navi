@@ -202,11 +202,11 @@ export default class NodeView extends NodeModel {
     linksDOM = div({class: "links"})
 
     valueInput: autoResizedTextarea = new autoResizedTextarea({
-        class: "value", 
-        value: this.value, 
+        class: "key", 
+        value: this.key, 
         onclick: (event) => this.#onclick(), 
         onauxclick: (event) => this.#onauxclick(event), 
-        onchange: (event) => {this.#onvaluechange(event)},
+        onchange: (event) => {this.#onkeychange(event)},
         onkeydown: (event) => this.#onkeydown(event),
         onselect: (event) => this.#onselect(event),
         onfocus: ((e) => {
@@ -217,6 +217,8 @@ export default class NodeView extends NodeModel {
 
     tieDOM = input({class: "tieInput", placeholder: "from/to", 
         
+        disabled: (this.planted || this.isReference),
+
         onclick: (event) => {
             if (this.planted || this.isReference) {
                 event.target.disabled = true
@@ -367,7 +369,7 @@ export default class NodeView extends NodeModel {
         
         //focus
         //@ts-ignore
-        this.DOM.querySelector("textarea.value.input")!.focus()
+        this.DOM.querySelector("textarea.key")?.focus()
 
         //show options
         this.showOptions()
@@ -522,14 +524,15 @@ export default class NodeView extends NodeModel {
     }
 
     showTieDefault () {
-        this.tieDOM.style.display = this.tie![0] === "context" ? "none" : "inline-block"
+        if (!this.tie) return
+        this.tieDOM.style.display = this.tie[0] === "context" ? "none" : "inline-block" //if the tie is "context/", don't display tieDOM
     }
 
     updateStyle () {
         try {
             
             this.showTieDefault()
-            this.tieDOM.value = this.tie!.join(" ----- ")
+            this.tieDOM.value = this.tie ? this.tie.join(" ----- ") : ""
             
             if (this.isAuthname) {
                 this.DOM.classList.add("authName")
@@ -592,8 +595,8 @@ export default class NodeView extends NodeModel {
         this.toggleOptionsDisplay()
     }
     
-    #onvaluechange (event) {
-        this.value = event.target.value
+    #onkeychange (event) {
+        this.key = event.target.value
         if (this.isAuthname && this.authNameConflict) {
             console.log(this.DOM, event.target)
             this.DOM.classList.add("error")

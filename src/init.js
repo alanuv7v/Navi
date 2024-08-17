@@ -26,7 +26,7 @@ export default async function init () {
     if (lastSession?.data) {
 
         appSession.overrideTempData(lastSession.data)
-        console.log("Loaded last session data.")
+        console.log("Loaded last session data.", lastSession)
         
         await initAppSession()
 

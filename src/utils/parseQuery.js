@@ -9,13 +9,13 @@ function simpleQuery (input) {
     let mid = input.slice(1)
 
     let conditionMatches = {
-        "@": `value='@${mid}'`,
+        "@": `key='@${mid}'`,
         "#": `id='${mid}'`
     }
 
     return appSession.network.DB.exec(
         `SELECT * FROM nodes WHERE ${
-            conditionMatches[startLetter] || `value='${input}'`
+            conditionMatches[startLetter] || `key='${input}'`
         }`
     )[0]?.values
 
@@ -27,12 +27,11 @@ export default async function parseQuery (input) {
 
         let querySegments = input.split("/")
         let context = simpleQuery(querySegments[0])[0]
+        if (querySegments.length === 1) return [context]
+
         let contextLinks = (new NodeData(...context)).links
-        
         let lastSegmentMatch = context
         let lastSegmentLinks = contextLinks
-        
-        if (querySegments.length === 1) return [context]
 
         //find nodeData for each segments
         for (let i=1; i < querySegments.length; i++) {

@@ -24,7 +24,7 @@ export default class NodeModel extends NodeData {
 
     get authNameConflict () {
         try {
-            if (appSession.network.DB?.exec(`SELECT * FROM nodes WHERE value='${this.value}' AND NOT id='${this.id}'`)[0]!.values.length > 0) return true
+            if (appSession.network.DB?.exec(`SELECT * FROM nodes WHERE key='${this.key}' AND NOT id='${this.id}'`)[0]!.values.length > 0) return true
             else return false
         }
         catch {
@@ -37,7 +37,7 @@ export default class NodeModel extends NodeData {
             return false
         } 
         return appSession.network.DB!.exec(`INSERT INTO nodes VALUES (${
-            ["id", "value", "links"].map(s => `'${typeof this[s] === "string" ? this[s] : JSON.stringify(this[s])}'`).join(", ")
+            ["id", "key", "value", "valueType", "links"].map(s => `'${typeof this[s] === "string" ? this[s] : JSON.stringify(this[s])}'`).join(", ")
         })`)
     }
 
@@ -52,7 +52,7 @@ export default class NodeModel extends NodeData {
             return false
         }
         console.log(`UPDATE nodes SET ${
-            ["value", "links"]
+            ["key", "value", "valueType", "links"]
                 .map(s => {
                     return `${s}='${typeof this[s] === "string" ? 
                     escape(this[s])
@@ -62,7 +62,7 @@ export default class NodeModel extends NodeData {
         } WHERE id='${this.id}';`)
         return appSession.network.DB!.exec(
             `UPDATE nodes SET ${
-                ["value", "links"]
+                ["key", "value", "valueType", "links"]
                     .map(s => {
                         return `${s}='${typeof this[s] === "string" ? 
                         escape(this[s])
@@ -77,18 +77,6 @@ export default class NodeModel extends NodeData {
         let aliveLinks = this.links.filter(l => l[1] != id)
         this.links = aliveLinks
         return this.updateRecord()
-    }
-
-    get readableLinks () {
-        return this.links.map(l => {
-            return {
-                tie: l[0],
-                id: l[1],
-                value: appSession.network.DB!.exec(
-                    `SELECT value FROM nodes WHERE id='${l[1]}'`
-                )[0]?.values?.at(0)?.at(0) || "unknown"
-            }
-        })
     }
 
     deleteRecord () {
