@@ -18,20 +18,14 @@ export default div("App", {
     style: "font-size: 16px;"
 },
 div("Header", {class: ""}, 
-div("QuickActions", {}, 
-        button("*", {
-            tooltip: "Open Network"
-        }, "*"),
-        button("History", {
-            tooltip: "History"
-        }, "↹"),
+div("QuickActions", {},
         button("GoBack", {
             tooltip: "Go Back"
-            }, "◁"),
+            }, "<"),
             button("GoForth", {
                 tooltip: "Go Forth"
-            }, "▷"),
-            button("Debugger", {
+            }, ">"),
+            /* button("Debugger", {
                 tooltip: "Debugger",
                 onclick: () => {
                     let t = van.tags.textarea()
@@ -41,7 +35,7 @@ div("QuickActions", {},
                         Logger.log(res)
                     })
                 }
-            }, "<>"),
+            }, "<>"), */
             //button("RegrowTree", {}, "⟳"),
             input("GoTo", {
                 onchange: (event) => {

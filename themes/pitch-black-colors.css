@@ -1,0 +1,23 @@
+:root {
+    --light: rgb(250 250 250);
+    --slight: rgb(200 200 200);
+    --nice: rgb(150 150 150);
+    --mild: rgb(120 120 120);
+    --mildshade: rgb(70 70 70);
+    --shade: rgb(30 30 30);
+    --deep: rgb(0 0 0);
+    --deeper: rgb(0 0 0);
+    --dark: rgb(0 0 0);
+    --vivid: rgba(151 200 128 1);
+    --link: rgb(153 247 225);
+    --hilight: rgb(202 231 188);
+    --active: rgba(185 156 189 0.3);
+    --executable: rgb(186 253 208);
+    
+    --authName: rgb(162 252 189);
+    --reference: rgb(180 150 250);
+    
+    --alert: rgb(252 222 90);
+    --error: rgb(255 100 121);
+    --success: rgba(151 200 128 1);
+}

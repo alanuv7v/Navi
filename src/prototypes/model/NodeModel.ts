@@ -80,21 +80,22 @@ export default class NodeModel extends NodeData {
     }
 
     deleteRecord () {
-        try {
-            // remove this node from other nodes data
-            for (let link of this.links) { //remove mirror links
-                let oppID = link[1]
-                let oppData: NodeDataRaw = Object.assign(NodeData, appSession.network.DB!.exec(
-                    `SELECT * FROM nodes WHERE id='${oppID}'`
-                )[0].values[0])
-                let model = new NodeModel(...oppData)
-                model.forget(this.id)
-                console.log(oppID, oppData, model)
-            }
-            return appSession.network.DB!.exec(`DELETE FROM nodes WHERE id='${this.id}'`)
-        } catch (err) {
-            Logger.log(err, "error")    
+        // remove this node from other nodes data
+        for (let link of this.links) { //remove mirror links
+            
+            let oppID = link[1]
+            let oppQueryRes = appSession.network.DB!.exec(
+                `SELECT * FROM nodes WHERE id='${oppID}'`
+            )[0]
+            
+            if (!oppQueryRes) continue
+
+            let oppData: NodeDataRaw = oppQueryRes.values[0]
+            let model = new NodeModel(...oppData)
+            model.forget(this.id)
+            console.log(oppID, oppData, model)
         }
+        return appSession.network.DB!.exec(`DELETE FROM nodes WHERE id='${this.id}'`)
     }
 
     refreshData() {
@@ -139,7 +140,7 @@ export default class NodeModel extends NodeData {
         
         this.addLink(tie, newNodeModel.id)
 
-        let mirrorTie = tie.reverse() as tie
+        let mirrorTie = structuredClone(tie).toReversed() as tie
         newNodeModel.addLink(mirrorTie, this.id)
 
         return newNodeModel

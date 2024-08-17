@@ -200,64 +200,6 @@ button, button:not(:hover), input, textarea, select {
 
 }
 
-button:hover {
-    color: var(--light); 
-}
-
-@keyframes active {
-    0% {    
-        box-shadow: 
-        0px -1px 0px 0px var(--shade), /* top hilight */
-        0px 4px 4px 0px var(--deeper); /* casting shadow */
-    }
-    50% {
-        box-shadow: 
-        0px -1px 1px 0px var(--shade),
-        0px 1px 1px 0px var(--deeper); /* casting shadow */
-    }
-    100% {
-        box-shadow: 
-        inset 0px 1px 1px 0px var(--dark),
-        inset 0px 1px 2px 0px var(--dark),
-        inset 0px -1px 1px 0px var(--dark),
-        0px 2px 1px 0px var(--shade); 
-    }
-}
-
-button:focus {
-    color: var(--light);
-    
-    box-shadow: 
-    inset 0px 1px 1px 0px var(--dark),
-    inset 0px 1px 2px 0px var(--dark),
-    inset 0px -1px 1px 0px var(--dark),
-    0px 2px 1px 0px var(--shade); 
-    
-    animation-name: active;
-    animation-duration: 0.15s;
-    animation-iteration-count: 1;
-    /* animation-direction: alternate; */
-    animation-timing-function: ease-out;
-    
-    /* box-shadow: 
-    0px -1px 1px 0px var(--shade),
-    0px 1px 1px 0px var(--deeper); */ /* casting shadow */
-}
-
-
-
-.nothing button:focus {
-    box-shadow: 
-    0px 2px 8px 0px var(--light); /* casting shadow */
-}
-    
-/* animation-name: active;
-animation-duration: 0.2s;
-animation-iteration-count: infinite;
-animation-direction: alternate;
-animation-timing-function: ease; */
-
-/* transform: translate(0px, 2px); */
 
 input {
     width: 5em;
@@ -270,13 +212,6 @@ input:first-child, input:focus {
 
 input, textarea {
     box-shadow: 0px 0px 0px 1px var(--deeper);
-}
-
-input:hover, textarea:hover, input:focus, textarea:focus, .clickable:hover {
-    /* 
-    color: var(--light) !important; */
-    background-color: var(--shade);
-
 }
 
 
@@ -331,7 +266,6 @@ input:active, .clickable:active {
 
     > .links {
         
-        box-shadow: inset 2px 0px 0px 0px var(--shade);
         padding-left: 1em;
         
         display: flex;
@@ -348,26 +282,18 @@ input:active, .clickable:active {
     }*/
 
     > .main {
-        /* .h-flex {
-            width: 100vw;
-        } */
-        position: relative;
-        box-shadow: inset 4px 0px 0px 0px var(--shade)
         
+        position: relative;
 
         .selectionIndicator {
             position: absolute; 
-            width: 0.5em
+            width: 8px;
             /* align-self: stretch; */
             background-color: var(--shade);
         }
 
         > * {
             margin-left: 0.5em
-        }
-
-        .selectionIndicator:has(+ .autoResize:hover) {
-            width: 4px;
         }
         
         .autoResize {
@@ -472,23 +398,31 @@ input:active, .clickable:active {
 
 }
 
-.node:has(.node.selected):not(.authName) {
-    > .main {
-        .selectionIndicator {
-            width: 4px;
-            background-color: var(--mildshade);
-        }
-    }
+.node > .main {
+    box-shadow: inset 2px 0px 0px 0px var(--shade);
 }
 
-.node.authName:has(.node.selected) {
-    > .main {
-        .selectionIndicator {
-            width: 4px;
-            background-color: var(--authName);
-        }
-    }
+.node.selected > .main {
+    box-shadow: inset 4px 0px 0px 0px var(--mild);
 }
+
+.node:has(.node.selected) > .main {
+    box-shadow: inset 2px 0px 0px 0px var(--mildshade);
+}
+
+.node.authName:has(.node.selected) > .main {
+    box-shadow: inset 2px 0px 0px 0px var(--authName);
+}
+
+.node.authName > .main {
+    box-shadow: inset 2px 0px 0px 0px var(--authName);
+}
+
+.node.authName.selected > .main {
+    box-shadow: inset 4px 0px 0px 0px var(--authName);
+}
+
+
 
 .node.option-shown {
     /* box-shadow: inset 4px 0px 0px -2px var(--light) !important; */

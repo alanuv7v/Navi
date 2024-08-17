@@ -59,8 +59,8 @@ export default class Session {
                 }
             },
             DB: undefined as SqlJsDb | undefined,
-            getNodeById: (id) => this.network.DB!.exec(`SELECT * FROM nodes WHERE id='${id}'`)[0].values,
-            getNodeByValue: (value) => this.network.DB!.exec(`SELECT * FROM nodes WHERE value='${value}'`)[0].values
+            getNodeById: (id) => this.network.DB!.exec(`SELECT * FROM nodes WHERE id='${id}'`)[0]?.values,
+            getNodeByValue: (value) => this.network.DB!.exec(`SELECT * FROM nodes WHERE value='${value}'`)[0]?.values
         }
 
     })(this) //outer this를 가져오기 위한 개고생

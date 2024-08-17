@@ -28,8 +28,10 @@ export default class NodeView extends NodeModel {
     planted:boolean = false
     selected:boolean = false
     opened:boolean = false
+    
     openedFrom: NodeView|undefined //NodeView that opened this node
-    tie:tie|undefined
+    tieFromOpenedFrom:tie|undefined
+
     linkedNodeViews: Array<NodeView> = []
     
     deleteReady = false
@@ -75,7 +77,7 @@ export default class NodeView extends NodeModel {
         let res
         for (let i = 0; i < this.openedFrom.links.length; i++) {
             let link = this.openedFrom.links[i]
-            if (this.tie === link.tie && this.id === link.id) {
+            if (this.tieFromOpenedFrom === link.tie && this.id === link.id) {
                 res = i
                 break
             }
@@ -113,7 +115,7 @@ export default class NodeView extends NodeModel {
         this.deleteRecord()
 
         if (!this.openedFrom) return
-        let prevId = this.openedFrom?.linkedNodeViews[this.siblingsIndex as number -1].id
+        let prevId = this.openedFrom.linkedNodeViews[this.siblingsIndex as number -1]?.id
         this.openedFrom.refreshData()
         this.openedFrom.updateStyle()
         this.openedFrom.open()
@@ -220,11 +222,6 @@ export default class NodeView extends NodeModel {
         disabled: (this.planted || this.isReference),
 
         onclick: (event) => {
-            if (this.planted || this.isReference) {
-                event.target.disabled = true
-            } else {
-                event.target.disabled = false
-            }
             event.target.value = event.target.value.split(" ----- ").join("/")
         },
 
@@ -236,13 +233,13 @@ export default class NodeView extends NodeModel {
 
             if (!this.openedFrom || this.planted || this.isReference) return false
             
-            let prevTie = structuredClone(this.tie) 
-            let newTie = event.target.value.split("/")
+            let prevTie = structuredClone(this.tieFromOpenedFrom) as tie
+            let newTie = event.target.value.split("/") as tie
 
-            this.changeTie(prevTie!.toReversed() as tie, newTie.toReversed() as tie, this.openedFrom!.id)
+            this.changeTie(prevTie, newTie, this.openedFrom!.id)
             
             event.target.value = event.target.value.split("/").join(" ----- ")
-            this.showTieDefault()
+            this.decideTieDisplay()
             
         }
     })
@@ -319,7 +316,7 @@ export default class NodeView extends NodeModel {
                 }
             }).map(({tie, view}) => {
                 view.openedFrom = this
-                view.tie = tie
+                view.tieFromOpenedFrom = tie
                 return view
             })
 
@@ -385,7 +382,7 @@ export default class NodeView extends NodeModel {
         /* this.optionSleep = true */
         this.hideOptions()
         
-        this.showTieDefault()
+        this.decideTieDisplay()
     }
 
     plant () {
@@ -434,7 +431,7 @@ export default class NodeView extends NodeModel {
 
     moveLinkIndex (toAdd) {
         
-        if (!this.openedFrom || !this.siblings || !this.siblingsIndex || !this.tie) return
+        if (!this.openedFrom || !this.siblings || !this.siblingsIndex || !this.tieFromOpenedFrom) return
 
         if (toAdd === 0) return false
         let toSwapWith = this.siblings[this.siblingsIndex + toAdd]
@@ -442,14 +439,14 @@ export default class NodeView extends NodeModel {
         let targetIndex = toSwapWith?.linkIndex
         if (!targetIndex || targetIndex < -1 || targetIndex > this.openedFrom.links.length) return false
         this.openedFrom.links.splice(this.linkIndex, 1) //delete pre-existing self
-        this.openedFrom.links.splice(targetIndex, 0, {tie: this.tie, id: this.id}) //insert self
+        this.openedFrom.links.splice(targetIndex, 0, {tie: this.tieFromOpenedFrom, id: this.id}) //insert self
         console.log(this.openedFrom.links)
         this.openedFrom.updateRecord()
 
     }
 
     moveUp () {
-        if (!this.openedFrom || !this.siblings || !this.siblingsIndex || !this.tie) return
+        if (!this.openedFrom || !this.siblings || !this.siblingsIndex || !this.tieFromOpenedFrom) return
         //move perm data
         let res = this.moveLinkIndex(-1)
         //move temp data
@@ -494,7 +491,7 @@ export default class NodeView extends NodeModel {
         //move data
         let newModel = new NodeModel(newOriginId)
         newModel.refreshData()
-        newModel.addLink(this.tie!, this.id)
+        newModel.addLink(this.tieFromOpenedFrom!, this.id)
         
         //move DOM
         if (!newOriginView) return
@@ -520,19 +517,28 @@ export default class NodeView extends NodeModel {
     }
 
     showTie () {
+        if (this.planted || this.isReference) {
+            this.tieDOM.disabled = true
+            this.tieDOM.value = "! planted"
+        }
         this.tieDOM.style.display = "inline-block"
     }
 
-    showTieDefault () {
-        if (!this.tie) return
-        this.tieDOM.style.display = this.tie[0] === "context" ? "none" : "inline-block" //if the tie is "context/", don't display tieDOM
+    decideTieDisplay () {
+        this.tieDOM.style.display = 
+            !this.tieFromOpenedFrom 
+            || this.tieFromOpenedFrom[0] === "context" 
+            || this.planted 
+            ? "none" : "inline-block" //if the tie is "context/", do not display tieDOM
     }
 
     updateStyle () {
         try {
             
-            this.showTieDefault()
-            this.tieDOM.value = this.tie ? this.tie.join(" ----- ") : ""
+            this.decideTieDisplay()
+            this.tieDOM.value = this.tieFromOpenedFrom ? 
+                this.tieFromOpenedFrom
+                .join(" ----- ") : ""
             
             if (this.isAuthname) {
                 this.DOM.classList.add("authName")
@@ -547,7 +553,7 @@ export default class NodeView extends NodeModel {
             }
 
             let linksOpener: HTMLButtonElement = this.DOM.querySelector(".linksOpener")!
-            linksOpener.innerText = String(this.links.filter(link => link[0].split("/")[1] != "context").length)
+            linksOpener.innerText = String(this.listLinkedDataToOpen().length)
 
         } catch (err) {
             console.error(err)
@@ -615,14 +621,19 @@ export default class NodeView extends NodeModel {
 
     #onkeydown (event) {
 
-        if (event.key === "Enter" && event.altKey) {
+        if (event.key === "Enter" && event.shiftKey) {
             
+            //new sibling added
             if (this.openedFrom) {
                 event.preventDefault()
                 this.openedFrom.createBranch()
                 this.openedFrom.open()
                 this.openedFrom.linkedNodeViews.slice(-1)[0]?.select()
             }
+            
+        } else if (event.key === "Enter" && event.altKey) {
+            
+            //edit value
             
         } else if (event.key === "ArrowUp" && event.altKey && event.shiftKey) {
 
