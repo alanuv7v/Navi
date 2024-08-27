@@ -44,6 +44,8 @@ userActions
 
 Navi
 
+Blur
+
     NodeVisual
         get isIsolated ()
         mirror ()
@@ -63,6 +65,13 @@ Navi
     reactions
         love
 
+		live 
+		heart
+
+		isWith
+
+		blurWith
+
 
 
     connect ()
@@ -72,6 +81,7 @@ Navi
     visual
         modes
             zen
+
 
 
 
