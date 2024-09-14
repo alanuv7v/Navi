@@ -85,7 +85,7 @@ export default class Session {
 
     settings = {
         style: {
-            fontSize: 16 as number
+            font_size: 16 as number
         },
         autosave: true as boolean,
         autosaveInterval: 10*1000 as number,

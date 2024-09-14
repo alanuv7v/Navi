@@ -1,0 +1,596 @@
+* {
+    font-size: inherit;
+    font-weight: normal;
+    box-sizing: border-box;
+    color: var(--light);
+    text-overflow: ellipsis;
+    background: transparent;
+}
+
+:root {
+    background-color: var(--deep);
+}
+
+body {
+    margin: 0px;
+}
+
+div {
+    text-align: left;
+}
+
+.h-flex {
+    display: flex;
+    flex-direction: row;
+}
+
+.v-flex {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+textarea {
+    display: block;
+    width: 100%;
+    resize: none;
+    overflow: auto; /* !! 결국 그게 되야하는데... 자동 리자이징. */
+}
+
+#App {
+
+    font-size: 14px;
+
+    width: 100vw;
+    height: 100vh;
+
+    background-color: var(--deep);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    
+    position: relative;
+
+}
+#App > * {
+    flex-shrink: 0;
+}
+
+::-webkit-scrollbar {
+    /* the scrollbar. */
+    width: 4px;
+	height: 4px;
+} 
+::-webkit-scrollbar-button /* the buttons on the scrollbar (arrows pointing upwards and downwards). */ {
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    /* the draggable scrolling handle. */
+	background-color: var(--shade);
+    border-radius: 8px;
+    min-width: 10px;    
+    min-height: 10px;
+}
+::-webkit-scrollbar-track /*  the track (progress bar) of the scrollbar. */ {
+
+}
+::-webkit-scrollbar-track-piece /* the track (progress bar) NOT covered by the handle. */ {
+
+}
+::-webkit-scrollbar-corner /* the bottom corner of the scrollbar, where both horizontal and vertical scrollbars meet. */ {
+
+}
+::-webkit-resizer /* the draggable resizing handle that appears at the bottom corner of some elements. */ {
+    display: none;
+}
+
+.title {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+b {
+    font-weight: bold !important;
+}
+
+.window {
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+a, .link {
+    text-decoration: none;
+    color: var(--link)
+}
+
+a:hover {
+    text-decoration: solid underline var(--link) 1px;
+}
+
+#RawEditor {
+    line-height: 2;
+    white-space: pre-wrap;
+    padding: 10px;
+    overflow: auto;
+}
+
+#LogPreview {
+    overflow: hidden;
+    padding: 0.5em;
+    width: 100%; 
+    max-height: 50%;
+    animation-name: logAppear;
+    animation-duration: 2s;
+    animation-iteration-count: 2;
+    animation-timing-function: ease-out;
+    overflow-y: auto;
+}
+
+
+.tabs {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#View {
+    overflow: auto;
+    width: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: column;
+
+}
+#Editor {
+    flex-grow: 1;
+    overflow: auto;
+}
+
+
+
+button, button:not(:hover) {
+
+    position: relative;
+
+}
+
+
+button:hover:before {
+    
+}
+
+button, button:not(:hover), input, textarea, select {
+
+
+    color: var(--slight);   
+    
+    border: none;
+    outline: none;
+
+    transition: color 0.15s ease, transform 0.1s ease;
+
+    padding-top: 4px;
+    padding-bottom: 4px;
+    
+    padding: 0.25em 0.5em 0.25em 0.5em;
+
+    border: none;
+    outline: none;
+
+    border-radius: 0.5em;
+
+    margin: 0.25em;
+    
+    flex-shrink: 0;
+
+
+
+}
+
+textarea {
+    border-radius: 0px;
+}
+
+
+button:hover {
+    color: var(--light); 
+}
+
+
+button:focus {
+    color: var(--light);
+}
+
+
+
+input:active, .clickable:active {
+
+    border: none;
+    outline: none;
+    
+}
+
+
+#Header {
+    overflow-x: auto;
+    #QuickActions {
+        display: flex;
+        > * {
+            min-width: 2em;
+            /* height: 2.5em; */
+            /* margin: 0px; */
+        }
+    }
+    #Commands {
+        width: fit-content;
+    }
+}
+
+
+
+
+#PickRoot {
+}
+
+#GoTo {
+    flex-grow: 1;
+}
+
+.appear {
+    animation-name: appear;
+    animation-duration: 0.3s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+}
+
+.node {
+    
+    overflow: visible;
+
+    > * {
+        overflow: visible;
+    }
+
+    > *:has(.value) > *:not(:last-child) {
+        margin-right: 1em;
+    }
+    > .links {
+        margin-left: 1em;
+        > .node {
+            margin-top: 1em !important;
+        }
+    }
+    > .main {
+        /* .h-flex {
+            width: 100vw;
+        } */
+        .valueWrap {
+            position: relative;
+        }
+        .selectionIndicator {
+            position: absolute;
+            width: fit-content;
+            height: 100%;
+            
+            color: var(--light);
+        }
+        .selectionIndicator:has(+ .autoResize:hover) {
+            width: 4px;
+        }
+        .autoResize {
+            flex-grow: 1;
+        }
+        .value {
+
+            margin: 0px;
+            min-width: 10em;
+            width: 100vw;
+            
+            padding-left: 1em;
+            padding-right: 0em;
+            padding-top: 0em;
+            padding-bottom: 0em;
+            
+            
+            line-height: 1.8em;
+        }
+        .options {
+            display: none;
+            overflow: visible;
+            align-items: flex-start;
+
+            margin: 1.5em;
+    
+            button {
+                min-width: 2em;
+            }
+        }
+        
+        .linksOpener {
+    
+            color: var(--slight);
+    
+            :active {
+                animation: none;
+            }
+    
+        }
+    }
+    
+
+}
+
+.node:has(.node.selected):not(.authName) {
+    > .main {
+        .selectionIndicator {
+            width: 4px;
+        }
+    }
+}
+
+.node.authName:has(.node.selected) {
+    > .main {
+        .selectionIndicator {
+            width: 4px;
+        }
+    }
+}
+
+.node.option-shown {
+    > .main > .options {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.node.selected {
+    > .main {
+        .selectionIndicator {
+            width: 4px;
+        }
+    } 
+}
+
+.node.authName {
+    
+    > .main {
+         
+        .selectionIndicator {
+        }
+        .linksOpener, .linksOpener:hover, .linksOpener:focus {
+            color: var(--dark) !important;
+            
+        }
+    } 
+
+}
+
+.node.reference {
+    
+    > .main {
+
+        .selectionIndicator {
+        }
+        .options .actions .linksOpener {
+            color: var(--dark) !important;
+        }
+    } 
+
+}
+
+.node.finding-new-origin {    
+    
+}
+
+.node.finding-new-origin::before {
+
+    display: block;
+    font-size: 0.75em;
+    /* transform: translate(0.25em, 0.75em); */
+    
+    content: "finding new origin...";/* attr(tooltip); */
+    color: var(--mildshade);
+    z-index: 3;
+
+}
+
+.node.error .value {
+    color: var(--error) !important;
+}
+
+
+.Command {
+    width: fit-content;
+}
+
+.Command .function { 
+    color: var(--executable);
+}
+
+#Main {;
+    overflow: auto;
+    width: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    display: flex;
+}
+
+#Commands {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    #Logs {
+        width: 100%;
+        flex-grow: 1;
+        display: flex;
+    }
+}
+
+[tooltip]:hover::after {
+
+    display: block;
+    position: absolute;
+
+    transform: translate(0.2em, 0.5em);
+    
+    content: attr(tooltip);
+    padding: 0.5em;
+    color: var(--dark);
+    border-radius: 0.5em;
+    z-index: 3;
+
+    width: max-content;
+    height: fit-content;
+
+    animation-name: appear;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+
+}
+
+#Footer {    
+    display: flex;
+    flex-direction: column-reverse;
+    overflow: hidden;
+    max-height: 50%;
+}
+
+#LogsView {
+
+    display: flex;
+    flex-direction: row;
+
+    padding: 0px;
+    width: 100%;
+    overflow: hidden;
+    
+    /* height: 100%; NEVER. */
+
+    flex-grow: 1;
+    
+    button {
+        height: fit-content;
+        padding: 0.25em 0.5em 0.25em 0.5em ;
+    }
+    #logs {
+        flex-grow: 1;
+        overflow: auto;
+    }
+    .log {
+        white-space: nowrap;
+        word-wrap: unset;
+    }
+    .options > *:not(:first-child) {
+        display: none;
+    }
+}
+
+#LogsView.expanded {
+    flex-direction: column;
+    .log {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    .options {
+        align-self: flex-end;
+    }
+    .options > *:not(:first-child) {
+        display: inline-block;
+    }
+}
+
+.log {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: 0.25em 0.5em 0.25em 0.5em ;
+    color: var(--alert);
+}
+
+.log:hover {
+}
+
+.log.error {
+    color: var(--error);
+}
+
+.log.success {
+    color: var(--success);
+}
+
+#CommandPalette {
+    width: 100%;
+}
+
+#View {    
+}
+
+#Editor {
+    position: relative;
+    > * {
+        padding: 1em;
+    }
+}
+
+#Editor > .overlay {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.originIndicator {
+    z-index: 0;
+    border-left: 4px dotted var(--mildshade);
+    border-bottom: 4px dotted var(--mildshade);
+    border-bottom-left-radius: 0em;
+}
+
+
+dialog {
+    
+    position: fixed; 
+    left: 0; 
+    right: 0; 
+    top: 0; 
+    bottom: 0; 
+    margin: auto; 
+    
+    min-width: 600px;
+    width: 60vw;
+    max-height: 60vw;
+
+    overflow: auto;
+    z-index: 2;
+
+    background: var(--deep);
+
+    padding: 20px;
+    
+}
+
+dialog::backdrop {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+
+#App:has(dialog[open]) {
+    filter: blur(1px);
+}
+
+#AboutRoot > *:not(:last-child) {
+    margin-bottom: 10px;
+}
+

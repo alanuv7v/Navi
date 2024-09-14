@@ -5,7 +5,7 @@ import wasm from "vite-plugin-wasm";
 import path from "path"
 
 export default defineConfig({
-    /* root: 'src', */
+    root: 'src',
     publicDir: 'public',
     build: {
         target: ['chrome120'],

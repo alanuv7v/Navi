@@ -5,12 +5,13 @@ import * as SqlDb from "./interface/SqlJsDb"
 import parseQuery from "./utils/parseQuery"
 import NodeView from "./prototypes/view/NodeView"
 
-import { default as init, initAppSession as init_root_DB, initAppSession } from "./init"
+import { default as init, initAppSession as init_appSession, initAppSession } from "./init"
 
 import * as BrowserFileSystem from "./interface/BrowserFileSystem"
 import BrowserDB from "./interface/BrowserDb"
 import Logger from "./prototypes/view/Logger"
 
+// @ts-ignore
 import { DateTime } from "luxon"
 
 import { Capacitor } from '@capacitor/core';
@@ -22,6 +23,7 @@ import * as yaml from "yaml"
 
 import aboutDOM from "./prototypes/view/About"
 
+// @ts-ignore
 import defaultSettings from "./defaultSettings.yaml"
 import refs from "./DOMRefs"
 
@@ -29,13 +31,14 @@ import refs from "./DOMRefs"
 
 export const Fix = {
     init,
-    init_root_DB
+    init_appSession
 }
 
 export const Sessions = {
     autosave_on () {
         if (appSession.settings.autosaveInterval < 10*1000) return false
         appSession.settings.autosave = true
+        // @ts-ignore
         appSession.settings.autosaveIntervalId = setTimeout(async () => {
             await Sessions.save_session_()
         }, appSession.settings.autosaveInterval);
@@ -174,7 +177,9 @@ export const Network = {
             
             case "web":
 
+                // @ts-ignore
                 if (window?.showDirectoryPicker) {
+                    // @ts-ignore
                     appSession.temp.browser.networkHandle = await window.showDirectoryPicker()
                     await initAppSession()
                     SessionManager.saveSession()
@@ -197,6 +202,7 @@ export const Network = {
                 break
             
             case "web":
+                // @ts-ignore
                 return await appSession.temp.browser.networkHandle.requestPermission()
 
         }
@@ -250,6 +256,7 @@ export const Network = {
         async create_backup () {        
             let version = DateTime.now().setZone("system")
             let backupFile = BrowserFileSystem.createFile(
+                // @ts-ignore
                 appSession.temp.networkDirHandle, 
                 appSession.network.name + version, 
                 "backup"
@@ -295,38 +302,45 @@ export const Edit = {
 export const Prune = {
 
     toggle_open: () => {
+        // @ts-ignore
         if (appSession.selectedNode.opened) {
+            // @ts-ignore
             appSession.selectedNode.close()
         } else {
+            // @ts-ignore
             appSession.selectedNode.open()
         }
         return appSession.selectedNode
     },
 
+    // @ts-ignore
     global_filter: (key) => {
     }
 
 }
 
 let global = () => document.querySelector('#App')
+// @ts-ignore
 let pureCssValue = (str) => Number(str.match(/[0-9]+/)[0])
 
 export const Visual = {
     set_size () {
-        global().style.fontSize = appSession.settings.style.fontSize + "px"
+        // @ts-ignore
+        global().style.font_size = appSession.settings.style.font_size + "px"
     },
     size_up () {
-        appSession.settings.style.fontSize++
+        appSession.settings.style.font_size++
         Visual.set_size()
     },
     size_down () {
-        appSession.settings.style.fontSize--
+        appSession.settings.style.font_size--
         Visual.set_size()
     }
 }
 
 export const Settings = {
     async save () {
+        // @ts-ignore
         return await BrowserDB.settings.put(
             {   
                 id: "lastUsed",
@@ -335,6 +349,7 @@ export const Settings = {
         )
     },
     async clear () {
+        // @ts-ignore
         return await BrowserDB.settings.clear()
     },
     async clear_indexedDB () {

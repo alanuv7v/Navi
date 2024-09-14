@@ -58,8 +58,9 @@ export async function initAppSession () {
     switch (Capacitor.getPlatform()) {
 
         case "web":
+            debugger
 
-        if (!appSession.temp.browser.networkHandle) break
+            if (!appSession.temp.browser.networkHandle) break
             
             if (!(await appSession.temp.browser.networkHandle?.queryPermission()) === "granted") {
                 await appSession.temp.browser.networkHandle?.requestPermission()

@@ -215,7 +215,7 @@ class Session {
   globalFilter = null;
   settings = {
     style: {
-      fontSize: 16
+      font_size: 16
     },
     autosave: true,
     autosaveInterval: 10 * 1e3,
@@ -13007,14 +13007,14 @@ const Navigate = {
 let global$1 = () => document.querySelector("#App");
 const Visual = {
   set_size() {
-    global$1().style.fontSize = appSession.settings.style.fontSize + "px";
+    global$1().style.font_size = appSession.settings.style.font_size + "px";
   },
   size_up() {
-    appSession.settings.style.fontSize++;
+    appSession.settings.style.font_size++;
     Visual.set_size();
   },
   size_down() {
-    appSession.settings.style.fontSize--;
+    appSession.settings.style.font_size--;
     Visual.set_size();
   }
 };

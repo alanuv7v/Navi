@@ -1,4 +1,13 @@
 name: Hello Navi
 entry: "@Hello Navi"
 visual:
-  fontSize: 10
+  font_size: 10
+key_map:
+  move_node: ["altKey", "shiftKey"]
+  move_node_selection: ["altKey", "ctrlKey"]
+  break_line: ["Enter"]
+  insert_sibling: ["Enter", "shiftKey"]
+  insert_link: [""]
+  save_database: ["S", "altKey"]
+  save_session: ["S", "altKey"]
+  

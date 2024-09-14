@@ -37,14 +37,14 @@ export default class NodeView extends NodeModel {
     deleteReady = false
     
     
-    getAdress () {
+    getAddress () {
         let originPath = this?.openedFrom?.path
         if (originPath) return [...originPath, this.value]
         else return [this.value]
     }
     
-    getAdressString () {
-        return this.getAdress().join("/")
+    getAddressString () {
+        return this.getAddress().join("/")
     }
 
     get isReference () {
@@ -621,6 +621,9 @@ export default class NodeView extends NodeModel {
 
     #onkeydown (event) {
 
+        //@ts-ignore
+        const keyMap = (() => appSession.settingsParsed!.key_map)
+
         if (event.key === "Enter" && event.shiftKey) {
             
             //new sibling added
@@ -678,6 +681,7 @@ export default class NodeView extends NodeModel {
             event.preventDefault()
             if (!this.opened) this.open()
             this.linkedNodeViews[0]?.select()
+
         } else if (event.key.startsWith("Arrow") && event.target.selectionStart === event.target.selectionEnd) { 
         
             let pos = event.target.selectionStart
